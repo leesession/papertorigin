@@ -1,0 +1,65 @@
+/*  
+ * @description: resst样式
+ * @author: WXF 
+ * @update: 2018-04-22 
+ */
+html, body, div, iframe, h1, h2, h3, h4, h5, h6, p, span, a, b, i, em, img, sub, sup, dl, dt, dd, ol, ul, li, table, thead, tbody, tfoot, th, tr, td,
+form, button, input, select, textarea, fieldset, label, legend, header, footer, section, article, nav, aside{
+	margin: 0;
+	padding: 0;
+}
+header, footer, section, article, nav, aside{
+	display: block;
+}
+table{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+h1, h2, h3, h4, h5, h6{
+	font-size: 100%;
+}
+ul, ol, li{
+	list-style: none;
+}
+button, input, select, textarea{
+	outline: none;
+	border: 0;
+	background: none;
+}
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px white inset; /*利用阴影来填充掉input自动填充色(chrome下input背景黄色)*/
+}
+textarea{
+	resize: none;
+}
+img{ 
+	display: inline-block; 
+	max-width: 100%; 
+	vertical-align: middle; 
+	outline: none; 
+	-webkit-appearance: none;
+}
+html, body {
+	background-color: #fff;
+ 	color: #333;
+}
+div, p, ul, ol, li, h1, h2, h3, h4, h5, h6, input, button, select{
+	box-sizing: border-box;
+}
+a{
+	color: #333;
+ 	text-decoration: none;
+}
+em, i{
+	font-style: normal;
+}
+.fl{ 
+  float: left;
+}
+.fr{ 
+  float: right;
+}
+.icon{
+	display: inline-block;
+	overflow: hidden;
+}
