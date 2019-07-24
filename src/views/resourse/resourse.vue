@@ -7,6 +7,35 @@
       <h6>TASSEL SCHOLAR make cooperation with below journal publishers to provide academic paper information searching and retrieving</h6>
     </div>
     <div class="box wrap1300">
+      <div class="row">
+        <div class="box-title">
+          <span>Journal</span>
+        </div>
+        <div class="box-cont">
+          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/resours-01.png" alt="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="box-title">
+          <span>Conference</span>
+        </div>
+        <div class="box-cont">
+          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/resours-01.png" alt="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="box-title">
+          <span>Thesis</span>
+        </div>
+        <div class="box-cont">
+          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/resours-01.png" alt="">
+        </div>
+      </div>
       
     </div>
   </div>
@@ -27,10 +56,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.resourse{
+  padding-bottom: 50px;
+}
 .title{
   h1{
     height: 92px;
-    line-height: 110px;
+    line-height: 120px;
     font-size: 28px;
     color: #29697E;
   }
@@ -40,7 +72,33 @@ export default {
   }
 }
 .box{
-  width: 
+  padding: 38px 30px 38px 40px;
+  margin: 30px auto 0 auto;
+  box-shadow: 0 3px 7px rgba(33, 91, 90, 0.35);
+  .box-title{
+    width: 100%;
+    height: 42px;
+    line-height: 42px;
+    background: url(../../assets/images/title-bg.png) no-repeat left center;
+    border-bottom: 1px solid #56B29D;
+    span{
+      display: inline-block;
+      width: 175px;
+      text-align: center;
+      font-size: 28px;
+      color: #fff;
+    }
+  }
+  .box-cont{
+    width: 100%;
+    height: 165px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    img{
+      margin: 0 50px 0 0;
+    }
+  }
 }
 
 </style>

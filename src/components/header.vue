@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="head">
     <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
     <div class="header-right">
       <span>Register</span>
@@ -10,13 +10,13 @@
 
 <script>
 export default {
-  name: 'header',
+  name: 'headers',
   
 }
 </script>
 
 <style scoped lang="scss">
-.header{
+.head{
   width: 100%;
   height: 50px;
   overflow: hidden;
