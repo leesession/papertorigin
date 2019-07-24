@@ -1,22 +1,131 @@
 <template>
   <div class="contact">
-    
+    <site-header></site-header>
+    <search title="Contact Us" index="4"></search>
+    <div class="map-box">
+      <h2>Contact Information</h2>
+      <div class="map"></div>
+      <div class="info">
+        <div class="info-left">
+          <span>How to</span>
+          <b>find us</b>
+        </div>
+        <div class="info-right">
+          <div class="col">
+            <i class="icon icon-phone"></i>
+            <span>+86 028-6162-6262</span>
+          </div>
+          <div class="col">
+            <i class="icon icon-email"></i>
+            <span>service@tasselscholar.com</span>
+          </div>
+          <div class="col">
+            <i class="icon icon-address"></i>
+            <span>NO.366, North Hupan Road, Chengdu 610000, China</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
+import siteHeader from '../../components/header.vue'
+import search from '../../components/search.vue'
 export default {
   name: 'contact',
   data() {
     return {
 
     }
-  }
+  },
+  components: { siteHeader, search }
 }
 </script>
 
 <style scoped lang="scss">
-
+.map-box{
+  width: 100%;
+  position: relative;
+  h2{
+    height: 75px;
+    line-height: 75px;
+    text-align: center;
+    background: #f6f8f9;
+    font-size: 28px;
+    color: #6A7884;
+  }
+  .map{
+    height: 490px;
+    background: red;
+  }
+  .info{
+    position: absolute;
+    top: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 790px;
+    height: 160px;
+    background: #fff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: flex-start;
+    .info-left{
+      width: 300px;
+      overflow: hidden;
+      padding: 0 0 0 32px;
+      span{
+        display: block;
+        font-size: 18px;
+        color: #667C83;
+        margin: 45px 0 5px 0;
+      }
+      b{
+        font-size: 26px;
+        color: #262828;
+      }
+    }
+    .info-right{
+      .col{
+        float: left;
+        display: flex;
+        justify-content: flex-start;
+        &:nth-child(1){
+          margin-right: 75px;
+        }
+        &:nth-child(1), &:nth-child(2){
+          height: 100px;
+          line-height: 100px;
+        }
+        span{
+          font-size: 18px;
+          color: #53565B;
+        }
+        .icon{
+          width: 31px;
+          height: 31px;
+          margin: 32px 15px 0 0;
+          &.icon-phone{
+            background: url(../../assets/images/phone.png) no-repeat center center;
+            background-size: 100% 100%;
+          }
+          &.icon-email{
+            background: url(../../assets/images/email.png) no-repeat center center;
+            background-size: 100% 100%;
+          }
+          &.icon-address{
+            width: 25px;
+            height: 32px;
+            background: url(../../assets/images/local.png) no-repeat center center;
+            background-size: 100% 100%;
+            margin: 0 15px 0 0;
+          }
+        }
+      }
+    }
+  }
+}
 </style>
 
 
