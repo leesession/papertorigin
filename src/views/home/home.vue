@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import siteHeader from '../../compents/header.vue'
+import siteHeader from '../../components/header.vue'
 export default {
   name: 'home',
   data() {
@@ -182,49 +182,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.banner-box{
-  width: 100%;
-  height: 410px;
-  overflow: hidden;
-  background: url(../../assets/images/sky-home.png) no-repeat center center;
-  background-size: 100% 100%;
-  .head{
-    display: flex;
-    justify-content: space-between;
-    height: 60px;
-    .logo{
-      width: 113px;
-      height: 44px;
-      margin: 15px 0 0 30px;
-    }
-    nav{
-      margin: 0 20px 0 0;
-      ul{
-        display: flex;
-        justify-content: flex-start;
-      }
-      li{
-        height: 60px;
-        line-height: 60px;
-        margin: 0 0 0 40px;
-        cursor: pointer;
-        &:hover, &.active{
-          span{
-            color: #58EEFF;
-            border-color: #58EEFF;
-          }
-        }
-        span{
-          display: inline-block;
-          height: 48px;
-          border-bottom: 3px solid transparent;
-          font-size: 24px;
-          color: #DDE9F7;
-        }
-      }
-    }
-  }
-}
 .words-box{
   width: 100%;
   margin-top: 73px;
