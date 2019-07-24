@@ -7,8 +7,133 @@ html, body {
 	background-color: #fff;
   font-family: firstFont;
 }
+.wrap1100{
+  width: 1100px;
+  margin: auto;
+}
+.wrap1150{
+  width: 1200px;
+  margin: auto;
+}
+.wrap1300{
+  width: 1300px;
+  margin: auto;
+}
 @font-face {
   font-family: firstFont;
   src: url('../fonts/ArialMT.ttf');
 }
 
+/* 搜索 */
+.search-box{
+  display: flex;
+  justify-content: center;
+  .search{
+    width: 556px;
+    height: 50px;
+    background: #F6F6F6;
+    border-radius: 2px;
+    display: flex;
+    justify-content: flex-start;
+    .search-key{
+      width: 110px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      border-right: 1px solid #4E545B;
+      .el-dropdown-link{
+        font-size: 16px;
+        color: #222725;
+      }
+    }
+    .search-ipt{
+      width: 446px;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 10px;
+    }
+  }
+  .search-btn{
+    width: 128px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 2px;
+    background: linear-gradient(to right, #37CDFB , #00AEF4);
+    margin: 0 0 0 10px;
+    font-size: 18px;
+    color: #fff;
+  }
+}
+
+/* 首页banner 幻灯片 */
+.resource-banner{
+  .el-carousel__arrow{
+    width: 40px;
+    height: 40px;
+    border: 2px solid #B5B5B5;
+    border-radius: 100%;
+    background-color: #F6F8F9;
+    i{
+      font-size: 28px;
+      font-weight: bold;
+      color: #B5B5B5;
+    }
+  }
+}
+.about-us-box, .contact-us-box{
+  .el-carousel{
+    position: relative;
+  }
+  .el-carousel__container{
+    position: static;
+    width: 1050px;
+    margin: auto;
+    overflow: hidden;
+    .el-carousel__item{
+      width: 1050px;
+      left: 50%;
+      margin: 0 0 0 -525px;
+    }
+  }
+  .el-carousel__arrow{
+    width: 44px;
+    height: 60px;
+    border-radius: 0;
+    background-color: #F6F8F9;
+    &.el-carousel__arrow--left{
+      left: 0;
+    }
+    &.el-carousel__arrow--right{
+      right: 0;
+    }
+    i{
+      font-size: 28px;
+      font-weight: bold;
+      color: #B5B5B5;
+    }
+  }
+}
+
+.contact-us-box{
+  .el-carousel{
+    margin-top: 55px !important;
+  }
+  .el-carousel__container{
+    width: 1320px;
+    padding: 0 10px;
+    .el-carousel__item{
+      width: 1320px;
+      margin: 0 0 0 -660px;
+    }
+  }
+  .el-carousel__arrow{
+    background-color: #BED4DB;
+    &:hover{
+      background-color: #296A7F;
+    }
+    i{
+      color: #fff;
+    }
+  }
+}
