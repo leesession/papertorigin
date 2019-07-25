@@ -192,3 +192,106 @@ html, body {
     margin: 0 8px;
   }
 }
+
+/* 弹框 */
+.bg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  background: #000;
+  opacity: 0.5;
+}
+.dialog{
+  width: 653px;
+  background: #eff2f4;
+  border-radius: 4px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  .dialog-head{
+    height: 224px;
+    background: url(../images/sky.png) no-repeat center bottom;
+    // background-size: 100% 100%;
+    position: relative;
+    .cont{
+      line-height: 120px;
+      display: flex;
+      justify-content: center;
+      span{
+        font-size: 28px;
+        color: #E8F5F8;
+      }
+    }
+    h3{
+      width: 122px;
+      height: 122px;
+      line-height: 122px;
+      text-align: center;
+      background: #5BBAD7;
+      border-radius: 100%;
+      color: #fff;
+      font-size: 26px;
+      position: absolute;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .btn-close{
+      position: absolute;
+      top: -22px;
+      right: -22px;
+      width: 44px;
+      height: 44px;
+      .btn-close-bg{
+        width: 44px;
+        height: 44px;
+        text-align: center;
+        background: #EBEBEB;
+        border-radius: 100%;
+        opacity: 0.5;
+      }
+      i{
+        position: absolute;
+        top: 11px;
+        left: 11px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
+  }
+  .dialog-body{
+    .row{
+      padding: 0 115px 0 118px;
+      margin-bottom: 10px;
+      label{
+        display: block;
+        font-size: 16px;
+        color: #667C83;
+        margin-bottom: 2px;
+        i{
+          color: #CC122C;
+          margin-right: 5px;
+        }
+      }
+      .ipt{
+        width: 420px;
+        height: 32px;
+        line-height: 32px;
+        background: #fff;
+        border: 1px solid #F0F0F0;
+        border-radius: 2px;
+        padding: 0 10px;
+      }
+    }
+  }
+  .dialog-footer{
+    height: 72px;
+    background: #DCE7EA;
+  }
+}

@@ -164,19 +164,22 @@
       </div>
     </div>
 
+    <register :show="isShow"></register>
   </div>
 </template>
 
 <script>
 import siteHeader from '../../components/header.vue'
+import register from '../../components/register.vue'
 export default {
   name: 'home',
   data() {
     return {
-      key: ''
+      key: '',
+      isShow: true
     }
   },
-  components: { siteHeader },
+  components: { siteHeader, register },
   
 }
 </script>
