@@ -27,6 +27,39 @@
       </div>
     </div>
 
+    <div class="footer">
+      <ul>
+        <li>
+          <h4>Administrative Management</h4>
+          <p>Telephone: +86 028-6162-6264</p>
+          <p>Mobilephone: +86 13367537892</p>
+          <p>E-mail: yanfeng@tasselpaper.com</p>
+          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
+        </li>
+        <li>
+          <h4>Market and Cooperation</h4>
+          <p>Telephone: +86 028-6162-6266</p>
+          <p>Mobilephone: +86 13367533362</p>
+          <p>E-mail: yangjunjie@tasselpaper.com</p>
+          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
+        </li>
+        <li>
+          <h4>Product and Service</h4>
+          <p>Telephone: +86 028-6162-6268</p>
+          <p>Mobilephone: +86 13362347865</p>
+          <p>E-mail: ruhang@tasselpaper.com</p>
+          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
+        </li>
+        <li>
+          <h4>Technology and Design</h4>
+          <p>Telephone: +86 028-6162-6270</p>
+          <p>Mobilephone: +86 13362343628</p>
+          <p>E-mail: shenghao@tasselpaper.com</p>
+          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </template>
 
@@ -58,7 +91,7 @@ export default {
   }
   .map{
     height: 490px;
-    background: red;
+    background: #ccc;
   }
   .info{
     position: absolute;
@@ -69,6 +102,7 @@ export default {
     height: 160px;
     background: #fff;
     border-radius: 2px;
+    box-shadow: 0 5px 12px rgba(77, 112, 123, 0.3);
     display: flex;
     justify-content: flex-start;
     .info-left{
@@ -123,6 +157,33 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.footer{
+  height: 460px;
+  overflow: hidden;
+  background: linear-gradient(to right, #575281 , #517e98);
+  padding: 115px 0 0 0;
+  li{
+    float: left;
+    width: 33.3%;
+    height: 140px;
+    border-right: 1px solid #fff;
+    margin: 0 0 30px 0;
+    padding: 0 0 0 4%;
+    &:nth-child(3n), &:last-child{
+      border: none;
+    }
+    h4{
+      font-size: 18px;
+      color: #58EEFF;
+      margin-bottom: 10px;
+    }
+    p{
+      line-height: 28px;
+      font-size: 14px;
+      color: #F5F5F5;
     }
   }
 }
