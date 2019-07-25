@@ -269,6 +269,29 @@ html, body {
     .row{
       padding: 0 115px 0 118px;
       margin-bottom: 10px;
+      position: relative;
+      &.spe{
+        padding: 0 0 0 118px;
+        margin: 20px 0;
+        display: flex;
+        justify-content: flex-start;
+        cursor: pointer;
+        .checkbox{
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          margin: 0 10px 0 0;
+          &.checked{
+            background: url(../images/checked.png) no-repeat center center;
+            background-size: 100% 100%;
+          }
+        }
+        span{
+          line-height: 16px;
+          font-size: 14px;
+          color: #32982A;
+        }
+      }
       label{
         display: block;
         font-size: 16px;
@@ -287,11 +310,47 @@ html, body {
         border: 1px solid #F0F0F0;
         border-radius: 2px;
         padding: 0 10px;
+        &.spe{
+          padding: 0 115px 0 10px;
+        }
+      }
+      img{
+        position: absolute;
+        bottom: 0;
+        right: 115px;
+        width: 92px;
+        height: 32px;
       }
     }
+  }
+  .tips{
+    font-size: 20px;
+    color: #3C66D2;
+    margin: 10px 0 20px 118px;
   }
   .dialog-footer{
     height: 72px;
     background: #DCE7EA;
+    display: flex;
+    justify-content: flex-end;
+    .btn{
+      width: 158px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 16px;
+      border-radius: 2px;
+      margin: 16px 10px;
+      cursor: pointer;
+      &.cancel{
+        border: 1px solid #427F90;
+        color: #3F7589;
+      }
+      &.confirm{
+        background: linear-gradient(to right, #5DC1E2, #427387);
+        color: #fff;
+      }
+      
+    }
   }
 }

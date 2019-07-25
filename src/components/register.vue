@@ -10,7 +10,7 @@
         <h3>Register</h3>
         <div class="cont">
           <i class="icon"></i>
-          <span>Register	 New Account </span>
+          <span>Register	 New Account</span>
         </div>
       </div>
       <div class="dialog-body">
@@ -44,11 +44,11 @@
         </div>
         <div class="row">
           <label><i>*</i>Retype the Code from the picture</label>
-          <input v-model="code" class="ipt"/>
+          <input v-model="code" class="ipt spe"/>
           <img src="../assets/images/service-bg3.png" alt="">
         </div>
       </div>
-      <p class="go-login">Login Now >></p>
+      <p class="tips">Login Now >></p>
       <div class="dialog-footer">
         <button class="btn cancel">Cancel</button>
         <button class="btn confirm">Register</button>

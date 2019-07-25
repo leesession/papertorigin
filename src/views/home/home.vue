@@ -164,22 +164,25 @@
       </div>
     </div>
 
-    <register :show="isShow"></register>
+    <register :show="registerShow"></register>
+    <login :show="loginShow"></login>
   </div>
 </template>
 
 <script>
 import siteHeader from '../../components/header.vue'
 import register from '../../components/register.vue'
+import login from '../../components/login.vue'
 export default {
   name: 'home',
   data() {
     return {
       key: '',
-      isShow: true
+      registerShow: false,
+      loginShow: true
     }
   },
-  components: { siteHeader, register },
+  components: { siteHeader, register, login },
   
 }
 </script>
