@@ -179,7 +179,7 @@ export default {
     return {
       key: '',
       registerShow: false,
-      loginShow: true
+      loginShow: false
     }
   },
   components: { siteHeader, register, login },

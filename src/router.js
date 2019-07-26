@@ -14,6 +14,16 @@ export default new Router({
       component: home
     },
     {
+      path: '/searchList',
+      name: 'searchList',
+      component: () => import(/* webpackChunkName: "about" */ './views/home/searchList.vue')
+    },
+    {
+      path: '/searchDetails',
+      name: 'searchDetails',
+      component: () => import(/* webpackChunkName: "about" */ './views/home/searchDetails.vue')
+    },
+    {
       path: '/service',
       name: 'service',
       component: () => import(/* webpackChunkName: "about" */ './views/service/service.vue')
