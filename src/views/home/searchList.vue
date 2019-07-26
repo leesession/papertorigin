@@ -3,34 +3,6 @@
 		<site-header></site-header>
     <search title="Home" index="0"></search>
 		<div class="list">
-			<aside class="my-aside">
-				<div class="col">
-					<h3>Published Date:</h3>
-					<p>~2018</p>
-					<p>~2017</p>
-					<p>~2016</p>
-					<p>~2015</p>
-					<span>See More</span>
-				</div>
-				<div class="col">
-					<h3>Subjects:</h3>
-					<p>Inorganic Chemistry</p>
-					<p>Material Science</p>
-					<p>Nanotechnology</p>
-					<p>Optics and Optoelectronics</p>
-					<p>Plasmonics and Optical Devices</p>
-					<span>More</span>
-				</div>
-				<div class="col">
-					<h3>Publisher:</h3>
-					<p>journal of Nanoparticle Research</p>
-					<p>Nature physics</p>
-					<p>Advanced Nanomaterials</p>
-					<p>Optics Letter</p>
-					<p>Chinese Optics Leter</p>
-					<span>More</span>
-				</div>
-			</aside>
 			<div class="list-cont">
 				<div class="title">
 					<span>Results:1-20/169</span>
@@ -38,6 +10,31 @@
 				<div class="cont">
 					<ul>
 						<li>
+							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
+							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
+							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
+							<p>
+								<em>Springer</em> | <em>Journal of Nanoparticle Research</em>
+								| Volume 18 | Page 1-8 | 2016-01-19
+							</p>
+							<p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
+							<p>ISSN：1572-896X</p>
+							<div class="tools">
+								<div class="col">
+									<i class="icon icon-eyes"></i>
+									<span>123</span>
+								</div>
+								<div class="col">
+									<i class="icon icon-quote"></i>
+									<span>456</span>
+								</div>
+								<div class="col">
+									<i class="icon icon-share"></i>
+									<span>789</span>
+								</div>
+							</div>
+						</li>
+            <li>
 							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
 							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
 							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
@@ -115,30 +112,63 @@
 					</ul>
 				</div>
 			</div>
+      <aside class="my-aside">
+				<div class="col">
+					<h3>Published Date:</h3>
+					<p>~2018</p>
+					<p>~2017</p>
+					<p>~2016</p>
+					<p>~2015</p>
+					<span>See More</span>
+				</div>
+				<div class="col">
+					<h3>Subjects:</h3>
+					<p>Inorganic Chemistry</p>
+					<p>Material Science</p>
+					<p>Nanotechnology</p>
+					<p>Optics and Optoelectronics</p>
+					<p>Plasmonics and Optical Devices</p>
+					<span>More</span>
+				</div>
+				<div class="col">
+					<h3>Publisher:</h3>
+					<p>journal of Nanoparticle Research</p>
+					<p>Nature physics</p>
+					<p>Advanced Nanomaterials</p>
+					<p>Optics Letter</p>
+					<p>Chinese Optics Leter</p>
+					<span>More</span>
+				</div>
+			</aside>
 		</div>
 
+    <citation :show="citationShow"></citation>  
 	</div>
 </template>
 
 <script>
 import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
+import citation from '../../components/citation.vue'
 export default {
 	name: 'searchList',
 	data() {
     return {
-			checkAll: false
+      checkAll: false,
+      citationShow: true
     }
   },
-  components: { siteHeader, search },
+  components: { siteHeader, search, citation },
 }
 </script>
 
 <style scoped lang="scss">
 .list{
-	width: calc(100% - 368px);
 	display: flex;
-	justify-content: flex-start;
+  justify-content: flex-start;
+  .list-cont{
+    width: calc(100% - 368px);
+  }
 	.title{
 		height: 70px;
 		line-height: 70px;
@@ -179,7 +209,8 @@ export default {
 				.col{
 					display: flex;
 					justify-content: flex-start;
-					margin: 0 40px 0 0;
+          margin: 0 40px 0 0;
+          cursor: pointer;
 					span{
 						color: #2950EB;
 						font-size: 18px;
