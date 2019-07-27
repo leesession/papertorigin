@@ -1,16 +1,13 @@
 <template>
   <div class="home">
-    <site-header></site-header>
     <div class="banner-box">
       <div class="head">
         <img src="../../assets/images/logo.png" alt="" class="logo">
         <nav>
           <ul>
-            <li class="active"><span>Home</span></li>
-            <li><span>Our Service</span></li>
-            <li><span>Our Resource</span></li>
-            <li><span>About Us</span></li>
-            <li><span>Contact Us</span></li>
+            <li v-for="(item, index) in navList" :key="index" :class="{active: index == activeNum}" @click="navClickEvent(item)">
+              <span>{{item.name}}</span>
+            </li>
           </ul>
         </nav>
       </div>
@@ -164,26 +161,45 @@
       </div>
     </div>
 
-    <register :show="registerShow"></register>
-    <login :show="loginShow"></login>
   </div>
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
-import register from '../../components/register.vue'
-import login from '../../components/login.vue'
 export default {
   name: 'home',
   data() {
     return {
       key: '',
-      registerShow: false,
-      loginShow: false
+      navList: [
+        {
+          name: 'Home',
+          path: '/home'
+        },
+        {
+          name: 'Our Service',
+          path: '/service'
+        },
+        {
+          name: 'Our Resource',
+          path: '/resource'
+        },
+        {
+          name: 'About Us',
+          path: '/about'
+        },
+        {
+          name: 'Contact Us',
+          path: '/contact'
+        }
+      ],
+      activeNum: 0
     }
   },
-  components: { siteHeader, register, login },
-  
+  methods: {
+    navClickEvent(obj) {
+      this.$router.push({ path: obj.path});
+    }
+  }
 }
 </script>
 

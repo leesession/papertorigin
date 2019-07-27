@@ -2,8 +2,8 @@
   <div class="head">
     <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
     <div class="header-right">
-      <span>Register</span>
-      <span>login</span>
+      <span @click="registerEvent">Register</span>
+      <span @click="loginEvent">login</span>
     </div>
   </div>
 </template>
@@ -11,7 +11,25 @@
 <script>
 export default {
   name: 'headers',
-  
+  data() {
+    return {
+      registerMsg: {
+        registerShow: true
+      },
+      loginMsg: {
+        loginShow: true
+      }
+    }
+  },
+  methods: {
+    registerEvent() {
+      this.$emit('lintenRegisterFun', this.registerMsg);
+    },
+    loginEvent() {
+      this.$emit('lintenLoginFun', this.loginMsg);
+    }
+
+  }
 }
 </script>
 

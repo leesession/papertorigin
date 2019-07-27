@@ -3,7 +3,7 @@
     <div class="bg"></div>
     <div class="dialog">
       <div class="dialog-head">
-        <div class="btn-close">
+        <div class="btn-close" @click="closeDialog">
           <div class="btn-close-bg"></div>
           <i class="el-icon-close"></i>
         </div>
@@ -70,7 +70,13 @@ export default {
       country: '',
       institutions: '',
       code: '',
-      isChecked: true
+      isChecked: true,
+      msg: false
+    }
+  },
+  methods: {
+    closeDialog() {
+      this.$emit('listenFun', this.msg);
     }
   }
 }

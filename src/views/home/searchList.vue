@@ -1,6 +1,5 @@
 <template>
 	<div class="searchList">
-		<site-header></site-header>
     <search title="Home" index="0"></search>
 		<div class="list">
 			<div class="list-cont">
@@ -24,7 +23,7 @@
 									<i class="icon icon-eyes"></i>
 									<span>123</span>
 								</div>
-								<div class="col">
+								<div class="col" @click="openDialog">
 									<i class="icon icon-quote"></i>
 									<span>456</span>
 								</div>
@@ -142,12 +141,11 @@
 			</aside>
 		</div>
 
-    <citation :show="citationShow"></citation>  
+    <citation :show="citationShow" @listenFun="getCitationMsg"></citation>  
 	</div>
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 import citation from '../../components/citation.vue'
 export default {
@@ -155,10 +153,18 @@ export default {
 	data() {
     return {
       checkAll: false,
-      citationShow: true
+      citationShow: false
     }
   },
-  components: { siteHeader, search, citation },
+	components: { search, citation },
+	methods: {
+		openDialog() {
+			this.citationShow = true;
+		},
+		getCitationMsg(data) {
+			this.citationShow = data;
+		}
+	}
 }
 </script>
 

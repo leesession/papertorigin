@@ -5,7 +5,7 @@
       <div class="dialog-title">
         <i class="icon icon-note fl"></i>
         <span class="fl">Citation</span>
-        <i class="el-icon-close icon-close fr"></i>
+        <i class="el-icon-close icon-close fr" @click="closeDialog"></i>
       </div>
       <div class="dialog-body">
         <ul>
@@ -47,8 +47,15 @@ export default {
     return {
       userName: '',
       password: '',
+      msg: false
+    }
+  },
+  methods: {
+    closeDialog() {
+      this.$emit('listenFun', this.msg);
     }
   }
+  
 }
 </script>
 

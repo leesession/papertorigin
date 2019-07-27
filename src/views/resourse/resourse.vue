@@ -1,6 +1,5 @@
 <template>
   <div class="resourse">
-    <site-header></site-header>
     <search title="Our Resourse" index="2"></search>
     <div class="title wrap1300">
       <h1>What resources do we have?</h1>
@@ -42,7 +41,6 @@
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 export default {
   name: 'resourse',
@@ -51,7 +49,7 @@ export default {
 
     }
   },
-  components: { siteHeader, search },
+  components: { search },
 }
 </script>
 

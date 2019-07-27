@@ -1,6 +1,5 @@
 <template>
 	<div class="searchList">
-		<site-header></site-header>
     <search title="Home" index="0"></search>
 		<div class="list">
 			<div class="list-cont">
@@ -86,7 +85,6 @@
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 export default {
 	name: 'searchList',
@@ -95,7 +93,7 @@ export default {
 			checkAll: false
     }
   },
-  components: { siteHeader, search },
+  components: { search },
 }
 </script>
 

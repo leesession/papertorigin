@@ -1,6 +1,5 @@
 <template>
   <div class="service">
-    <site-header></site-header>
     <search title="Our Service" index="1"></search>
     <div class="we-do">
       <h2 class="wrap1100">what can we do?</h2>
@@ -45,7 +44,6 @@ share and spread academic achievements.</p>
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 export default {
   name: 'service',
@@ -54,7 +52,7 @@ export default {
 
     }
   },
-  components: { siteHeader, search },
+  components: { search },
 }
 </script>
 

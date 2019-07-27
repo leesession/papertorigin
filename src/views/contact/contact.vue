@@ -1,6 +1,5 @@
 <template>
   <div class="contact">
-    <site-header></site-header>
     <search title="Contact Us" index="4"></search>
     <div class="map-box">
       <h2>Contact Information</h2>
@@ -64,7 +63,6 @@
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 export default {
   name: 'contact',
@@ -73,7 +71,7 @@ export default {
 
     }
   },
-  components: { siteHeader, search }
+  components: { search }
 }
 </script>
 

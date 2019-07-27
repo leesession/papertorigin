@@ -1,6 +1,5 @@
 <template>
   <div class="about">
-    <site-header></site-header>
     <search title="About Us" index="3"></search>
     <div class="title wrap1150">
       <h3>Team Member</h3>
@@ -62,7 +61,6 @@
 </template>
 
 <script>
-import siteHeader from '../../components/header.vue'
 import search from '../../components/search.vue'
 export default {
   name: 'about',
@@ -71,7 +69,7 @@ export default {
 
     }
   },
-  components: { siteHeader, search },
+  components: { search },
 }
 </script>
 
