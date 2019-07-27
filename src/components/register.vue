@@ -38,17 +38,18 @@
           <label><i>*</i>Institutions</label>
           <input v-model="institutions" class="ipt"/>
         </div>
-        <div class="row spe">
-          <i class="checkbox checked"></i>
+        <div class="row spe" @click="checkEvent">
+          <i class="checkbox" :class="{check: isChecked == false, checked: isChecked == true}"></i>
           <span>I have read and agree to the the TASSEL SCHOLAR privacy policy</span>
         </div>
         <div class="row">
           <label><i>*</i>Retype the Code from the picture</label>
           <input v-model="code" class="ipt spe"/>
-          <img src="../assets/images/service-bg3.png" alt="">
+          <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" />
+          <!-- <img src="../assets/images/service-bg3.png" alt=""> -->
         </div>
       </div>
-      <p class="tips">Login Now >></p>
+      <p class="tips" @click="goLogin">Login Now >></p>
       <div class="dialog-footer">
         <button class="btn cancel">Cancel</button>
         <button class="btn confirm">Register</button>
@@ -58,6 +59,7 @@
 </template>
 
 <script>
+import vueImgVerify from './vue-img-verify'
 export default {
   name: 'register',
   props: ['show'],
@@ -71,12 +73,36 @@ export default {
       institutions: '',
       code: '',
       isChecked: true,
-      msg: false
+      msg: false,
+      loginMsg: true
     }
   },
+  components: { vueImgVerify },
   methods: {
+    // 点击图片获取验证码
+    getImgCode(code) {
+      this.imgCode = code
+      console.log('验证码: ' + this.imgCode)
+    },
+    // 点击按钮获取验证码
+    handleClick() {
+      this.imgCode = this.$refs.vueImgVerify.draw()
+      console.log('验证码: ' + this.imgCode)
+    },
     closeDialog() {
       this.$emit('listenFun', this.msg);
+    },
+    checkEvent() {
+      console.log(111)
+      if (this.isChecked == true) {
+        this.isChecked = false;
+      } else {
+        this.isChecked = true;
+      }
+    },
+    goLogin() {
+      this.$emit('listenFun', this.msg);
+      this.$emit('listenLoginFun', this.loginMsg);
     }
   }
 }

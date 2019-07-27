@@ -2,8 +2,8 @@
   <div id="app">
     <site-header  @lintenRegisterFun="getRegisterMsg" @lintenLoginFun="getLoginMsg"></site-header>
     <router-view/>
-    <register :show="registerShow" @listenFun="getRegisterCloseMsg"></register>
-    <login :show="loginShow" @listenFun="getLoginCloseMsg"></login>
+    <register :show="registerShow" @listenFun="getRegisterCloseMsg" @listenLoginFun="getLoginCloseMsg"></register>
+    <login :show="loginShow" @listenFun="getLoginCloseMsg" @listenRegisterFun="getRegisterCloseMsg"></login>
   </div>
 </template>
 

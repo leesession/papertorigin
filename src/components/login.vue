@@ -25,21 +25,23 @@
         <!-- <div class="row">
           <p class="forget">Forget password?</p>
         </div> -->
-        <div class="row spe">
-          <i class="checkbox checked"></i>
+        <div class="row spe" @click="checkEvent">
+          <i class="checkbox" :class="{check: isChecked == false, checked: isChecked == true}"></i>
           <span>Keep me log logged in</span>
         </div>
       </div>
-      <p class="tips">Register Now >></p>
+      <p class="tips" @click="goRegister">Register Now >></p>
       <div class="dialog-footer">
-        <button class="btn cancel">Cancel</button>
-        <button class="btn confirm">Register</button>
+        <button class="btn cancel" @click="closeDialog">Cancel</button>
+        <button class="btn confirm" @click="loginEvent">Login</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { http } from '../api/http.js'
+import { dialog } from '../utils/dialog.js'
 export default {
   name: 'login',
   props: ['show'],
@@ -47,12 +49,36 @@ export default {
     return {
       userName: '',
       password: '',
-      msg: false
+      msg: false,
+      registerMsg: true,
+      isChecked: true,
     }
   },
   methods: {
     closeDialog() {
-      this.$emit('listenFun', this.msg)
+      this.$emit('listenFun', this.msg);
+    },
+    checkEvent() {
+      if (this.isChecked == true) {
+        this.isChecked = false;
+      } else {
+        this.isChecked = true;
+      }
+    },
+    goRegister() {
+      this.$emit('listenFun', this.msg);
+      this.$emit('listenRegisterFun', this.registerMsg);
+    },
+    loginEvent() {
+      let data = {
+        loginmail: this.userName,
+        loginpassword: this.password
+      };
+      http.login(data, function(res) {
+        if (res.data.code == 200) {
+
+        }
+      });
     }
   }
 }

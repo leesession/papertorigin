@@ -1,5 +1,5 @@
 // api地址
-const api = 'http://192.168.0.234:8083';
+const api = 'http://47.112.29.135:9094';
 //引入webpack
 const webpack = require('webpack');
 
@@ -16,18 +16,18 @@ module.exports = {
     port: 8080, 
     https: false, 
     open: true, //配置自动启动浏览器
-    // proxy: 'http://localhost:4000' // 配置跨域处理,只有一个代理
+    proxy: 'http://47.112.29.135:9094' // 配置跨域处理,只有一个代理
     // 配置多个代理
-    proxy: {
-      "/financial": {
-        target: api,
-        ws: false,
-        changeOrigin: true,   //是否跨域
-        pathRewrite: {
-          '^/financial': '/financial'
-        }
-      }    
-    }
+    // proxy: {
+    //   "/": {
+    //     target: api,
+    //     ws: false,
+    //     changeOrigin: true,   //是否跨域
+    //     pathRewrite: {
+    //       '^/': ''
+    //     }
+    //   }    
+    // }
   },
   // 插件
   configureWebpack: {

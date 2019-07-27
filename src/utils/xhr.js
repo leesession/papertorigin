@@ -16,9 +16,6 @@ axios.defaults.timeout = 10000;
 // 响应拦截器
 axios.interceptors.request.use( 
 	config => {
-		//请求headers带上token
-		let token = sessionStorage.getItem('X-AUTH-TOKEN');
-		if(token) config.headers.token = token;
 		// 在get请求的参数中加上一个随机参数
 		if (config.method === 'get') {
 			let random = Math.random();
@@ -27,13 +24,13 @@ axios.interceptors.request.use(
 			} else {
 				config.params = {
 					r: random
-			}
-				};
+			  }
+      };
 		}
 		// POST传参序列化(添加请求拦截器，与Content-Type配合使用，如Content-Type=application/json,则无需序列化)
 		if (config.method === 'post' && config.headers['Content-Type'] == 'application/x-www-form-urlencoded; charset=UTF-8') {
 			config.data = qs.stringify(config.data);
-		}
+    }
 		return config;
 	}, 
 	error => {
@@ -77,7 +74,7 @@ export default function xhr(params){
 		axios({
 			method: params.method,
 			url: params.url,
-			params: params.data,
+			params: params.datas,
 			data: params.data,
 			headers: {
 			  "Content-Type": dataFormatType(params.type),

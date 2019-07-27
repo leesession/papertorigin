@@ -288,6 +288,10 @@ html, body {
             background: url(../images/checked.png) no-repeat center center;
             background-size: 100% 100%;
           }
+          &.check{
+            background: url(../images/check.png) no-repeat center center;
+            background-size: 100% 100%;
+          }
         }
         span{
           line-height: 16px;
@@ -317,12 +321,13 @@ html, body {
           padding: 0 115px 0 10px;
         }
       }
-      img{
+      .img-verify{
         position: absolute;
         bottom: 0;
         right: 115px;
-        width: 92px;
+        width: 120px;
         height: 32px;
+        overflow: hidden;
       }
     }
   }
@@ -330,6 +335,7 @@ html, body {
     font-size: 20px;
     color: #3C66D2;
     margin: 10px 0 20px 118px;
+    cursor: pointer;
   }
   .dialog-footer{
     height: 72px;
