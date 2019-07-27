@@ -29,9 +29,9 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/service/service.vue')
     },
     {
-      path: '/resourse',
-      name: 'resourse',
-      component: () => import(/* webpackChunkName: "about" */ './views/resourse/resourse.vue')
+      path: '/resource',
+      name: 'resource',
+      component: () => import(/* webpackChunkName: "about" */ './views/resourse/resource.vue')
     },
     {
       path: '/about',

@@ -21,24 +21,24 @@
         <div class="search">
           <el-dropdown trigger="click" class="search-key">
             <span class="el-dropdown-link">
-              journal
+              <span>{{selectVal}}</span>
               <i class="el-icon-caret-bottom el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>journal</el-dropdown-item>
-              <el-dropdown-item>conference</el-dropdown-item>
-              <el-dropdown-item>thesis</el-dropdown-item>
+              <el-dropdown-item v-for="(item, index) in selectList" :key="index">
+                <span @click="selectEvent(item)">{{item}}</span>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <input type="text" class="search-ipt">
         </div>
-        <button class="search-btn">SEARCH</button>
+        <button class="search-btn" @click="searchEvent">SEARCH</button>
       </div>
     </div>
 
     <div class="common-box service-box">
       <div class="title">
-        <h3>Our  Service</h3>
+        <h3 @click="goService">Our  Service</h3>
       </div>
       <div class="cont">
         <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. </p>
@@ -53,13 +53,11 @@
 
     <div class="common-box resource-box">
       <div class="title">
-        <h3>Our  Resource</h3>
+        <h3 @click="goResource">Our  Resource</h3>
       </div>
       <div class="cont">
         <div class="tab">
-          <span class="active">Journal</span>
-          <span>Conference</span>
-          <span>Thesis</span>
+          <span v-for="(item, index) in selectList" :key="index" :class="{active: index == currentNum}" @click="tabEvent(index)">{{item}}</span>
         </div>
         <div class="wrap1100">
           <h4>What resources do we have?</h4>
@@ -78,7 +76,7 @@
 
     <div class="common-box about-us-box">
       <div class="title">
-        <h3>About  Us</h3>
+        <h3 @click="goAbout">About  Us</h3>
       </div>
       <div class="cont">
         <el-carousel :interval="5000" arrow="always" height="280px" indicator-position="none">
@@ -99,7 +97,7 @@
 
     <div class="common-box contact-us-box">
       <div class="title">
-        <h3>Contact  Us</h3>
+        <h3 @click="goContact">Contact  Us</h3>
       </div>
       <div class="contact wrap1150">
         <div class="col">
@@ -165,6 +163,7 @@
 </template>
 
 <script>
+import xhr from '../../utils/xhr.js'
 export default {
   name: 'home',
   data() {
@@ -192,12 +191,48 @@ export default {
           path: '/contact'
         }
       ],
-      activeNum: 0
+      activeNum: 0,
+      selectVal: 'journal',
+      selectList: ['journal', 'conference', 'thesis'],
+      currentNum: 0
     }
   },
   methods: {
+    // 导航
     navClickEvent(obj) {
       this.$router.push({ path: obj.path});
+    },
+    // 搜索下拉
+    selectEvent(val) {
+      this.selectVal = val;
+    },
+    tabEvent(index) {
+      this.currentNum = index;
+    },
+    goService() {
+      this.$router.push({ path: '/service'});
+    },
+    goResource() {
+      this.$router.push({ path: '/resource'});
+    },
+    goAbout() {
+      this.$router.push({ path: '/about'});
+    },
+    goContact() {
+      this.$router.push({ path: '/contact'});
+    },
+    // 搜索
+    searchEvent() {
+      xhr({
+        method: 'post',
+        url: 'http://api.springernature.com/metadata/json?q=keyword:onlinear&api_key=eded390c0074daf47de31d49ab06d924',
+        data: '',
+        type: 'json'
+      }).then(res => {
+        console.log(res);
+      });
+
+      // this.$router.push({ path: '/searchList'});
     }
   }
 }
@@ -232,12 +267,16 @@ export default {
 .common-box{
   .title{
     text-align: center;
+    padding: 13px 0;
     h3{
       display: inline-block;
-      height: 65px;
-      line-height: 65px;
       font-size: 28px;
       color: #29697E;
+      border-bottom: 2px solid #fff;
+      cursor: pointer;
+      &:hover{
+        border-color: #29697E;
+      }
     }
   }
 }
@@ -247,9 +286,6 @@ export default {
   overflow: hidden;
   background: url(../../assets/images/service-bg.png) no-repeat center 20px;
   background-size: 100% 100%;
-  .title h3{
-    border-bottom: 2px solid #29697E;
-  }
   .cont{
     text-align: center;
     margin-top: 25px;
@@ -266,9 +302,8 @@ export default {
   height: 390px;
   overflow: hidden;
   background: #F6F8F9;
-  .title h3{
-    height: 75px;
-    line-height: 75px;
+  .title{
+    padding: 20px 0;
   }
   .cont{
     .tab{
@@ -328,10 +363,12 @@ export default {
   height: 380px;
   overflow: hidden;
   background: linear-gradient(to right, #3B2B6A , #307C95);
-  .title h3{
-    height: 75px;
-    line-height: 75px;
-    color: #fff;
+  .title{
+    padding: 20px 0;
+    h3{
+      color: #fff;
+      border: none;
+    }
   }
   .cont{
     margin-top: 25px;
@@ -360,9 +397,11 @@ export default {
   height: 475px;
   overflow: hidden;
   background: #f6f6f6 url(../../assets/images/map.png) no-repeat center 60px;
-  .title h3{
-    height: 90px;
-    line-height: 90px;
+  .title{
+    padding: 35px;
+    h3{
+      border-color: transparent; 
+    }
   }
   .contact{
     display: flex;
