@@ -41,7 +41,7 @@ axios.interceptors.request.use(
 // 响应数据拦截
 axios.interceptors.response.use(
 	response => {
-		return response;
+    return response;
 	}, 
 	error => {
 		return Promise.reject(error);
@@ -81,24 +81,11 @@ export default function xhr(params){
 			}
 		}).then(
 			response => {
-				if (response.status == 200) {
-					if(response.data.code == 200){
-						resolve(response.data);
-					}else{
-						dialog.error(response.data.message);
-					}
-				} else if (response.data.code == 402) {   //token过期
-					sessionStorage.clear();
-					router.push('/login');
-					hideLoading();
-				} else if (response.status == 403) {   //没有权限
-					sessionStorage.clear();
-					router.push('/');
-					hideLoading();
-				} else {
-					dialog.error('网络错误');
-					hideLoading();
-				}
+        if (response.data.code == 'SUCCES') {
+          resolve(response.data);
+        } else {
+          dialog.error(response.data.msg);
+        }
 			}, 
 			error => {
 				reject(error);

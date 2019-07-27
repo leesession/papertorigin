@@ -20,7 +20,7 @@
         </div>
         <div class="row">
           <label><i>*</i>Password</label>
-          <input v-model="password" class="ipt" />
+          <input type="password" v-model="password" class="ipt" />
         </div>
         <!-- <div class="row">
           <p class="forget">Forget password?</p>
@@ -74,9 +74,10 @@ export default {
         loginmail: this.userName,
         loginpassword: this.password
       };
-      http.login(data, function(res) {
-        if (res.data.code == 200) {
-
+      http.login(data, res => {
+        if (res.code == 'SUCCES') {
+          dialog.success('login was successfully');
+          this.$emit('listenFun', this.msg);
         }
       });
     }

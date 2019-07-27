@@ -28,7 +28,7 @@
         </div>
         <div class="row">
           <label><i>*</i>Password</label>
-          <input v-model="password" class="ipt"/>
+          <input type="password" v-model="password" class="ipt"/>
         </div>
         <div class="row">
           <label><i>*</i>Country</label>
@@ -45,20 +45,22 @@
         <div class="row">
           <label><i>*</i>Retype the Code from the picture</label>
           <input v-model="code" class="ipt spe"/>
-          <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" />
+          <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" @initImgCode="initImgCode" />
           <!-- <img src="../assets/images/service-bg3.png" alt=""> -->
         </div>
       </div>
       <p class="tips" @click="goLogin">Login Now >></p>
       <div class="dialog-footer">
-        <button class="btn cancel">Cancel</button>
-        <button class="btn confirm">Register</button>
+        <button class="btn cancel" @click="closeDialog">Cancel</button>
+        <button class="btn confirm" @click="registerEvent">Register</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { http } from '../api/http.js'
+import { dialog } from '../utils/dialog.js'
 import vueImgVerify from './vue-img-verify'
 export default {
   name: 'register',
@@ -74,26 +76,27 @@ export default {
       code: '',
       isChecked: true,
       msg: false,
-      loginMsg: true
+      loginMsg: true,
+      imgCode: ''
     }
   },
   components: { vueImgVerify },
+  created() {
+    
+  },
   methods: {
+    // 默认获取图片验证码
+    initImgCode(data) {
+      this.imgCode = data;
+    },
     // 点击图片获取验证码
     getImgCode(code) {
-      this.imgCode = code
-      console.log('验证码: ' + this.imgCode)
-    },
-    // 点击按钮获取验证码
-    handleClick() {
-      this.imgCode = this.$refs.vueImgVerify.draw()
-      console.log('验证码: ' + this.imgCode)
+      this.imgCode = code;
     },
     closeDialog() {
       this.$emit('listenFun', this.msg);
     },
     checkEvent() {
-      console.log(111)
       if (this.isChecked == true) {
         this.isChecked = false;
       } else {
@@ -103,6 +106,30 @@ export default {
     goLogin() {
       this.$emit('listenFun', this.msg);
       this.$emit('listenLoginFun', this.loginMsg);
+    },
+    registerEvent() {
+      if (this.code.toUpperCase() != this.imgCode) {
+        dialog.error('Verification code error');
+        return;
+      }
+      let data = {
+        country: this.country,
+        discipline: "",
+        email: this.email,
+        familyName: this.familyName,
+        givenName: this.firstName,
+        insitution: this.institutions,
+        password: this.password,
+        retypePassword: this.code,
+        role: "",
+        username: ""
+      }
+      http.register(data, res => {
+        if (res.code == 'SUCCES') {
+          dialog.success('registered was successfully');
+          this.$emit('listenFun', this.msg);
+        }
+      });
     }
   }
 }
