@@ -97,6 +97,8 @@ html, body {
       height: 50px;
       line-height: 50px;
       padding: 0 10px;
+      font-size: 16px;
+      color: #222725;
     }
   }
   .search-btn{
@@ -321,6 +323,17 @@ html, body {
           padding: 0 115px 0 10px;
         }
       }
+      .country{
+        width: 420px;
+        .el-input__inner{
+          height: 32px;
+          line-height: 32px;
+          padding: 0 10px;
+        }
+        span.el-input__suffix{
+          // margin: -4px -4px 0 0;
+        }
+      }
       .img-verify{
         position: absolute;
         bottom: 0;
@@ -449,8 +462,12 @@ html, body {
       color: #424344;
     }
     p{
+      width: 368px;
       height: 34px;
       line-height: 34px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       padding: 0 45px;
       font-size: 16px;
       color: #2F454C;
@@ -470,6 +487,7 @@ html, body {
       color: #fff;
       font-size: 18px;
       margin: 10px 0 0 45px;
+      cursor: pointer;
     }
   }
 }
@@ -501,9 +519,47 @@ html, body {
     }
   }
   &.check-col{
+    display: block;
+    overflow: hidden;
     .el-checkbox__label{
+      max-width: 1200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: #29697E;
       font-size: 22px;
+    }
+  }
+}
+
+/* 页码 */
+.el-pagination{
+  .el-pager{
+    li{
+      padding: 0 24px;
+      &:hover, &.active{
+        color: #27C0A5;
+      }
+    }
+    .number{
+      font-size: 20px;
+      color: #616363;
+      font-weight: normal;
+    }
+  }
+  .btn-next, .btn-prev{
+    display: inline-block;
+    width: 23px;
+    height: 22px;
+    background: #65D3E3;
+    border-radius: 2px;
+    padding: 0;
+    color: #fff;
+    min-width: 0;
+    margin: 4px 0;
+    &:disabled{
+      background: #D9E5E7;
+      color: #B1B1B1;
     }
   }
 }

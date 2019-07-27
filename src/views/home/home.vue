@@ -30,7 +30,7 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <input type="text" class="search-ipt">
+          <input type="text" class="search-ipt" v-model="key">
         </div>
         <button class="search-btn" @click="searchEvent">SEARCH</button>
       </div>
@@ -164,6 +164,7 @@
 
 <script>
 import xhr from '../../utils/xhr.js'
+import { http } from '../../api/http.js'
 export default {
   name: 'home',
   data() {
@@ -223,16 +224,7 @@ export default {
     },
     // 搜索
     searchEvent() {
-      xhr({
-        method: 'post',
-        url: 'http://api.springernature.com/metadata/json?q=keyword:onlinear&api_key=eded390c0074daf47de31d49ab06d924',
-        data: '',
-        type: 'json'
-      }).then(res => {
-        console.log(res);
-      });
-
-      // this.$router.push({ path: '/searchList'});
+      this.$router.push({ path: '/searchList', query: {type: this.selectVal, key: this.key }});
     }
   }
 }

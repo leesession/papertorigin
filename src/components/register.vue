@@ -32,7 +32,14 @@
         </div>
         <div class="row">
           <label><i>*</i>Country</label>
-          <input v-model="country" class="ipt"/>
+          <el-select v-model="country" class="country">
+            <el-option
+              v-for="item in countryList"
+              :key="item.en"
+              :label="item.en"
+              :value="item.en">
+            </el-option>
+          </el-select>
         </div>
         <div class="row">
           <label><i>*</i>Institutions</label>
@@ -62,6 +69,7 @@
 import { http } from '../api/http.js'
 import { dialog } from '../utils/dialog.js'
 import vueImgVerify from './vue-img-verify'
+import { country } from '../utils/country.js'
 export default {
   name: 'register',
   props: ['show'],
@@ -77,12 +85,13 @@ export default {
       isChecked: true,
       msg: false,
       loginMsg: true,
-      imgCode: ''
+      imgCode: '',
+      countryList: [],
     }
   },
   components: { vueImgVerify },
   created() {
-    
+    this.countryList = country;
   },
   methods: {
     // 默认获取图片验证码

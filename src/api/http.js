@@ -24,12 +24,11 @@ export const http = {
 		});
   },
   // 查询主页面选项的值
-  mainQuery(data, successFun) {
+  search(data, successFun) {
 		xhr({
-			method: 'post',
-			url: '/nonAuthorityQuery/mainQuery',
+			method: 'GET',
+			url: '/metadata/json',
 			data: data,
-			type: 'json'
 		}).then(res => {
 			successFun(res);
 		});

@@ -1,6 +1,6 @@
 <template>
-  <div class="resourse">
-    <search title="Our Resourse" index="2"></search>
+  <div class="resource">
+    <search title="Our Resource" index="2"></search>
     <div class="title wrap1300">
       <h1>What resources do we have?</h1>
       <h6>TASSEL SCHOLAR make cooperation with below journal publishers to provide academic paper information searching and retrieving</h6>
@@ -43,7 +43,7 @@
 <script>
 import search from '../../components/search.vue'
 export default {
-  name: 'resourse',
+  name: 'resource',
   data() {
     return {
 
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.resourse{
+.resource{
   padding-bottom: 50px;
 }
 .title{

@@ -1,23 +1,23 @@
 <template>
 	<div class="searchList">
-    <search title="Home" index="0"></search>
+    <search title="Home" index="0" ref="searchBox"></search>
 		<div class="list">
 			<div class="list-cont">
 				<div class="title">
-					<span>Results:1-20/169</span>
+					<span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
 				</div>
 				<div class="cont">
 					<ul>
-						<li>
+						<li v-for="(item, index) in list" :key="index" @click="goDetails">
 							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
-							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
-							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
+							<el-checkbox v-model="checkAll" class="check-col">{{item.title}}</el-checkbox>
+							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator}}</i></p>
 							<p>
-								<em>Springer</em> | <em>Journal of Nanoparticle Research</em>
-								| Volume 18 | Page 1-8 | 2016-01-19
+								<em>{{item.publisher}}</em> | <em>{{item.publicationName}}</em>
+								| Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} | {{item.publicationDate}}
 							</p>
-							<p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
-							<p>ISSN：1572-896X</p>
+							<p>DOI：<span>{{item.doi}}</span></p>
+							<p>ISSN：{{item.issn}}</p>
 							<div class="tools">
 								<div class="col">
 									<i class="icon icon-eyes"></i>
@@ -33,110 +33,46 @@
 								</div>
 							</div>
 						</li>
-            <li>
-							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
-							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
-							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
-							<p>
-								<em>Springer</em> | <em>Journal of Nanoparticle Research</em>
-								| Volume 18 | Page 1-8 | 2016-01-19
-							</p>
-							<p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
-							<p>ISSN：1572-896X</p>
-							<div class="tools">
-								<div class="col">
-									<i class="icon icon-eyes"></i>
-									<span>123</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-quote"></i>
-									<span>456</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-share"></i>
-									<span>789</span>
-								</div>
-							</div>
-						</li>
-						<li>
-							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
-							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
-							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
-							<p>
-								<em>Springer</em> | <em>Journal of Nanoparticle Research</em>
-								| Volume 18 | Page 1-8 | 2016-01-19
-							</p>
-							<p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
-							<p>ISSN：1572-896X</p>
-							<div class="tools">
-								<div class="col">
-									<i class="icon icon-eyes"></i>
-									<span>123</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-quote"></i>
-									<span>456</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-share"></i>
-									<span>789</span>
-								</div>
-							</div>
-						</li>
-						<li>
-							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
-							<el-checkbox v-model="checkAll" class="check-col">Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</el-checkbox>
-							<p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
-							<p>
-								<em>Springer</em> | <em>Journal of Nanoparticle Research</em>
-								| Volume 18 | Page 1-8 | 2016-01-19
-							</p>
-							<p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
-							<p>ISSN：1572-896X</p>
-							<div class="tools">
-								<div class="col">
-									<i class="icon icon-eyes"></i>
-									<span>123</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-quote"></i>
-									<span>456</span>
-								</div>
-								<div class="col">
-									<i class="icon icon-share"></i>
-									<span>789</span>
-								</div>
-							</div>
-						</li>
 					</ul>
 				</div>
+        <div class="page-box" v-if="total != 0">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
 			</div>
       <aside class="my-aside">
 				<div class="col">
 					<h3>Published Date:</h3>
-					<p>~2018</p>
-					<p>~2017</p>
-					<p>~2016</p>
-					<p>~2015</p>
-					<span>See More</span>
+          <div v-if="!yearFlag">
+            <p v-for="(item, index) in year" :key="index" v-if="index < 4" @click="yearClickEvent(item.value)">~{{item.value}}</p>
+          </div>
+          <div v-if="yearFlag">
+            <p v-for="(item, index) in year" :key="index">~{{item.value}}</p>
+          </div>
+					<span @click="yearMore" v-show="!yearFlag">See More</span>
 				</div>
 				<div class="col">
 					<h3>Subjects:</h3>
-					<p>Inorganic Chemistry</p>
-					<p>Material Science</p>
-					<p>Nanotechnology</p>
-					<p>Optics and Optoelectronics</p>
-					<p>Plasmonics and Optical Devices</p>
-					<span>More</span>
+          <div v-if="!subjectsFlag">
+            <p v-for="(item, index) in subjects" :key="index" v-if="index < 5">{{item.value}}</p>
+          </div>
+          <div v-if="subjectsFlag">
+            <p v-for="(item, index) in subjects" :key="index">{{item.value}}</p>
+          </div>
+					<span @click="subjectsMore" v-show="!subjectsFlag">More</span>
 				</div>
 				<div class="col">
 					<h3>Publisher:</h3>
-					<p>journal of Nanoparticle Research</p>
-					<p>Nature physics</p>
-					<p>Advanced Nanomaterials</p>
-					<p>Optics Letter</p>
-					<p>Chinese Optics Leter</p>
-					<span>More</span>
+					<div v-if="!publisherFlag">
+            <p v-for="(item, index) in publisher" :key="index" v-if="index < 5">{{item.value}}</p>
+          </div>
+          <div v-if="publisherFlag">
+            <p v-for="(item, index) in publisher" :key="index">{{item.value}}</p>
+          </div>
+					<span @click="publisherMore" v-show="!publisherFlag">More</span>
 				</div>
 			</aside>
 		</div>
@@ -153,22 +89,108 @@ export default {
 	data() {
     return {
       checkAll: false,
-      citationShow: false
+      citationShow: false,
+      pagination: {},
+      total: 0,
+      start: 1,
+      startNum: 1,
+      endNum: 10,
+      type: '',
+      key: '',
+      url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924',
+      list: [],
+      year: [],
+      subjects: [],
+      publisher: [],
+      yearFlag: false,
+      subjectsFlag: false,
+      publisherFlag: false
     }
   },
-	components: { search, citation },
+  components: { search, citation },
+  created() {
+    this.type = this.$route.query.type ? this.$route.query.type : '';
+    this.key = this.$route.query.key ? this.$route.query.key : '';
+    this.searchEvent();
+  },
+  mounted() {
+    this.$refs.searchBox.key = this.key;
+    this.$refs.searchBox.selectVal = this.type;
+  },
 	methods: {
 		openDialog() {
 			this.citationShow = true;
 		},
 		getCitationMsg(data) {
 			this.citationShow = data;
-		}
+    },
+    searchEvent() {
+      let _url = this.url + '&q=' + this.type + ':' + this.key; 
+      $.ajax({
+        type: "get",
+        url: _url,
+        data: "",
+        success: res => {
+          this.total = Number(JSON.parse(res).result[0].total);
+          this.start = Number(JSON.parse(res).result[0].start);
+          this.list = JSON.parse(res).records;
+          this.year = JSON.parse(res).facets[3].values;
+          this.subjects = JSON.parse(res).facets[0].values;
+          this.publisher = JSON.parse(res).facets[2].values;
+        }
+      });
+    },
+    handleCurrentChange: function (page) {
+      let totalPage = Math.ceil(this.total / 10);
+      this.startNum = 1 + (Number(page) - 1) * 10;
+      this.endNum = 10 + (Number(page) - 1) * 10;
+      if (Number(page) == totalPage) {
+        this.endNum = this.total;
+      }
+      let _url = this.url + '&q=' + this.type + ':' + this.key + '&s=' + page; 
+      $.ajax({
+        type: "get",
+        url: _url,
+        data: "",
+        success: res => {
+          this.total = Number(JSON.parse(res).result[0].total);
+          this.list = JSON.parse(res).records;
+        }
+      });
+    },
+    goDetails() {
+      this.$router.push({path: '/searchDetails'});
+    },
+    yearMore() {
+      this.yearFlag = true;
+    },
+    subjectsMore() {
+      this.subjectsFlag = true;
+    },
+    publisherMore() {
+      this.publisherFlag = true;
+    },
+    yearClickEvent(year) {
+      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + year + ')';
+      $.ajax({
+        type: "get",
+        url: _url,
+        data: "",
+        success: res => {
+          this.total = Number(JSON.parse(res).result[0].total);
+          this.list = JSON.parse(res).records;
+        }
+      });
+    }
 	}
 }
 </script>
 
 <style scoped lang="scss">
+.page-box{
+  padding: 20px 0;
+  text-align: center;
+}
 .list{
 	display: flex;
   justify-content: flex-start;

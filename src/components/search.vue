@@ -18,18 +18,18 @@
       <div class="search">
         <el-dropdown trigger="click" class="search-key">
           <span class="el-dropdown-link">
-            journal
+            <span>{{selectVal}}</span>
             <i class="el-icon-caret-bottom el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>journal</el-dropdown-item>
-            <el-dropdown-item>conference</el-dropdown-item>
-            <el-dropdown-item>thesis</el-dropdown-item>
+            <el-dropdown-item v-for="(item, index) in selectList" :key="index">
+              <span @click="selectEvent(item)">{{item}}</span>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <input type="text" class="search-ipt">
+        <input type="text" class="search-ipt" v-model="key">
       </div>
-      <button class="search-btn">SEARCH</button>
+      <button class="search-btn" @click="searchEvent">SEARCH</button>
     </div>
 
   </div>
@@ -42,6 +42,9 @@ export default {
   data() {
     return {
       navList: ['Home', 'Our Service', 'Our Resource', 'About Us', 'Contact Us'],
+      key: '',
+      selectVal: 'journal',
+      selectList: ['journal', 'conference', 'thesis'],
     }
   },
   computed: {
@@ -52,18 +55,25 @@ export default {
     }
   },
   methods: {
+    // 搜索下拉
+    selectEvent(val) {
+      this.selectVal = val;
+    },
     navClickEvent(index) {
       if (index == 0) {
         this.$router.push({ path: '/' });
       } else if (index == 1) {
         this.$router.push({ path: '/service' });
       } else if (index == 2) {
-        this.$router.push({ path: '/resourse' });
+        this.$router.push({ path: '/resource' });
       } else if (index == 3) {
         this.$router.push({ path: '/about' });
       } else if (index == 4) {
         this.$router.push({ path: '/contact' });
       }
+    },
+    searchEvent() {
+      this.$router.push({ path: '/searchList', query: {type: this.selectVal, key: this.key }});
     }
   }
 }

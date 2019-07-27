@@ -1,5 +1,6 @@
 // api地址
-const api = 'http://47.112.29.135:9094';
+const api1 = 'http://47.112.29.135:9094';
+const api2 = 'http://api.springernature.com';
 // const api = 'http://192.168.30.17:9094';
 //引入webpack
 const webpack = require('webpack');
@@ -17,8 +18,8 @@ module.exports = {
     port: 8080, 
     https: false, 
     open: true, //配置自动启动浏览器
-    proxy: api // 配置跨域处理,只有一个代理
-    // 配置多个代理
+    proxy: api1 // 配置跨域处理,只有一个代理
+    //配置多个代理
     // proxy: {
     //   "/": {
     //     target: api,
@@ -27,7 +28,7 @@ module.exports = {
     //     pathRewrite: {
     //       '^/': ''
     //     }
-    //   }    
+    //   },
     // }
   },
   // 插件
