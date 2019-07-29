@@ -10,6 +10,18 @@ import './assets/css/style.scss'
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
+import VueI18n from 'vue-i18n'
+
+Vue.use(VueI18n)
+
+const i18n = new VueI18n({
+  locale: window.localStorage.getItem('user_lang') == null ? "cn" : window.localStorage.getItem('user_lang'),    // 语言标识
+  messages: {
+    'cn': require('./utils/lang/cn'),   // 中文语言包
+    'en': require('./utils/lang/en')    // 英文语言包
+  },
+});
+
 /**
  * 全局导航
  * @param {Object} to 目标路由对象

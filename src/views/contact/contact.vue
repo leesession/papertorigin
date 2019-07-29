@@ -3,7 +3,7 @@
     <search title="Contact Us" index="4"></search>
     <div class="map-box">
       <h2>Contact Information</h2>
-      <div class="map"></div>
+      <div id="map" class="map"></div>
       <div class="info">
         <div class="info-left">
           <span>How to</span>
@@ -20,7 +20,7 @@
           </div>
           <div class="col">
             <i class="icon icon-address"></i>
-            <span>NO.366, North Hupan Road, Chengdu 610000, China</span>
+            <span>{{address}}</span>
           </div>
         </div>
       </div>
@@ -68,10 +68,50 @@ export default {
   name: 'contact',
   data() {
     return {
-
+      address: 'NO.366, North Hupan Road, Chengdu 610000, China',
+      icon: require("../../assets/images/icon.png")
     }
   },
-  components: { search }
+  components: { search },
+  created() {
+  },
+  mounted() {
+    //创建实例
+    var map = new BMap.Map("map");
+    //创建坐标点
+    var point = new BMap.Point(116.404,39.915);
+    //初始化实例，传入坐标点并设置地图级别
+    map.centerAndZoom(point,15);
+    map.enableScrollWheelZoom(true);
+    // 创建地址解析器实例     
+    var myGeo = new BMap.Geocoder();      
+    // 将地址解析结果显示在地图上
+    myGeo.getPoint("中国成都市湖畔北路366号", point =>{ 
+      if (point) {      
+        map.centerAndZoom(point, 16);
+        // var myIcon = new BMap.Icon(this.icon, new BMap.Size(23, 25), {    
+        //   anchor: new BMap.Size(18, 33),    
+        //   imageOffset: new BMap.Size(0, 0 - 33) 
+        // });      
+        // var marker = new BMap.Marker(point, {icon: myIcon});
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        var opts = {    
+          width : 200,     // 信息窗口宽度    
+          height: 80,     // 信息窗口高度    
+          title : "Address:",  // 信息窗口标题
+          offset: new BMap.Size(0, -24),
+
+        }    
+        var infoWindow = new BMap.InfoWindow(this.address, opts); 
+        marker.addEventListener("click", function(){          
+          map.openInfoWindow(infoWindow,point); //开启信息窗口
+        });
+        // map.openInfoWindow(infoWindow, point);     
+      }      
+    });
+
+  }
 }
 </script>
 

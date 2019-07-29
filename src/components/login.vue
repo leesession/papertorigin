@@ -7,7 +7,7 @@
           <div class="btn-close-bg"></div>
           <i class="el-icon-close"></i>
         </div>
-        <h3>login</h3>
+        <h3>Login</h3>
         <div class="cont">
           <i class="icon"></i>
           <span>Sign in to your Account</span>
@@ -22,9 +22,9 @@
           <label><i>*</i>Password</label>
           <input type="password" v-model="password" class="ipt" />
         </div>
-        <!-- <div class="row">
-          <p class="forget">Forget password?</p>
-        </div> -->
+        <div class="row">
+          <p class="forget" @click="goForgetPwd">Forget password?</p>
+        </div>
         <div class="row spe" @click="checkEvent">
           <i class="checkbox" :class="{check: isChecked == false, checked: isChecked == true}"></i>
           <span>Keep me log logged in</span>
@@ -52,6 +52,7 @@ export default {
       msg: false,
       registerMsg: true,
       isChecked: true,
+      forgetMsg: true
     }
   },
   methods: {
@@ -69,6 +70,10 @@ export default {
       this.$emit('listenFun', this.msg);
       this.$emit('listenRegisterFun', this.registerMsg);
     },
+    goForgetPwd() {
+      this.$emit('listenFun', this.msg);
+      this.$emit('listenForgetFun', this.forgetMsg);
+    },
     loginEvent() {
       let data = {
         loginmail: this.userName,
@@ -76,8 +81,14 @@ export default {
       };
       http.login(data, res => {
         if (res.code == 'SUCCES') {
+          if (this.isChecked == true) {
+            localStorage.setItem('USER', JSON.stringify(data));
+          } else {
+            localStorage.clear();
+          }
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
+
         }
       });
     }
@@ -93,7 +104,7 @@ export default {
   .forget{
     font-size: 16px;
     color: #3496B4;
-
+    cursor: pointer;
   }
 }
 </style>

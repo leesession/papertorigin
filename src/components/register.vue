@@ -32,7 +32,7 @@
         </div>
         <div class="row">
           <label><i>*</i>Country</label>
-          <el-select v-model="country" class="country">
+          <el-select v-model="country" class="country" placeholder="">
             <el-option
               v-for="item in countryList"
               :key="item.en"

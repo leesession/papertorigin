@@ -329,9 +329,13 @@ html, body {
           height: 32px;
           line-height: 32px;
           padding: 0 10px;
+          border: none;
+          &:hover{
+            border: none;
+          }
         }
-        span.el-input__suffix{
-          // margin: -4px -4px 0 0;
+        i.el-input__icon{
+          line-height: 32px !important;
         }
       }
       .img-verify{

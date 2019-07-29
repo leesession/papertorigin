@@ -3,7 +3,8 @@
     <site-header  @lintenRegisterFun="getRegisterMsg" @lintenLoginFun="getLoginMsg"></site-header>
     <router-view/>
     <register :show="registerShow" @listenFun="getRegisterCloseMsg" @listenLoginFun="getLoginCloseMsg"></register>
-    <login :show="loginShow" @listenFun="getLoginCloseMsg" @listenRegisterFun="getRegisterCloseMsg"></login>
+    <login :show="loginShow" @listenFun="getLoginCloseMsg" @listenRegisterFun="getRegisterCloseMsg" @listenForgetFun="getForgetMsg"></login>
+    <forget-pwd :show="forgetShow" @listenFun="getForgetCloseMsg" @listenForgetFun="getLoginCloseMsg"></forget-pwd>
   </div>
 </template>
 
@@ -11,13 +12,15 @@
 import siteHeader from './components/header.vue'
 import register from './components/register.vue'
 import login from './components/login.vue'
+import forgetPwd from './components/forgetPwd.vue'
 export default {
   name: "app",
-  components: { siteHeader, register, login },
+  components: { siteHeader, register, login, forgetPwd },
   data() {
     return {
       registerShow: false,
       loginShow: false,
+      forgetShow: false
     }
   },
   methods: {
@@ -32,6 +35,12 @@ export default {
     },
     getLoginCloseMsg(data) {
       this.loginShow = data;
+    },
+    getForgetMsg(data) {
+      this.forgetShow = data;
+    },
+    getForgetCloseMsg(data) {
+      this.forgetShow = data;
     }
   }
 
