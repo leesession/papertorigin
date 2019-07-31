@@ -41,13 +41,13 @@
         <h3 @click="goService">Our  Service</h3>
       </div>
       <div class="cont">
-        <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. </p>
+        <!-- <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. </p>
         <p>Our data information will obtain from publishers to keep copyright and accuracy so that users can derive the most </p>
         <p>qualified information searching service. tassels cholar will ensure every user can</p>
         <p>retrieve every academic paper information including titles, authors, DOI, </p>
         <p>subjects, keywords, abstracts etc. Users can transfer to official </p>
         <p>websites of publishers to obtain corresponding </p>
-        <p>full article of academic papers</p>
+        <p>full article of academic papers</p> -->
       </div>
     </div>
 

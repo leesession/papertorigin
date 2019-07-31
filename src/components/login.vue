@@ -88,7 +88,7 @@ export default {
           }
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
-
+          sessionStorage.setItem('ISLOGIN', 'true');
         }
       });
     }

@@ -5,7 +5,7 @@
       <h2 class="wrap1100">what can we do?</h2>
       <div class="cont wrap1100">
         <div class="cont-left">
-          <p>
+          <!-- <p>
             <i></i>
             <span>
               TASSEL SCHOLAR will provide  the latest paper searching and the most comprehensive 
@@ -21,7 +21,7 @@
               including titles, authors,  DOI,  subjects,  keywords,  abstracts etc.  Users cantransfer to 
               officialwebsites of publishers to obtain corresponding full article of academic papers.
             </span>
-          </p>
+          </p> -->
         </div>
         <img src="../../assets/images/service-blue.png" alt="">
       </div>

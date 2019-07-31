@@ -25,21 +25,24 @@
         </div>
         <p class="tips" v-if="details.keyword">{{details.keyword}}</p>
         <div class="tools">
-          <div class="col">
+          <div class="col" @click="addListNum(1)">
             <i class="icon icon-eyes"></i>
-            <span>123</span>
+            <span>{{numObj.lookCount}}</span>
           </div>
-          <div class="col">
+          <div class="col" @click="addListNum(2)">
             <i class="icon icon-quote"></i>
-            <span>456</span>
+            <span>{{numObj.quoteCount}}</span>
           </div>
-          <div class="col">
+          <div class="col" @click="addListNum(3)">
             <i class="icon icon-share"></i>
-            <span>789</span>
+            <span>{{numObj.forwardCount}}</span>
           </div>
         </div>
         <div class="btn-box">
-          <a href="http://api.springernature.com/metadata/json?q=(doi:10.1007/s10853-019-03707-1)&api_key=eded390c0074daf47de31d49ab06d924">DOWNLOAD</a>
+          
+          <a v-if="isLogin" href="http://api.springernature.com/metadata/json?q=(doi:10.1007/s10853-019-03707-1)&api_key=eded390c0074daf47de31d49ab06d924">DOWNLOAD</a>
+          <a v-if="!isLogin" href="javascript:void(0)">DOWNLOAD</a>
+          
           <!-- <button>DOWNLOAD</button> -->
         </div>
 			</div>
@@ -77,19 +80,57 @@
 </template>
 
 <script>
+import { http } from '../../api/http.js'
 import search from '../../components/search.vue'
 export default {
 	name: 'searchList',
 	data() {
     return {
       checkAll: false,
-      details: {}
+      details: {},
+      numObj: {},
+      isLogin: ''
     }
   },
   components: { search },
   created() {
     this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
-    console.log(this.details);
+    this.isLogin = sessionStorage.getItem('ISLOGIN');
+    this.getListNum();
+
+  },
+  methods: {
+    getListNum() {
+      let data = {
+        doiList: [this.details.doi],
+        singnal: ""
+      }
+      http.getListNum(data, res => {
+        if (res.code == 'SUCCES') {
+          this.numObj = res.data[0];
+        }
+      });
+    },
+    addListNum(index) {
+      let data = {
+        forwardCount: 0,
+        lookCount: 0,
+        peperDoi: this.details.doi,
+        quoteCount: 0
+      }
+      if(index == 1) {
+        data.lookCount = 1;
+      } else if (index == 2) {
+        data.quoteCount = 1;
+      } else if (index == 3) {
+        data.forwardCount = 1;
+      }
+      http.addListNum(data, res => {
+        if (res.code == 'SUCCES') {
+          this.getListNum();
+        }
+      });
+    }
   }
 }
 </script>

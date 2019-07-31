@@ -14,10 +14,10 @@
             <div>
               <h4>Feng Yan<span>Management</span></h4>
               <p>
-                Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
+                <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
                 organization cooperation in undergraduate university.He is responding to management and 
-                business development
+                business development -->
               </p>
             </div>
           </div>
@@ -29,10 +29,10 @@
             <div>
               <h4>Feng Yan<span>Management</span></h4>
               <p>
-                Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
+                <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
                 organization cooperation in undergraduate university.He is responding to management and 
-                business development
+                business development -->
               </p>
             </div>
           </div>
@@ -44,10 +44,10 @@
             <div>
               <h4>Feng Yan<span>Management</span></h4>
               <p>
-                Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
+                <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
                 organization cooperation in undergraduate university.He is responding to management and 
-                business development
+                business development -->
               </p>
             </div>
           </div>

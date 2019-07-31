@@ -12,7 +12,7 @@
 						<li v-for="(item, index) in list" :key="index">
 							<div class="cont-title">
 								<el-checkbox v-model="checkAll" class="check-col fl"></el-checkbox>
-								<h4 class="fl">{{item.title}}</h4>
+								<h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
 							</div>
 							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
 							<p>
@@ -421,11 +421,11 @@ export default {
 					white-space: nowrap;
 					color: #29697E;
 					font-size: 22px;
+					cursor: pointer;
 				}
 			}
 			padding: 28px 50px 25px 40px;
 			border-bottom: 1px solid #D9E5E7;
-			cursor: pointer;
 			&:first-child{
 				padding: 0px 50px 25px 40px;
 			}
