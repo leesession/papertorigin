@@ -8,10 +8,10 @@
 				</div>
 				<div class="cont">
 					<ul>
-						<li v-for="(item, index) in list" :key="index" @click="goDetails">
+						<li v-for="(item, index) in list" :key="index" @click="goDetails(item)">
 							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
 							<el-checkbox v-model="checkAll" class="check-col">{{item.title}}</el-checkbox>
-							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator}}</i></p>
+							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
 							<p>
 								<em>{{item.publisher}}</em> | <em>{{item.publicationName}}</em>
 								| Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} | {{item.publicationDate}}
@@ -47,30 +47,42 @@
 				<div class="col">
 					<h3>Published Date:</h3>
           <div v-if="!yearFlag">
-            <p v-for="(item, index) in year" :key="index" v-if="index < 4" @click="yearClickEvent(item.value)">~{{item.value}}</p>
+            <p v-for="(item, index) in year" :key="index" v-if="index < 4"
+							:class="{active: item.isActive == true}"
+							@click="yearClickEvent(item.value)">~{{item.value}}</p>
           </div>
           <div v-if="yearFlag">
-            <p v-for="(item, index) in year" :key="index">~{{item.value}}</p>
+            <p v-for="(item, index) in year" :key="index"
+							:class="{active: item.isActive == true}"
+							@click="yearClickEvent(item.value)">~{{item.value}}</p>
           </div>
 					<span @click="yearMore" v-show="!yearFlag">See More</span>
 				</div>
 				<div class="col">
 					<h3>Subjects:</h3>
           <div v-if="!subjectsFlag">
-            <p v-for="(item, index) in subjects" :key="index" v-if="index < 5">{{item.value}}</p>
+            <p v-for="(item, index) in subjects" :key="index" v-if="index < 5"
+							:class="{active: item.isActive == true}"
+							@click="subjectClickEvent(item.value)">{{item.value}}</p>
           </div>
           <div v-if="subjectsFlag">
-            <p v-for="(item, index) in subjects" :key="index">{{item.value}}</p>
+            <p v-for="(item, index) in subjects" :key="index"
+							:class="{active: item.isActive == true}"
+							@click="subjectClickEvent(item.value)">{{item.value}}</p>
           </div>
 					<span @click="subjectsMore" v-show="!subjectsFlag">More</span>
 				</div>
 				<div class="col">
 					<h3>Publisher:</h3>
 					<div v-if="!publisherFlag">
-            <p v-for="(item, index) in publisher" :key="index" v-if="index < 5">{{item.value}}</p>
+            <p v-for="(item, index) in publisher" :key="index" v-if="index < 5"
+							:class="{active: item.isActive == true}"
+							@click="publishClickEvent(item.value)">{{item.value}}</p>
           </div>
           <div v-if="publisherFlag">
-            <p v-for="(item, index) in publisher" :key="index">{{item.value}}</p>
+            <p v-for="(item, index) in publisher" :key="index"
+							:class="{active: item.isActive == true}"
+							@click="publishClickEvent(item.value)">{{item.value}}</p>
           </div>
 					<span @click="publisherMore" v-show="!publisherFlag">More</span>
 				</div>
@@ -84,6 +96,7 @@
 <script>
 import search from '../../components/search.vue'
 import citation from '../../components/citation.vue'
+import { constants } from 'crypto';
 export default {
 	name: 'searchList',
 	data() {
@@ -96,8 +109,10 @@ export default {
       startNum: 1,
       endNum: 10,
       type: '',
+      types: '',
       key: '',
-      url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924',
+			url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924&p=5',
+			urls: 'http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&max_records=5&sort_order=asc&sort_field=article_number',
       list: [],
       year: [],
       subjects: [],
@@ -111,6 +126,11 @@ export default {
   created() {
     this.type = this.$route.query.type ? this.$route.query.type : '';
     this.key = this.$route.query.key ? this.$route.query.key : '';
+    if(this.type == 'journal') {
+      this.types = 'Journals';
+    } else if (this.type == 'conference') {
+      this.types = 'Conferences';
+    }
     this.searchEvent();
   },
   mounted() {
@@ -124,6 +144,25 @@ export default {
 		getCitationMsg(data) {
 			this.citationShow = data;
     },
+    operateData(arr) {
+      if(arr && arr.length > 0) {
+        arr.forEach(item => {
+          let obj = {};
+          obj.title = item.title;
+          obj.creators = item.authors.authors;
+          obj.publisher = item.publisher;
+          obj.publicationName = item.publication_title;
+          obj.volume = item.volume;
+          obj.startingPage = item.start_page;
+          obj.endingPage = item.end_page;
+          obj.publicationDate = item.publication_date;
+          obj.doi = item.doi;
+          obj.issn = item.issn;
+          obj.abstract = item.abstract;
+          this.list.push(obj);
+        });
+      }
+    },
     searchEvent() {
       let _url = this.url + '&q=' + this.type + ':' + this.key; 
       $.ajax({
@@ -131,12 +170,32 @@ export default {
         url: _url,
         data: "",
         success: res => {
-          this.total = Number(JSON.parse(res).result[0].total);
+          // this.total = Number(JSON.parse(res).result[0].total);
           this.start = Number(JSON.parse(res).result[0].start);
           this.list = JSON.parse(res).records;
-          this.year = JSON.parse(res).facets[3].values;
-          this.subjects = JSON.parse(res).facets[0].values;
-          this.publisher = JSON.parse(res).facets[2].values;
+					this.year = JSON.parse(res).facets[3].values;
+					this.year.map(item => {
+						item.isActive = false;
+					});
+					this.subjects = JSON.parse(res).facets[0].values;
+					this.subjects.map(item => {
+						item.isActive = false;
+					});
+					this.publisher = JSON.parse(res).facets[2].values;
+					this.publisher.map(item => {
+						item.isActive = false;
+					});
+          //二次请求
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+					$.ajax({
+						type: "get",
+						url: _urls,
+						data: "",
+						success: ress => {
+              this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+              let list = this.operateData(ress.articles);
+						}
+					});
         }
       });
     },
@@ -153,12 +212,24 @@ export default {
         url: _url,
         data: "",
         success: res => {
-          this.total = Number(JSON.parse(res).result[0].total);
+          // this.total = Number(JSON.parse(res).result[0].total);
           this.list = JSON.parse(res).records;
+          //二次请求
+					let _urls = this.urls + '&content_type=' + this.types + '&article_title=' + this.key + '&start_record=' + page;
+					$.ajax({
+						type: "get",
+						url: _urls,
+						data: "",
+						success: ress => {
+              this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+              let list = this.operateData(ress.articles);
+            }
+					});
         }
       });
     },
-    goDetails() {
+    goDetails(obj) {
+			sessionStorage.setItem('INFO', JSON.stringify(obj));
       this.$router.push({path: '/searchDetails'});
     },
     yearMore() {
@@ -171,7 +242,42 @@ export default {
       this.publisherFlag = true;
     },
     yearClickEvent(year) {
+			this.year.forEach(item => {
+				item.isActive = false;
+				if(item.value == year) {
+					item.isActive = true;
+				}
+			});
       let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + year + ')';
+      $.ajax({
+        type: "get",
+        url: _url,
+        data: "",
+        success: res => {
+          // this.total = Number(JSON.parse(res).result[0].total);
+          this.list = JSON.parse(res).records;
+          //二次请求
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
+					$.ajax({
+						type: "get",
+						url: _urls,
+						data: "",
+						success: ress => {
+              this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+              let list = this.operateData(ress.articles);
+            }
+					});
+        }
+      });
+		},
+		subjectClickEvent(subject) {
+			this.subjects.forEach(item => {
+				item.isActive = false;
+				if(item.value == subject) {
+					item.isActive = true;
+				}
+			});
+      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + subject + ')';
       $.ajax({
         type: "get",
         url: _url,
@@ -181,7 +287,36 @@ export default {
           this.list = JSON.parse(res).records;
         }
       });
-    }
+		},
+		publishClickEvent(publish) {
+			this.publisher.forEach(item => {
+				item.isActive = false;
+				if(item.value == publish) {
+					item.isActive = true;
+				}
+			});
+      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'publisher:' + publish + ')';
+      $.ajax({
+        type: "get",
+        url: _url,
+        data: "",
+        success: res => {
+          // this.total = Number(JSON.parse(res).result[0].total);
+          this.list = JSON.parse(res).records;
+          //二次请求
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+					$.ajax({
+						type: "get",
+						url: _urls,
+						data: "",
+						success: ress => {
+              this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+              let list = this.operateData(ress.articles);
+            }
+					});
+        }
+      });
+		}
 	}
 }
 </script>

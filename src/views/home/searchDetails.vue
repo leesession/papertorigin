@@ -5,34 +5,25 @@
 			<div class="list-cont">
 				<div class="title">
           <i class="icon icon-note"></i>
-          <span>Experiment study on stimulated scattering of ZnO nanosphere dispersed in water</span>
+          <span>{{details.title}}</span>
         </div>
-        <p>Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He</p>
+        <p><i v-for="(o, i) in details.creators" :key="i">{{o.creator}}</i></p>
         <p>
-          <em>Springer</em> | <em>Journal of Nanoparticle Research</em>
-          | Volume 18 | Page 1-8 | 2016-01-19
+          <em>{{details.publisher}}</em> | <em>{{details.publicationName}}</em>
+          | Volume {{details.volume}} | Page {{details.startingPage}}-{{details.endingPage}} | {{details.publicationDate}}
         </p>
-        <p>DOI：<span>http://dx.doi.org/10.1007/a11051-016-3333-1</span></p>
-        <p>ISSN：1572-896X</p>
+        <p>DOI：<span>{{details.doi}}</span></p>
+        <p>ISSN：{{details.issn}}</p>
         <div class="list-cont-title">
           <i class="icon icon-zero"></i>
           <span>Abstract</span>
         </div>
-        <p class="tips">
-          The backward stimulated scattering (BSS) from ZnO nanospheres dispersed in water has been
-          investigated experimentally by employing a Nd:YAG pulse laser with ~532 nm wavelength and ~8
-          ns pulse width as the pump laser source. The present results show that the BSS effect is uniquely 
-          and unequivocally different compared to other known stimulated scattering,   such as stimulated 
-          Rayleigh scattering,   stimulated Brillouin scattering,and stimulated Raman scattering,    and it 
-          displaysthe characteristics of no frequency shift and threshold dependence on initial spontaneous 
-          Mie scattering seed source. These can be understood by means of the Mie scattering theory and 
-          a laser-induced stationary Bragg grating model.
-        </p>
-        <div class="list-cont-title">
+        <p class="tips">{{details.abstract}}</p>
+        <div class="list-cont-title" v-if="details.keyword">
           <i class="icon icon-zero"></i>
           <span>Keyword</span>
         </div>
-        <p class="tips">Stimulated scattering, ZnO nanospheres, Mie theory, Stationary Bragg grating</p>
+        <p class="tips" v-if="details.keyword">{{details.keyword}}</p>
         <div class="tools">
           <div class="col">
             <i class="icon icon-eyes"></i>
@@ -48,10 +39,11 @@
           </div>
         </div>
         <div class="btn-box">
-          <button>DOWNLOAD</button>
+          <a href="http://api.springernature.com/metadata/json?q=(doi:10.1007/s10853-019-03707-1)&api_key=eded390c0074daf47de31d49ab06d924">DOWNLOAD</a>
+          <!-- <button>DOWNLOAD</button> -->
         </div>
 			</div>
-      <aside class="my-aside">
+      <!-- <aside class="my-aside">
 				<div class="col">
 					<h3>Published Date:</h3>
 					<p>~2018</p>
@@ -78,7 +70,7 @@
 					<p>Chinese Optics Leter</p>
 					<span>More</span>
 				</div>
-			</aside>
+			</!-->
 		</div>
 
 	</div>
@@ -90,10 +82,15 @@ export default {
 	name: 'searchList',
 	data() {
     return {
-			checkAll: false
+      checkAll: false,
+      details: {}
     }
   },
   components: { search },
+  created() {
+    this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
+    console.log(this.details);
+  }
 }
 </script>
 
@@ -121,6 +118,9 @@ export default {
         display: inline-block;
         height: 34px;
         line-height: 34px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         font-size: 22px;
         color: #29697E;
       }
@@ -206,7 +206,8 @@ export default {
       height: 108px;
       border-top: 1px solid #D5E0E2;
       margin: 30px 0 0 0;
-      button{
+      a{
+        display: inline-block;
         width: 165px;
         height: 40px;
         line-height: 40px;
