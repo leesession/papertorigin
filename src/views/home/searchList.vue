@@ -119,7 +119,10 @@ export default {
       publisher: [],
       yearFlag: false,
       subjectsFlag: false,
-      publisherFlag: false
+      publisherFlag: false,
+      yearFactor: '',
+      subjectFactor: '',
+      publishFactor: ''
     }
   },
   components: { search, citation },
@@ -242,6 +245,7 @@ export default {
       this.publisherFlag = true;
     },
     yearClickEvent(year) {
+      this.yearFactor = year;
 			this.year.forEach(item => {
 				item.isActive = false;
 				if(item.value == year) {
@@ -271,6 +275,7 @@ export default {
       });
 		},
 		subjectClickEvent(subject) {
+      this.subjectFactor = subject;
 			this.subjects.forEach(item => {
 				item.isActive = false;
 				if(item.value == subject) {
@@ -289,6 +294,7 @@ export default {
       });
 		},
 		publishClickEvent(publish) {
+      this.publishFactor = publish;
 			this.publisher.forEach(item => {
 				item.isActive = false;
 				if(item.value == publish) {
