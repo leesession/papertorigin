@@ -261,7 +261,7 @@ export default {
           // this.total = Number(JSON.parse(res).result[0].total);
           this.list = JSON.parse(res).records;
           //二次请求
-					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publish;
 					$.ajax({
 						type: "get",
 						url: _urls,
@@ -310,7 +310,7 @@ export default {
           // this.total = Number(JSON.parse(res).result[0].total);
           this.list = JSON.parse(res).records;
           //二次请求
-					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
 					$.ajax({
 						type: "get",
 						url: _urls,
