@@ -252,7 +252,17 @@ export default {
 					item.isActive = true;
 				}
 			});
-      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + year + ')';
+			let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ')';
+			if(this.subjectFactor){
+				_url =  this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+			}
+			if(this.publishFactor){
+				_url =  this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
+			}
+			if(this.subjectFactor && this.publishFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+				' AND ' + 'pub:' + this.publishFactor + ')';
+			}
       $.ajax({
         type: "get",
         url: _url,
@@ -261,7 +271,10 @@ export default {
           // this.total = Number(JSON.parse(res).result[0].total);
           this.list = JSON.parse(res).records;
           //二次请求
-					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publish;
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
+					if(this.publishFactor){
+						_urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
+					}
 					$.ajax({
 						type: "get",
 						url: _urls,
@@ -282,14 +295,44 @@ export default {
 					item.isActive = true;
 				}
 			});
-      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + subject + ')';
+      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + this.subjectFactor + ')';
+			if(this.yearFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+			}
+			if(this.publishFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+			}
+			if(this.yearFactor && this.publishFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+				' AND ' + 'pub:' + this.publishFactor + ')';
+			}
       $.ajax({
         type: "get",
         url: _url,
         data: "",
         success: res => {
-          this.total = Number(JSON.parse(res).result[0].total);
-          this.list = JSON.parse(res).records;
+          // this.total = Number(JSON.parse(res).result[0].total);
+					this.list = JSON.parse(res).records;
+					//二次请求
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+					if(this.yearFactor){
+						_urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
+					}
+					if(this.publishFactor){
+						_urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
+					}
+					if(this.yearFactor && this.publishFactor){
+						_urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
+					}
+					$.ajax({
+						type: "get",
+						url: _urls,
+						data: "",
+						success: ress => {
+              this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+              let list = this.operateData(ress.articles);
+            }
+					});
         }
       });
 		},
@@ -301,7 +344,17 @@ export default {
 					item.isActive = true;
 				}
 			});
-      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'publisher:' + publish + ')';
+      let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND '+ 'pub:' + this.publishFactor + ')';
+			if(this.yearFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
+			}
+			if(this.subjectFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+			}
+			if(this.yearFactor && this.subjectFactor){
+				_url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+				' AND ' + 'pub:' + this.publishFactor + ')';
+			}
       $.ajax({
         type: "get",
         url: _url,
@@ -310,7 +363,10 @@ export default {
           // this.total = Number(JSON.parse(res).result[0].total);
           this.list = JSON.parse(res).records;
           //二次请求
-					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
+					let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+					if(this.yearFactor){
+						_urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
+					}
 					$.ajax({
 						type: "get",
 						url: _urls,
