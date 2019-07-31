@@ -517,14 +517,17 @@ html, body {
     line-height: 24px;
   }
   &.check-all{
+    margin: 28px 50px 25px 40px;
     .el-checkbox__label{
       color: #424344;
       font-size: 22px;
+       
     }
   }
   &.check-col{
     display: block;
     overflow: hidden;
+    margin: 3px 10px 0 0;
     .el-checkbox__label{
       max-width: 1200px;
       overflow: hidden;

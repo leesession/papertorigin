@@ -7,10 +7,13 @@
 					<span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
 				</div>
 				<div class="cont">
+					<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
 					<ul>
-						<li v-for="(item, index) in list" :key="index" @click="goDetails(item)">
-							<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
-							<el-checkbox v-model="checkAll" class="check-col">{{item.title}}</el-checkbox>
+						<li v-for="(item, index) in list" :key="index">
+							<div class="cont-title">
+								<el-checkbox v-model="checkAll" class="check-col fl"></el-checkbox>
+								<h4 class="fl">{{item.title}}</h4>
+							</div>
 							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
 							<p>
 								<em>{{item.publisher}}</em> | <em>{{item.publicationName}}</em>
@@ -407,9 +410,25 @@ export default {
 	}
 	.cont{
 		li{
-			padding: 28px 100px 25px 40px;
+			.cont-title{
+				height: 38px;
+				display: flex;
+				justify-content: flex-start;
+				h4{
+					max-width: 1200px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					color: #29697E;
+					font-size: 22px;
+				}
+			}
+			padding: 28px 50px 25px 40px;
 			border-bottom: 1px solid #D9E5E7;
 			cursor: pointer;
+			&:first-child{
+				padding: 0px 50px 25px 40px;
+			}
 			p{
 				color: #485764;
 				font-size: 18px;
