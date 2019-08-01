@@ -7,7 +7,7 @@
 					<span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
 				</div>
 				<div class="cont">
-					<el-checkbox v-model="checkAll" class="check-all">select all</el-checkbox>
+					<el-checkbox v-model="checkAll" class="check-all" @change="allChangeEvent(checkAll)">select all</el-checkbox>
 					<ul>
 						<li v-for="(item, index) in list" :key="index">
 							<div class="cont-title">
@@ -21,7 +21,7 @@
 							</p>
 							<p @click="jumpPage(item)" style="cursor: pointer;">DOI：<span>{{item.doi}}</span></p>
 							<p>ISSN：{{item.issn}}</p>
-							<div class="tools">
+							<!-- <div class="tools">
 								<div class="col">
 									<i class="icon icon-eyes"></i>
 									<span>123</span>
@@ -34,7 +34,7 @@
 									<i class="icon icon-share"></i>
 									<span>789</span>
 								</div>
-							</div>
+							</div> -->
 						</li>
 					</ul>
 				</div>
@@ -92,13 +92,15 @@
 			</aside>
 		</div>
 
-    <citation v-if="citationShow" :show="citationShow" :params="stringObj" @listenFun="getCitationMsg"></citation>  
+    <citation v-if="citationShow" :show="citationShow" :params="stringObj" @listenFun="getCitationMsg"></citation>
+    <citation-all v-if="citationAllShow" :show="citationAllShow" :params="stringAllObj" @listenFun="getCitationAllMsg"></citation-all>
 	</div>
 </template>
 
 <script>
 import search from '../../components/search.vue'
 import citation from '../../components/citation.vue'
+import citationAll from '../../components/citationAll.vue'
 import { constants } from 'crypto';
 export default {
 	name: 'searchList',
@@ -106,6 +108,7 @@ export default {
     return {
       checkAll: false,
       citationShow: false,
+      citationAllShow: false,
       pagination: {},
       total: 0,
       start: 1,
@@ -126,10 +129,11 @@ export default {
       yearFactor: '',
       subjectFactor: '',
       publishFactor: '',
-      stringObj: ''
+      stringObj: '',
+      stringAllObj: []
     }
   },
-  components: { search, citation },
+  components: { search, citation, citationAll },
   created() {
     this.type = this.$route.query.type ? this.$route.query.type : '';
     this.key = this.$route.query.key ? this.$route.query.key : '';
@@ -145,6 +149,44 @@ export default {
     this.$refs.searchBox.selectVal = this.type;
   },
 	methods: {
+    allChangeEvent(data) {
+      if(data == true) {
+        this.citationAllShow = true;
+        let list = this.list;
+        list.forEach(item => {
+          item.isChecked = true;
+          this.list = list;
+        });
+        let arr1 = [], arr2 = [], arr3 = [];
+        this.list.forEach(item => {
+          let authors = '';   //作者
+          item.creators.forEach(o => {
+            if(o.creator){
+              // authors += item.creator.replace(',', '') + ',';
+              authors += o.creator + ',';
+            }else{
+              authors += o.full_name + ',';
+            }
+          });
+          authors = authors.slice(0, -1) + '.';
+          let title = item.title;  //论文名称
+          let publicationName = item.publicationName ? item.publicationName : item.publication_title; //期刊名称
+          let year = item.publicationDate;  //出版年份
+          let volume = item.volume ? item.volume : '';  //卷数
+          let startPage = item.startingPage;  //开始页码
+          let endPage = item.endingPage;  //结束页码
+          let stringObj = {};
+          stringObj.string1 = authors + title + '[J].' + publicationName + ',' + year + ',' + '(' + volume + '):' + startPage + '-' + endPage;
+          stringObj.string2 = authors + '"' + title + '."' + publicationName + ',' + volume + '(' + year + '):' + startPage + '-' + endPage;
+          stringObj.string3 = authors + '(' + year +').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage;
+          arr1.push(stringObj.string1);
+          arr2.push(stringObj.string2);
+          arr3.push(stringObj.string3);
+          this.stringAllObj = [arr1, arr2, arr3];
+        });
+        console.log(this.stringAllObj);
+      }
+    },
 		colChangeEvent(obj) {
       this.citationShow = true;
       let list = this.list;
@@ -189,6 +231,15 @@ export default {
     },
 		getCitationMsg(data) {
       this.citationShow = data;
+      let list = this.list;
+      list.forEach(item => {
+        item.isChecked = false;
+        this.list = list;
+      });
+    },
+    getCitationAllMsg(data) {
+      this.citationAllShow = data;
+      this.checkAll = false;
       let list = this.list;
       list.forEach(item => {
         item.isChecked = false;
