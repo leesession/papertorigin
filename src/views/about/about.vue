@@ -12,7 +12,7 @@
           <div class="cont">
             <img src="../../assets/images/service-blue.png" alt="">
             <div>
-              <h4>Feng Yan<span>Management</span></h4>
+              <!-- <h4>Feng Yan<span>Management</span></h4> -->
               <p>
                 <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
@@ -27,7 +27,7 @@
           <div class="cont">
             <img src="../../assets/images/service-blue.png" alt="">
             <div>
-              <h4>Feng Yan<span>Management</span></h4>
+              <!-- <h4>Feng Yan<span>Management</span></h4> -->
               <p>
                 <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
@@ -42,7 +42,7 @@
           <div class="cont">
             <img src="../../assets/images/service-blue.png" alt="">
             <div>
-              <h4>Feng Yan<span>Management</span></h4>
+              <!-- <h4>Feng Yan<span>Management</span></h4> -->
               <p>
                 <!-- Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been 
                 authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 
