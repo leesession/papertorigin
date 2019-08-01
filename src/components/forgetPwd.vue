@@ -15,18 +15,27 @@
       </div>
       <div class="dialog-body">
         <div class="row">
-          <label><i>*</i>E-mail / name</label>
+          <label><i>*</i>Register Email</label>
           <input v-model="userName" class="ipt" />
         </div>
         <div class="row">
-          <label><i>*</i>Password</label>
-          <input type="password" v-model="password" class="ipt" />
+          <label><i>*</i>ldentifying Code</label>
+          <input type="text" v-model="code" class="ipt ipt-code" />
+          <span>Send lidentifying code</span>
+        </div>
+        <div class="row">
+          <label><i>*</i>Confirming</label>
+          <input type="text" v-model="confirming" class="ipt" />
+        </div>
+        <div class="row">
+          <label><i>*</i>New Password</label>
+          <input type="text" v-model="password" class="ipt" />
         </div>
       </div>
       <p class="tips" @click="goLogin">Login Now >></p>
       <div class="dialog-footer">
         <button class="btn cancel" @click="closeDialog">Cancel</button>
-        <button class="btn confirm" @click="confirmEvent">confirm</button>
+        <button class="btn confirm" @click="confirmEvent">Submit</button>
       </div>
     </div>
   </div>
@@ -41,6 +50,8 @@ export default {
   data() {
     return {
       userName: '',
+      code: '',
+      confirming: '',
       password: '',
       msg: false,
       loginMsg: true,
@@ -62,14 +73,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.login{
-  .tips{
-    margin: 10px 0 30px 118px;
-  }
-  .forget{
-    font-size: 16px;
-    color: #3496B4;
-
+.tips{
+  margin: 15px 0 45px 118px !important;
+}
+.dialog{
+  .dialog-body .row{
+    position: relative;
+    span{
+      position: absolute;
+      top: 28px;
+      right: 123px;
+      display: inline-block;
+      color: #3C66D2;
+      font-size: 16px;
+      cursor: pointer;
+    }
   }
 }
 </style>
