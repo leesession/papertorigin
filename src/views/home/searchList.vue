@@ -11,22 +11,22 @@
 					<ul>
 						<li v-for="(item, index) in list" :key="index">
 							<div class="cont-title">
-								<el-checkbox v-model="checkAll" class="check-col fl"></el-checkbox>
+								<el-checkbox v-model="item.isChecked" class="check-col fl" @change="colChangeEvent(item.doi)"></el-checkbox>
 								<h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
 							</div>
 							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
 							<p>
-								<em>{{item.publisher}}</em> | <em>{{item.publicationName}}</em>
+								<em>{{item.publisher}}</em> | <em @click="jumpPage(item)">{{item.publicationName}}</em>
 								| Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} | {{item.publicationDate}}
 							</p>
-							<p>DOI：<span>{{item.doi}}</span></p>
+							<p @click="jumpPage(item)" style="cursor: pointer;">DOI：<span>{{item.doi}}</span></p>
 							<p>ISSN：{{item.issn}}</p>
 							<div class="tools">
 								<div class="col">
 									<i class="icon icon-eyes"></i>
 									<span>123</span>
 								</div>
-								<div class="col" @click="openDialog">
+								<div class="col">
 									<i class="icon icon-quote"></i>
 									<span>456</span>
 								</div>
@@ -144,11 +144,18 @@ export default {
     this.$refs.searchBox.selectVal = this.type;
   },
 	methods: {
-		openDialog() {
-			this.citationShow = true;
+		colChangeEvent(doi) {
+      this.citationShow = true;
+      let list = this.list;
+      list.forEach(item => {
+        item.isChecked = false;
+        if (item.doi == doi) {
+          item.isChecked = true;
+          this.list = list;
+        }
+      });
     },
     getChildParams(data) {
-      console.log(data);
       this.type = data.type ? data.type : '';
       this.key = data.key ? data.key : '';
       if(this.type == 'journal') {
@@ -159,9 +166,24 @@ export default {
       this.searchEvent();
     },
 		getCitationMsg(data) {
-			this.citationShow = data;
+      this.citationShow = data;
+      let list = this.list;
+      list.forEach(item => {
+        item.isChecked = false;
+        this.list = list;
+      });
+    },
+    jumpPage(obj){
+      if(obj.url && obj.url[0].value){
+        window.open(obj.url[0].value);
+      }else {
+        window.open(obj.urls);
+      }
     },
     operateData(arr) {
+      this.list.forEach(item => {
+        item.isChecked = false;
+      });
       if(arr && arr.length > 0) {
         arr.forEach(item => {
           let obj = {};
@@ -176,6 +198,8 @@ export default {
           obj.doi = item.doi;
           obj.issn = item.issn;
           obj.abstract = item.abstract;
+          obj.urls = item.abstract_url;
+          obj.isChecked = false;
           this.list.push(obj);
         });
       }
@@ -452,6 +476,7 @@ export default {
 					border-radius: 13px;
 					background: #ddf6ec;
 					color: #009A7D;
+          cursor: pointer;
 				}
 				span{
 					color: #3356E3;

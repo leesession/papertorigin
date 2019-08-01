@@ -9,10 +9,10 @@
         </div>
         <p><i v-for="(o, i) in details.creators" :key="i">{{o.creator}}</i></p>
         <p>
-          <em>{{details.publisher}}</em> | <em>{{details.publicationName}}</em>
+          <em>{{details.publisher}}</em> | <em @click="jumpPage">{{details.publicationName}}</em>
           | Volume {{details.volume}} | Page {{details.startingPage}}-{{details.endingPage}} | {{details.publicationDate}}
         </p>
-        <p>DOI：<span>{{details.doi}}</span></p>
+        <p style="cursor: pointer;" @click="jumpPage">DOI：<span>{{details.doi}}</span></p>
         <p>ISSN：{{details.issn}}</p>
         <div class="list-cont-title">
           <i class="icon icon-zero"></i>
@@ -100,6 +100,13 @@ export default {
 
   },
   methods: {
+    jumpPage() {
+      if(this.details.url && this.details.url[0].value){
+        window.open(this.details.url[0].value);
+      }else {
+        window.open(this.details.urls);
+      }
+    },
     getListNum() {
       let data = {
         doiList: [this.details.doi],
@@ -197,6 +204,7 @@ export default {
         border-radius: 13px;
         background: #ddf6ec;
         color: #009A7D;
+        cursor: pointer;
       }
       span{
         color: #3356E3;
