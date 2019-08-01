@@ -73,7 +73,13 @@ export default {
       }
     },
     searchEvent() {
-      this.$router.push({ path: '/searchList', query: {type: this.selectVal, key: this.key }});
+      if (this.$route.path == '/searchList') {
+        let query = {type: this.selectVal, key: this.key };
+        this.$emit('listenFun', query);
+      } else{
+        this.$router.push({ path: '/searchList', query: {type: this.selectVal, key: this.key }});
+      }
+      
     }
   }
 }

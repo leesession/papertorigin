@@ -1,6 +1,6 @@
 <template>
 	<div class="searchList">
-    <search title="Home" index="0" ref="searchBox"></search>
+    <search title="Home" index="0" ref="searchBox" @listenFun="getChildParams"></search>
 		<div class="list">
 			<div class="list-cont">
 				<div class="title">
@@ -146,7 +146,18 @@ export default {
 	methods: {
 		openDialog() {
 			this.citationShow = true;
-		},
+    },
+    getChildParams(data) {
+      console.log(data);
+      this.type = data.type ? data.type : '';
+      this.key = data.key ? data.key : '';
+      if(this.type == 'journal') {
+        this.types = 'Journals';
+      } else if (this.type == 'conference') {
+        this.types = 'Conferences';
+      }
+      this.searchEvent();
+    },
 		getCitationMsg(data) {
 			this.citationShow = data;
     },
