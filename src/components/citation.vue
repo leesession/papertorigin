@@ -11,27 +11,15 @@
         <ul>
           <li>
             <h4>GB/T7714</h4>
-            <p>
-              Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He. Experiment study on 
-              stimulated scattering of ZnO nanosphere diapered in water[J]. Journal of Nanoparticle
-              Research, 2016, 18(1): 1-8.
-            </p>
+            <p>{{info.string1}}</p>
           </li>
           <li>
             <h4>MLA</h4>
-            <p>
-              Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He. Experiment study on 
-              stimulated scattering of ZnO nanosphere diapered in water[J]. Journal of Nanoparticle
-              Research, 2016, 18(1): 1-8.
-            </p>
+            <p>{{info.string2}}</p>
           </li>
           <li>
             <h4>APA</h4>
-            <p>
-              Jiulin Shi, Haopeng Wu, Feng Yan, Junjie Yang, Xingdao He. Experiment study on 
-              stimulated scattering of ZnO nanosphere diapered in water[J]. Journal of Nanoparticle
-              Research, 2016, 18(1): 1-8.
-            </p>
+            <p>{{info.string3}}</p>
           </li>
         </ul>
       </div>
@@ -42,13 +30,17 @@
 <script>
 export default {
   name: 'login',
-  props: ['show'],
+  props: ['show', 'params'],
   data() {
     return {
       userName: '',
       password: '',
-      msg: false
+      msg: false,
+      info: null
     }
+  },
+  created() {
+    this.info = JSON.parse(this.params);
   },
   methods: {
     closeDialog() {

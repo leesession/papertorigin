@@ -11,7 +11,7 @@
 					<ul>
 						<li v-for="(item, index) in list" :key="index">
 							<div class="cont-title">
-								<el-checkbox v-model="item.isChecked" class="check-col fl" @change="colChangeEvent(item.doi)"></el-checkbox>
+								<el-checkbox v-model="item.isChecked" class="check-col fl" @change="colChangeEvent(item)"></el-checkbox>
 								<h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
 							</div>
 							<p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
@@ -92,7 +92,7 @@
 			</aside>
 		</div>
 
-    <citation :show="citationShow" @listenFun="getCitationMsg"></citation>  
+    <citation v-if="citationShow" :show="citationShow" :params="stringObj" @listenFun="getCitationMsg"></citation>  
 	</div>
 </template>
 
@@ -125,7 +125,8 @@ export default {
       publisherFlag: false,
       yearFactor: '',
       subjectFactor: '',
-      publishFactor: ''
+      publishFactor: '',
+      stringObj: ''
     }
   },
   components: { search, citation },
@@ -144,16 +145,37 @@ export default {
     this.$refs.searchBox.selectVal = this.type;
   },
 	methods: {
-		colChangeEvent(doi) {
+		colChangeEvent(obj) {
       this.citationShow = true;
       let list = this.list;
       list.forEach(item => {
         item.isChecked = false;
-        if (item.doi == doi) {
+        if (item.doi == obj.doi) {
           item.isChecked = true;
           this.list = list;
         }
       });
+      let authors = '';   //作者
+      obj.creators.forEach(item => {
+        if(item.creator){
+          // authors += item.creator.replace(',', '') + ',';
+          authors += item.creator + ',';
+        }else{
+          authors += item.full_name + ',';
+        }
+      });
+      authors = authors.slice(0, -1) + '.';
+      let title = obj.title;  //论文名称
+      let publicationName = obj.publicationName ? obj.publicationName : obj.publication_title; //期刊名称
+      let year = obj.publicationDate;  //出版年份
+      let volume = obj.volume ? obj.volume : '';  //卷数
+      let startPage = obj.startingPage;  //开始页码
+      let endPage = obj.endingPage;  //结束页码
+      let stringObj = {};
+      stringObj.string1 = authors + title + '[J].' + publicationName + ',' + year + ',' + '(' + volume + '):' + startPage + '-' + endPage;
+      stringObj.string2 = authors + '"' + title + '."' + publicationName + ',' + volume + '(' + year + '):' + startPage + '-' + endPage;
+      stringObj.string3 = authors + '(' + year +').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage;
+      this.stringObj = JSON.stringify(stringObj);
     },
     getChildParams(data) {
       this.type = data.type ? data.type : '';
