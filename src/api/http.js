@@ -34,7 +34,7 @@ export const http = {
 			successFun(res);
 		});
 	},
-	// 查询浏览量、分享量
+	// 更新浏览量、分享量
   addListNum(data, successFun) {
 		xhr({
 			method: 'post',
@@ -45,6 +45,24 @@ export const http = {
 			successFun(res);
 		});
 	},
+	// 忘记密码
+	findPassword(data, successFun) {
+		xhr({
+			method: 'post',
+			url: '/login/findPassword',
+			data: data,
+			type: 'json'
+		}).then(res => {
+			successFun(res);
+		});
+	},
+
+
+
+
+
+
+
 
   // 查询主页面选项的值
   search(data, successFun) {

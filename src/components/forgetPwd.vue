@@ -18,18 +18,18 @@
           <label><i>*</i>Register Email</label>
           <input v-model="userName" class="ipt" />
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <label><i>*</i>ldentifying Code</label>
           <input type="text" v-model="code" class="ipt ipt-code" />
           <span>Send lidentifying code</span>
-        </div>
+        </div> -->
         <div class="row">
           <label><i>*</i>Confirming</label>
-          <input type="text" v-model="confirming" class="ipt" />
+          <input type="password" v-model="confirming" class="ipt" />
         </div>
         <div class="row">
           <label><i>*</i>New Password</label>
-          <input type="text" v-model="password" class="ipt" />
+          <input type="password" v-model="password" class="ipt" />
         </div>
       </div>
       <p class="tips" @click="goLogin">Login Now >></p>
@@ -66,7 +66,22 @@ export default {
       this.$emit('listenForgetFun', this.loginMsg);
     },
     confirmEvent() {
+      if(this.userName == '') {
+        dialog.error('Please enter your email address');
+      } else if (this.confirming != this.password) {
+        dialog.error('Two inconsistent password input');
+      } else {
+        let data = {
+          email: this.userName,
+          newPassword: this.password
+        }
+        http.findPassword(data, res => {
+          if (res.code == 'SUCCES') {
 
+          }
+        });
+      }
+      
     }
   }
 }
