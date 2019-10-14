@@ -2,7 +2,7 @@
   <div class="home">
     <div class="banner-box">
       <div class="head">
-        <img src="../../assets/images/logo.png" alt="" class="logo">
+        <img src="../../assets/images/logo.png" alt="" class="logo" >
         <nav>
           <ul>
             <li v-for="(item, index) in navList" :key="index" :class="{active: index == activeNum}" @click="navClickEvent(item)">
@@ -41,13 +41,13 @@
         <h3 @click="goService">Our  Service</h3>
       </div>
       <div class="cont">
-        <!-- <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. </p>
+        <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. </p>
         <p>Our data information will obtain from publishers to keep copyright and accuracy so that users can derive the most </p>
         <p>qualified information searching service. tassels cholar will ensure every user can</p>
         <p>retrieve every academic paper information including titles, authors, DOI, </p>
         <p>subjects, keywords, abstracts etc. Users can transfer to official </p>
         <p>websites of publishers to obtain corresponding </p>
-        <p>full article of academic papers</p> -->
+        <p>full article of academic papers</p>
       </div>
     </div>
 
@@ -85,8 +85,8 @@
             <div class="introduce fl">
               <h6>Feng Yan<span>Management</span></h6>
               <p>
-                Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has beenauthorized more than 35 Chinese patents, and one of his 
-                scientific projects obtained ¥250000 organization cooperation in undergraduate 
+                Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has beenauthorized more than 35 Chinese patents, and one of his
+                scientific projects obtained ¥250000 organization cooperation in undergraduate
                 university.He is responding to management and business development
               </p>
             </div>
@@ -287,7 +287,7 @@ export default {
       color: #485764;
     }
   }
-  
+
 }
 .resource-box{
   width: 100%;
@@ -392,7 +392,7 @@ export default {
   .title{
     padding: 35px;
     h3{
-      border-color: transparent; 
+      border-color: transparent;
     }
   }
   .contact{

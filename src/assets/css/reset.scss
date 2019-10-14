@@ -1,7 +1,7 @@
-/*  
+/*
  * @description: resst样式
- * @author: WXF 
- * @update: 2018-04-22 
+ * @author: WXF
+ * @update: 2018-04-22
  */
 html, body, div, iframe, h1, h2, h3, h4, h5, h6, p, span, a, b, i, em, img, sub, sup, dl, dt, dd, ol, ul, li, table, thead, tbody, tfoot, th, tr, td,
 form, button, input, select, textarea, fieldset, label, legend, header, footer, section, article, nav, aside{
@@ -32,11 +32,11 @@ input:-webkit-autofill {
 textarea{
 	resize: none;
 }
-img{ 
-	display: inline-block; 
-	max-width: 100%; 
-	vertical-align: middle; 
-	outline: none; 
+img{
+	display: inline-block;
+	//max-width: 100%;
+	vertical-align: middle;
+	outline: none;
 	-webkit-appearance: none;
 }
 html, body {
@@ -53,10 +53,10 @@ a{
 em, i{
 	font-style: normal;
 }
-.fl{ 
+.fl{
   float: left;
 }
-.fr{ 
+.fr{
   float: right;
 }
 .icon{

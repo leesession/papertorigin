@@ -23,9 +23,11 @@ export default {
   },
   methods: {
     registerEvent() {
+      $('body').css('overflow','hidden')
       this.$emit('lintenRegisterFun', this.registerMsg);
     },
     loginEvent() {
+      $('body').css('overflow','hidden')
       this.$emit('lintenLoginFun', this.loginMsg);
     }
 

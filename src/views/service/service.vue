@@ -5,23 +5,23 @@
       <h2 class="wrap1100">what can we do?</h2>
       <div class="cont wrap1100">
         <div class="cont-left">
-          <!-- <p>
+           <p>
             <i></i>
             <span>
-              TASSEL SCHOLAR will provide  the latest paper searching and the most comprehensive 
-              article retrieving for global users. Our data information will obtain from publishers to keep 
-              copyright and accuracy so that users can derive the most qualified information searching 
+              TASSEL SCHOLAR will provide  the latest paper searching and the most comprehensive
+              article retrieving for global users. Our data information will obtain from publishers to keep
+              copyright and accuracy so that users can derive the most qualified information searching
               service.
-            </span> 
+            </span>
           </p>
           <p>
             <i></i>
             <span>
-              TASSEL SCHOLAR will ensure every user canretrieve every academic paper information 
-              including titles, authors,  DOI,  subjects,  keywords,  abstracts etc.  Users cantransfer to 
+              TASSEL SCHOLAR will ensure every user canretrieve every academic paper information
+              including titles, authors,  DOI,  subjects,  keywords,  abstracts etc.  Users cantransfer to
               officialwebsites of publishers to obtain corresponding full article of academic papers.
             </span>
-          </p> -->
+          </p>
         </div>
         <img src="../../assets/images/service-blue.png" alt="">
       </div>
@@ -36,7 +36,7 @@
     <div class="shares-ervice">
       <div class="wrap1100">
         <h2>Share Service!</h2>
-        <p>TASSEL SCHOLAR will help users to share academic paper to others by social network tools so that authors and researchers can 
+        <p>TASSEL SCHOLAR will help users to share academic paper to others by social network tools so that authors and researchers can
 share and spread academic achievements.</p>
       </div>
     </div>
@@ -94,7 +94,7 @@ export default {
           display: inline-block;
           width: 14px;
           height: 14px;
-          border-radius: 100%;
+          border-radius: 50%;
           background: #667C83;
           margin: 10px 10px 0 0;
         }

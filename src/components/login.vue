@@ -1,41 +1,44 @@
 <template>
   <div class="login" v-if="show">
     <div class="bg"></div>
-    <div class="dialog">
-      <div class="dialog-head">
-        <div class="btn-close" @click="closeDialog">
-          <div class="btn-close-bg"></div>
-          <i class="el-icon-close"></i>
+    <div class="dialog_wrapper">
+      <div class="dialog">
+        <div class="dialog-head">
+          <div class="btn-close" @click="closeDialog">
+            <div class="btn-close-bg"></div>
+            <i class="el-icon-close"></i>
+          </div>
+          <h3>Login</h3>
+          <div class="cont">
+            <i class="icon"></i>
+            <span>Sign in to your Account</span>
+          </div>
         </div>
-        <h3>Login</h3>
-        <div class="cont">
-          <i class="icon"></i>
-          <span>Sign in to your Account</span>
+        <div class="dialog-body">
+          <div class="row">
+            <label><i>*</i>E-mail / name</label>
+            <input v-model="userName" class="ipt" />
+          </div>
+          <div class="row">
+            <label><i>*</i>Password</label>
+            <input type="password" v-model="password" class="ipt" />
+          </div>
+          <div class="row">
+            <p class="forget" @click="goForgetPwd">Forget password?</p>
+          </div>
+          <div class="row spe" @click="checkEvent">
+            <i class="checkbox" :class="{check: isChecked == false, checked: isChecked == true}"></i>
+            <span>Keep me log logged in</span>
+          </div>
         </div>
-      </div>
-      <div class="dialog-body">
-        <div class="row">
-          <label><i>*</i>E-mail / name</label>
-          <input v-model="userName" class="ipt" />
+        <p class="tips" @click="goRegister">Register Now >></p>
+        <div class="dialog-footer">
+          <button class="btn cancel" @click="closeDialog">Cancel</button>
+          <button class="btn confirm" @click="loginEvent">Login</button>
         </div>
-        <div class="row">
-          <label><i>*</i>Password</label>
-          <input type="password" v-model="password" class="ipt" />
-        </div>
-        <div class="row">
-          <p class="forget" @click="goForgetPwd">Forget password?</p>
-        </div>
-        <div class="row spe" @click="checkEvent">
-          <i class="checkbox" :class="{check: isChecked == false, checked: isChecked == true}"></i>
-          <span>Keep me log logged in</span>
-        </div>
-      </div>
-      <p class="tips" @click="goRegister">Register Now >></p>
-      <div class="dialog-footer">
-        <button class="btn cancel" @click="closeDialog">Cancel</button>
-        <button class="btn confirm" @click="loginEvent">Login</button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -57,6 +60,7 @@ export default {
   },
   methods: {
     closeDialog() {
+      $('body').css('overflow','auto')
       this.$emit('listenFun', this.msg);
     },
     checkEvent() {

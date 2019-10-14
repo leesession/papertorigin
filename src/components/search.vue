@@ -1,7 +1,7 @@
 <template>
   <div id="search" class="banner-box">
     <div class="head">
-      <img src="../assets/images/logo.png" alt="" class="logo">
+      <img src="../assets/images/logo.png" alt="" class="logo" @click="$router.push('/')">
       <nav>
         <ul>
           <li v-for="(item, index) in navList" :key="index" :class="{active: activeNum == index}" @click="navClickEvent(index)">
@@ -79,7 +79,7 @@ export default {
       } else{
         this.$router.push({ path: '/searchList', query: {type: this.selectVal, key: this.key }});
       }
-      
+
     }
   }
 }

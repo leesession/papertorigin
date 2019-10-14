@@ -1,10 +1,10 @@
-/*  
+/*
  * @description: 公共样式
- * @author: WXF 
- * @update: 2019-07-22 
+ * @author: WXF
+ * @update: 2019-07-22
  */
 html, body {
-	background-color: #fff;
+  background-color: #fff;
   font-family: firstFont;
 }
 .wrap1100{
@@ -67,6 +67,10 @@ html, body {
       }
     }
   }
+}
+
+#search .logo{
+  cursor: pointer;
 }
 
 /* 搜索 */
@@ -208,178 +212,187 @@ html, body {
   background: #000;
   opacity: 0.5;
 }
-.dialog{
-  width: 653px;
-  background: #eff2f4;
-  border-radius: 4px;
+.dialog_wrapper{
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   z-index: 1000;
-  transform: translate(-50%, -50%);
-  .dialog-head{
-    height: 224px;
-    background: url(../images/sky.png) no-repeat center bottom;
-    // background-size: 100% 100%;
-    position: relative;
-    .cont{
-      line-height: 120px;
-      display: flex;
-      justify-content: center;
-      span{
-        font-size: 28px;
-        color: #E8F5F8;
+  overflow: auto;
+  margin: 0;
+  .dialog{
+    //position: absolute;
+    //top:50%;
+    //transform:translateY(-50%);
+    width: 653px;
+    margin: 25px auto;
+    background: #eff2f4;
+    border-radius: 4px;
+    .dialog-head{
+      height: 224px;
+      background: url(../images/sky.png) no-repeat center bottom;
+      position: relative;
+      .cont{
+        line-height: 120px;
+        display: flex;
+        justify-content: center;
+        span{
+          font-size: 28px;
+          color: #E8F5F8;
+        }
       }
-    }
-    h3{
-      width: 122px;
-      height: 122px;
-      line-height: 122px;
-      text-align: center;
-      background: #5BBAD7;
-      border-radius: 100%;
-      color: #fff;
-      font-size: 26px;
-      position: absolute;
-      top: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    .btn-close{
-      position: absolute;
-      top: -22px;
-      right: -22px;
-      width: 44px;
-      height: 44px;
-      cursor: pointer;
-      .btn-close-bg{
+      h3{
+        width: 122px;
+        height: 122px;
+        line-height: 122px;
+        text-align: center;
+        background: #5BBAD7;
+        border-radius: 100%;
+        color: #fff;
+        font-size: 26px;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .btn-close{
+        position: absolute;
+        top: -22px;
+        right: -22px;
         width: 44px;
         height: 44px;
-        text-align: center;
-        background: #EBEBEB;
-        border-radius: 100%;
-        opacity: 0.5;
-      }
-      i{
-        position: absolute;
-        top: 11px;
-        left: 11px;
-        font-size: 22px;
-        font-weight: bold;
-        color: #fff;
+        cursor: pointer;
+        .btn-close-bg{
+          width: 44px;
+          height: 44px;
+          text-align: center;
+          background: #EBEBEB;
+          border-radius: 100%;
+          opacity: 0.5;
+        }
+        i{
+          position: absolute;
+          top: 11px;
+          left: 11px;
+          font-size: 22px;
+          font-weight: bold;
+          color: #fff;
+        }
       }
     }
-  }
-  .dialog-body{
-    .row{
-      padding: 0 115px 0 118px;
-      margin-bottom: 10px;
-      position: relative;
-      &.spe{
-        padding: 0 0 0 118px;
-        margin: 20px 0;
-        display: flex;
-        justify-content: flex-start;
-        cursor: pointer;
-        .checkbox{
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          margin: 0 10px 0 0;
-          &.checked{
-            background: url(../images/checked.png) no-repeat center center;
-            background-size: 100% 100%;
-          }
-          &.check{
-            background: url(../images/check.png) no-repeat center center;
-            background-size: 100% 100%;
-          }
-        }
-        span{
-          line-height: 16px;
-          font-size: 14px;
-          color: #32982A;
-        }
-      }
-      label{
-        display: block;
-        font-size: 16px;
-        color: #667C83;
-        margin-bottom: 2px;
-        i{
-          color: #CC122C;
-          margin-right: 5px;
-        }
-      }
-      .ipt{
-        width: 420px;
-        height: 32px;
-        line-height: 32px;
-        background: #fff;
-        border: 1px solid #F0F0F0;
-        border-radius: 2px;
-        padding: 0 10px;
+    .dialog-body{
+      .row{
+        padding: 0 115px 0 118px;
+        margin-bottom: 10px;
+        position: relative;
         &.spe{
-          padding: 0 115px 0 10px;
+          padding: 0 0 0 118px;
+          margin: 20px 0;
+          display: flex;
+          justify-content: flex-start;
+          cursor: pointer;
+          .checkbox{
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin: 0 10px 0 0;
+            &.checked{
+              background: url(../images/checked.png) no-repeat center center;
+              background-size: 100% 100%;
+            }
+            &.check{
+              background: url(../images/check.png) no-repeat center center;
+              background-size: 100% 100%;
+            }
+          }
+          span{
+            line-height: 16px;
+            font-size: 14px;
+            color: #32982A;
+          }
         }
-      }
-      .country{
-        width: 420px;
-        .el-input__inner{
+        label{
+          display: block;
+          font-size: 16px;
+          color: #667C83;
+          margin-bottom: 2px;
+          i{
+            color: #CC122C;
+            margin-right: 5px;
+          }
+        }
+        .ipt{
+          width: 420px;
           height: 32px;
           line-height: 32px;
+          background: #fff;
+          border: 1px solid #F0F0F0;
+          border-radius: 4px;
           padding: 0 10px;
-          border: none;
-          &:hover{
-            border: none;
+          &.spe{
+            padding: 0 115px 0 10px;
           }
         }
-        i.el-input__icon{
-          line-height: 32px !important;
+        .country{
+          width: 420px;
+          .el-input__inner{
+            height: 32px;
+            line-height: 32px;
+            padding: 0 10px;
+            border: none;
+            &:hover{
+              border: none;
+            }
+          }
+          i.el-input__icon{
+            line-height: 32px !important;
+          }
+        }
+        .img-verify{
+          position: absolute;
+          bottom: 0;
+          right: 115px;
+          width: 120px;
+          height: 32px;
+          overflow: hidden;
         }
       }
-      .img-verify{
-        position: absolute;
-        bottom: 0;
-        right: 115px;
-        width: 120px;
-        height: 32px;
-        overflow: hidden;
-      }
     }
-  }
-  .tips{
-    font-size: 20px;
-    color: #3C66D2;
-    margin: 10px 0 20px 118px;
-    cursor: pointer;
-  }
-  .dialog-footer{
-    height: 72px;
-    background: #DCE7EA;
-    display: flex;
-    justify-content: flex-end;
-    .btn{
-      width: 158px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      font-size: 16px;
-      border-radius: 2px;
-      margin: 16px 10px;
+    .tips{
+      font-size: 20px;
+      color: #3C66D2;
+      margin: 10px 0 20px 118px;
       cursor: pointer;
-      &.cancel{
-        border: 1px solid #427F90;
-        color: #3F7589;
+    }
+    .dialog-footer{
+      height: 72px;
+      background: #DCE7EA;
+      display: flex;
+      justify-content: flex-end;
+      .btn{
+        width: 158px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 16px;
+        border-radius: 2px;
+        margin: 16px 10px;
+        cursor: pointer;
+        &.cancel{
+          border: 1px solid #427F90;
+          color: #3F7589;
+        }
+        &.confirm{
+          background: linear-gradient(to right, #5DC1E2, #427387);
+          color: #fff;
+        }
+
       }
-      &.confirm{
-        background: linear-gradient(to right, #5DC1E2, #427387);
-        color: #fff;
-      }
-      
     }
   }
 }
+
 .dialog-msg{
   width: 897px;
   overflow: hidden;
@@ -507,7 +520,7 @@ html, body {
       height: 15px;
       left: 7px;
 
-    } 
+    }
   }
   .el-checkbox__input{
     float: left;
@@ -521,7 +534,7 @@ html, body {
     .el-checkbox__label{
       color: #424344;
       font-size: 22px;
-       
+
     }
   }
   &.check-col{

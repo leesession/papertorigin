@@ -20,7 +20,7 @@
           </div>
           <div class="col">
             <i class="icon icon-address"></i>
-            <span>{{address}}</span>
+            <span style="margin-top: 10px">{{address}}</span>
           </div>
         </div>
       </div>
@@ -78,37 +78,27 @@ export default {
   mounted() {
     //创建实例
     var map = new BMap.Map("map");
-    //创建坐标点
-    var point = new BMap.Point(116.404,39.915);
-    //初始化实例，传入坐标点并设置地图级别
-    map.centerAndZoom(point,15);
     map.enableScrollWheelZoom(true);
-    // 创建地址解析器实例     
-    var myGeo = new BMap.Geocoder();      
+    // 创建地址解析器实例
+    var myGeo = new BMap.Geocoder();
     // 将地址解析结果显示在地图上
-    myGeo.getPoint("中国成都市湖畔北路366号", point =>{ 
-      if (point) {      
-        map.centerAndZoom(point, 16);
-        // var myIcon = new BMap.Icon(this.icon, new BMap.Size(23, 25), {    
-        //   anchor: new BMap.Size(18, 33),    
-        //   imageOffset: new BMap.Size(0, 0 - 33) 
-        // });      
-        // var marker = new BMap.Marker(point, {icon: myIcon});
+    myGeo.getPoint("中国成都市湖畔北路366号", point =>{
+      if (point) {
+        map.centerAndZoom(point, 15);
         var marker = new BMap.Marker(point);
         map.addOverlay(marker);
-        var opts = {    
-          width : 200,     // 信息窗口宽度    
-          height: 80,     // 信息窗口高度    
+        var opts = {
+          width : 200,     // 信息窗口宽度
+          height: 80,     // 信息窗口高度
           title : "Address:",  // 信息窗口标题
           offset: new BMap.Size(0, -24),
-
-        }    
-        var infoWindow = new BMap.InfoWindow(this.address, opts); 
-        marker.addEventListener("click", function(){          
-          map.openInfoWindow(infoWindow,point); //开启信息窗口
-        });
-        // map.openInfoWindow(infoWindow, point);     
-      }      
+        }
+        var infoWindow = new BMap.InfoWindow(this.address, opts);
+        // marker.addEventListener("click", function(){
+        //   map.openInfoWindow(infoWindow,point); //开启信息窗口
+        // });
+        map.openInfoWindow(infoWindow, point);
+      }
     });
 
   }
@@ -130,6 +120,7 @@ export default {
   .map{
     height: 490px;
     background: #ccc;
+
   }
   .info{
     position: absolute;
@@ -199,17 +190,15 @@ export default {
   }
 }
 .footer{
-  height: 460px;
   overflow: hidden;
   background: linear-gradient(to right, #575281 , #517e98);
   padding: 115px 0 0 0;
   li{
     float: left;
     width: 33.3%;
-    height: 140px;
     border-right: 1px solid #fff;
     margin: 0 0 30px 0;
-    padding: 0 0 0 4%;
+    padding: 0 0 0 2%;
     &:nth-child(3n), &:last-child{
       border: none;
     }
