@@ -29,7 +29,7 @@
                     </div>
                     <div class="row">
                         <label><i>*</i>Password</label>
-                        <input type="password" v-model="password" class="ipt"/>
+                        <input type="password" v-model="password" class="ipt" maxlength="32"/>
                     </div>
                     <div class="row">
                         <label><i>*</i>Country</label>
@@ -54,7 +54,6 @@
                         <label><i>*</i>Retype the Code from the picture</label>
                         <input v-model="code" class="ipt spe"/>
                         <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" @initImgCode="initImgCode"/>
-                        <!-- <img src="../assets/images/service-bg3.png" alt=""> -->
                     </div>
                 </div>
                 <p class="tips" @click="goLogin">Login Now >></p>
