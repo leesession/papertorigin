@@ -24,7 +24,7 @@
                             </p>
                             <p @click="jumpPage(item)" style="cursor: pointer;">DOI：<span>{{item.doi}}</span></p>
                             <p>ISSN：{{item.issn}}</p>
-                            <!-- <div class="tools">
+                            <div class="tools">
                                 <div class="col">
                                     <i class="icon icon-eyes"></i>
                                     <span>123</span>
@@ -37,7 +37,7 @@
                                     <i class="icon icon-share"></i>
                                     <span>789</span>
                                 </div>
-                            </div> -->
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -142,9 +142,9 @@
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
-            if (this.type == 'journal') {
+            if (this.type === 'journal') {
                 this.types = 'Journals';
-            } else if (this.type == 'conference') {
+            } else if (this.type === 'conference') {
                 this.types = 'Conferences';
             }
             this.searchEvent();
