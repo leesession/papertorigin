@@ -286,6 +286,11 @@ html, body {
         padding: 0 115px 0 118px;
         margin-bottom: 10px;
         position: relative;
+        >p{
+          font-size:12px;
+          color: red;
+          margin-left: 10px;
+        }
         &.spe{
           padding: 0 0 0 118px;
           margin: 20px 0;
@@ -334,6 +339,9 @@ html, body {
             padding: 0 115px 0 10px;
           }
         }
+        .err{
+          border: 1px solid #db3b21;
+        }
         .country{
           width: 420px;
           .el-input__inner{
@@ -351,7 +359,7 @@ html, body {
         }
         .img-verify{
           position: absolute;
-          bottom: 0;
+          top:23px;
           right: 115px;
           width: 120px;
           height: 32px;
@@ -360,6 +368,7 @@ html, body {
       }
     }
     .tips{
+      width: 180px;
       font-size: 20px;
       color: #3C66D2;
       margin: 10px 0 20px 118px;

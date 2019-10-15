@@ -84,15 +84,15 @@ export default {
         loginpassword: this.password
       };
       http.login(data, res => {
-        if (res.code == 'SUCCES') {
-          if (this.isChecked == true) {
+        if (res.code === 'SUCCES') {
+          if (this.isChecked === true) {
             localStorage.setItem('USER', JSON.stringify(data));
           } else {
             localStorage.clear();
           }
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
-          sessionStorage.setItem('ISLOGIN', 'true');
+          this.$store.commit('userLogin',JSON.stringify(data))
         }
       });
     }
@@ -109,6 +109,7 @@ export default {
     font-size: 16px;
     color: #3496B4;
     cursor: pointer;
+    width: 180px;
   }
 }
 </style>

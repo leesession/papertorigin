@@ -15,21 +15,20 @@ module.exports = {
   // 开发环境配置（它支持webPack-dev-server的所有选项）
   devServer: {
     host: "localhost",
-    port: 8080, 
-    https: false, 
+    port: 8080,
+    https: false,
     open: true, //配置自动启动浏览器
-    proxy: api1 // 配置跨域处理,只有一个代理
-    //配置多个代理
-    // proxy: {
-    //   "/": {
-    //     target: api,
-    //     ws: false,
-    //     changeOrigin: true,   //是否跨域
-    //     pathRewrite: {
-    //       '^/': ''
-    //     }
-    //   },
-    // }
+    // proxy: api1 // 配置跨域处理,只有一个代理
+    // 配置多个代理
+    proxy: {
+      "/": {
+        target: api1,
+        changeOrigin: true,   //是否跨域
+        pathRewrite: {
+          '^/': ''
+        }
+      },
+    }
   },
   // 插件
   configureWebpack: {
@@ -40,7 +39,7 @@ module.exports = {
       })
     ]
   },
-	
+
 	pages: {
 		index: {
 			entry: 'src/main.js',
@@ -50,5 +49,5 @@ module.exports = {
 			chunks: ['chunk-vendors', 'chunk-common', 'index']
 		}
 	}
-	
+
 };

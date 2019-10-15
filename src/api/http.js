@@ -56,6 +56,39 @@ export const http = {
 			successFun(res);
 		});
 	},
+	//查找email是否用了
+	ifHasEmail(data, successFun){
+		xhr({
+			method: 'post',
+			url: '/login/ifHasEmail',
+			data: data,
+			type: 'json'
+		}).then(res => {
+			successFun(res);
+		});
+	},
+	//发送邮箱短信
+	sendCodeToMail(data, successFun){
+		xhr({
+			method: 'post',
+			url: '/login/sendCodeToMail',
+			data: data,
+			type: 'json'
+		}).then(res => {
+			successFun(res);
+		});
+	},
+	//忘记密码 修改密码
+	findPasswordByCode(data, successFun){
+		xhr({
+			method: 'post',
+			url: '/login/findPasswordByCode',
+			data: data,
+			type: 'json'
+		}).then(res => {
+			successFun(res);
+		});
+	},
 
 
 
@@ -86,5 +119,5 @@ export const http = {
 			successFun(res);
 		});
   }
-  
+
 }

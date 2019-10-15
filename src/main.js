@@ -6,9 +6,17 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/reset.scss'
 import './assets/css/style.scss'
+import axios from 'axios'
+
+// axios基本配置
+axios.defaults.baseURL = process.env.BASE_API;
+axios.defaults.timeout = 10000;
+Vue.prototype.$axios = axios;
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
+
 
 import VueI18n from 'vue-i18n'
 

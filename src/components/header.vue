@@ -1,16 +1,28 @@
 <template>
   <div class="head">
     <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
-    <div class="header-right">
+    <div class="header-right" v-if="isLogin">
+      Welcome,<b>{{isLogin.loginmail}}</b>
+      <span >ResetPWD</span>
+      <span @click="loginOut">Logout</span>
+    </div>
+    <div class="header-right" v-else>
       <span @click="registerEvent">Register</span>
-      <span @click="loginEvent">login</span>
+      <span @click="loginEvent">Login</span>
     </div>
   </div>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
 export default {
   name: 'headers',
+  computed: {
+    ...mapState({
+      isLogin: 'loginMsg'
+    }),
+  },
   data() {
     return {
       registerMsg: {
@@ -29,8 +41,11 @@ export default {
     loginEvent() {
       $('body').css('overflow','hidden')
       this.$emit('lintenLoginFun', this.loginMsg);
+    },
+    loginOut(){
+      this.$message.success('logout was successfully');
+      this.$store.commit('userLoginOut');
     }
-
   }
 }
 </script>
