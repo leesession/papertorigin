@@ -73,7 +73,6 @@ export default {
       }
     },
     searchEvent() {
-        console.log(this.selectVal)
       if (this.$route.path == '/searchList') {
         let query = {type: this.selectVal, key: this.key };
         this.$emit('listenFun', query);

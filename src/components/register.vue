@@ -198,7 +198,7 @@
                             username: ""
                         };
                         http.register(data, res => {
-                            if (res.code === 'SUCCES') {
+                            if (res.code === 'SUCCESS') {
                                 dialog.success('registered was successfully');
                                 this.$emit('listenFun', this.msg);
                                 // 置空选项
@@ -223,7 +223,7 @@
                 } else {
                     this.$axios.post('/login/ifHasEmail', {email: this.email}).then(res => {
                         let {data} = res;
-                        if (data.code !== 'CAN USE') {
+                        if (data.code !== 'SUCCESS') {
                             this.confirmMsg.email = false;
                             this.emailText = data.msg
                         } else this.confirmMsg.email = true;

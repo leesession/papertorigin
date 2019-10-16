@@ -2,7 +2,7 @@
     <div class="searchList">
         <search title="Home" index="0" ref="searchBox" @listenFun="getChildParams"></search>
         <div class="list">
-            <div class="list-cont">
+            <div class="list-cont"  v-loading="loading">
                 <div class="title">
                     <span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
                 </div>
@@ -27,15 +27,15 @@
                             <div class="tools">
                                 <div class="col">
                                     <i class="icon icon-eyes"></i>
-                                    <span>123</span>
+                                    <span>{{recordData[index].lookCount}}</span>
                                 </div>
                                 <div class="col">
                                     <i class="icon icon-quote"></i>
-                                    <span>456</span>
+                                    <span>{{recordData[index].quoteCount}}</span>
                                 </div>
                                 <div class="col">
                                     <i class="icon icon-share"></i>
-                                    <span>789</span>
+                                    <span>{{recordData[index].forwardCount}}</span>
                                 </div>
                             </div>
                         </li>
@@ -106,11 +106,13 @@
     import citation from '../../components/citation.vue'
     import citationAll from '../../components/citationAll.vue'
     import {constants} from 'crypto';
+    import {http} from '../../api/http.js'
 
     export default {
         name: 'searchList',
         data() {
             return {
+                loading:true,
                 checkAll: false,
                 citationShow: false,
                 citationAllShow: false,
@@ -122,8 +124,8 @@
                 type: '',
                 types: '',
                 key: '',
-                url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924&p=5',
-                urls: 'http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&max_records=5&sort_order=asc&sort_field=article_number',
+                url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924&p=20',
+                urls: 'http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&max_records=20&sort_order=asc&sort_field=article_number',
                 list: [],
                 year: [],
                 subjects: [],
@@ -135,7 +137,14 @@
                 subjectFactor: '',
                 publishFactor: '',
                 stringObj: '',
-                stringAllObj: []
+                stringAllObj: [],
+                recordData:[
+                    {
+                        recordData:0,
+                        quoteCount:0,
+                        forwardCount:0
+                    }
+                ],//浏览次数等
             }
         },
         components: {search, citation, citationAll},
@@ -281,9 +290,26 @@
                         this.list.push(obj);
                     });
                 }
+                this.getRecord()
+            },
+            getRecord(){
+                let doiList = [];
+                this.list.forEach(item=>{
+                    doiList.push(item.doi)
+                });
+                let data = {
+                    doiList: doiList,
+                    singnal: ""
+                };
+                http.getListNum(data, res => {
+                    if (res.code === 'SUCCESS') {
+                        this.recordData = res.data;
+                    }
+                });
             },
             searchEvent() {
                 let _url = this.url + '&q=' + this.type + ':' + this.key;
+                this.loading = true;
                 $.ajax({
                     type: "get",
                     url: _url,
@@ -312,7 +338,8 @@
                             data: "",
                             success: ress => {
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                let list = this.operateData(ress.articles);
+                                this.operateData(ress.articles);
+                                this.loading = false;
                             }
                         });
                     }
@@ -326,6 +353,7 @@
                     this.endNum = this.total;
                 }
                 let _url = this.url + '&q=' + this.type + ':' + this.key + '&s=' + page;
+                this.loading = true;
                 $.ajax({
                     type: "get",
                     url: _url,
@@ -341,7 +369,8 @@
                             data: "",
                             success: ress => {
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                let list = this.operateData(ress.articles);
+                                this.operateData(ress.articles);
+                                this.loading = false;
                             }
                         });
                     }
@@ -379,6 +408,7 @@
                     _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
                         ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
+                this.loading = true;
                 $.ajax({
                     type: "get",
                     url: _url,
@@ -397,7 +427,8 @@
                             data: "",
                             success: ress => {
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                let list = this.operateData(ress.articles);
+                                this.operateData(ress.articles);
+                                this.loading = false;
                             }
                         });
                     }
@@ -528,6 +559,12 @@
 
         .cont {
             li {
+                padding: 28px 50px 25px 40px;
+                border-bottom: 1px solid #D9E5E7;
+                cursor: pointer;
+                &:hover{
+                    background-color: #F8F8FC;
+                }
                 .cont-title {
                     height: 38px;
                     display: flex;
@@ -543,14 +580,9 @@
                         cursor: pointer;
                     }
                 }
-
-                padding: 28px 50px 25px 40px;
-                border-bottom: 1px solid #D9E5E7;
-
                 &:first-child {
                     padding: 0px 50px 25px 40px;
                 }
-
                 p {
                     color: #485764;
                     font-size: 18px;
@@ -582,12 +614,13 @@
                         justify-content: flex-start;
                         margin: 0 40px 0 0;
                         cursor: pointer;
-
                         span {
                             color: #2950EB;
                             font-size: 18px;
+                            &:hover{
+                                border-bottom: 1px solid #2950EB;
+                            }
                         }
-
                         .icon {
                             width: 22px;
                             height: 23px;

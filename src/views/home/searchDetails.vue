@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="btn-box">
-          
+
           <a v-if="isLogin" href="http://api.springernature.com/metadata/json?q=(doi:10.1007/s10853-019-03707-1)&api_key=eded390c0074daf47de31d49ab06d924">DOWNLOAD</a>
           <a v-if="!isLogin" href="javascript:void(0)">DOWNLOAD</a>
-          
+
           <!-- <button>DOWNLOAD</button> -->
         </div>
 			</div>
@@ -113,7 +113,7 @@ export default {
         singnal: ""
       }
       http.getListNum(data, res => {
-        if (res.code == 'SUCCES') {
+        if (res.code === 'SUCCESS') {
           this.numObj = res.data[0];
         }
       });
@@ -267,7 +267,7 @@ export default {
       }
     }
   }
-	
+
 }
 </style>
 

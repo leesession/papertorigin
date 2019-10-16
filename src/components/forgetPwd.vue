@@ -28,7 +28,7 @@
                         <input v-model="code"
                                class="ipt ipt-code"
                         />
-                        <span @click="getEmailCode">Send lidentifying code</span>
+                        <button @click="getEmailCode" :disabled="isDisabled">{{buttonName}}</button>
                     </div>
                     <div class="row">
                         <label><i>*</i>New Password</label>
@@ -64,6 +64,9 @@
         props: ['show'],
         data() {
             return {
+                isDisabled:false,
+                buttonName:'Send lidentifying code',
+                time:59,
                 email: '',
                 code: '',
                 confirmPassword: '',
@@ -75,19 +78,48 @@
                     confirmPassword: true
                 },
                 emailText: '',//邮箱字段
+                timer:null,
             }
         },
         methods: {
             getEmailCode(){
-                if(!this.email || !this.confirmMsg.email) return;
+                if(!this.email || !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(this.email)) return;
+                this.$axios.post('/login/ifHasEmail', {email: this.email}).then(res => {
+                    let {data} = res;
+                    if (data.code === 'SUCCESS') {
+                        this.confirmMsg.email = false;
+                        this.emailText = 'email not register'
+                    } else {
+                        this.confirmMsg.email = true;
+                        this.sendCode();
+                    }
+                }).catch(err => {
+                })
+            },
+            sendCode(){
                 let data = {
                     email: this.email
                 };
                 http.sendCodeToMail(data, res => {
                     if (res.code === 'SUCCESS') {
                         dialog.success('email send successfully');
+                        this.restTime()
                     }
                 });
+            },
+            restTime() {
+
+                this.isDisabled = true;
+                this.timer = window.setInterval(()=>{
+                    this.buttonName = `（${this.time}）s`;
+                    --this.time;
+                    if(this.time < 0) {
+                        this.buttonName = "Send lidentifying code";
+                        this.time = 59;
+                        this.isDisabled = false;
+                        window.clearInterval(this.timer);
+                    }
+                }, 1000);
             },
             closeDialog() {
                 this.$emit('listenFun', this.msg);
@@ -106,7 +138,7 @@
                        };
                        this.$emit('listenFun', this.msg);
                        http.findPasswordByCode(data, res => {
-                           if (res.code === 'PASSWORD_HAS_BEEN_CHANGED') {
+                           if (res.code === 'SUCCESS') {
                                this.$message.success('NewPassword set successfully')
                            }
                        });
@@ -118,16 +150,12 @@
                 if (!/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(this.email)) {
                     this.confirmMsg.email = false;
                     this.emailText = 'email error'
-                } else {
-                    this.$axios.post('/login/ifHasEmail', {email: this.email}).then(res => {
-                        let {data} = res;
-                        if (data.code === 'CAN USE') {
-                            this.confirmMsg.email = false;
-                            this.emailText = 'email not register'
-                        } else this.confirmMsg.email = true;
-                    }).catch(err => {
-                    })
-                }
+                }else this.confirmMsg.email = true;
+            },
+        },
+        beforeDestroy(){
+            if(this.timer) {
+                clearInterval(this.timer); //关闭
             }
         }
     }
@@ -141,15 +169,13 @@
     .dialog {
         .dialog-body .row {
             position: relative;
-
-            span {
+            button {
                 position: absolute;
-                top: 28px;
+                top: 30px;
                 right: 123px;
                 display: inline-block;
                 color: #3C66D2;
                 font-size: 16px;
-                cursor: pointer;
             }
         }
     }
