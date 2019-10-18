@@ -45,22 +45,11 @@ export const http = {
 			successFun(res);
 		});
 	},
-	// 忘记密码
-	findPassword(data, successFun) {
+	// 重置密码
+	changePWDByOldPwd(data, successFun) {
 		xhr({
 			method: 'post',
-			url: '/login/findPassword',
-			data: data,
-			type: 'json'
-		}).then(res => {
-			successFun(res);
-		});
-	},
-	//查找email是否用了
-	ifHasEmail(data, successFun){
-		xhr({
-			method: 'post',
-			url: '/login/ifHasEmail',
+			url: '/login/changePWDByOldPwd',
 			data: data,
 			type: 'json'
 		}).then(res => {

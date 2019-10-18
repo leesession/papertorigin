@@ -16,7 +16,7 @@
                                              @change="colChangeEvent(item)"></el-checkbox>
                                 <h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
                             </div>
-                            <p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}</i></p>
+                            <p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}<span v-if="item.creators.length-1 > i">, </span></i></p>
                             <p>
                                 <em>{{item.publisher}}</em> | <em @click="jumpPage(item)">{{item.publicationName}}</em>
                                 | Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} |
@@ -117,6 +117,7 @@
                 citationShow: false,
                 citationAllShow: false,
                 pagination: {},
+                pageSize:5,
                 total: 0,
                 start: 1,
                 startNum: 1,
@@ -124,8 +125,8 @@
                 type: '',
                 types: '',
                 key: '',
-                url: 'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924&p=20',
-                urls: 'http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&max_records=20&sort_order=asc&sort_field=article_number',
+                url: `http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924`,
+                urls: `http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&sort_order=asc&sort_field=article_number`,
                 list: [],
                 year: [],
                 subjects: [],
@@ -138,13 +139,11 @@
                 publishFactor: '',
                 stringObj: '',
                 stringAllObj: [],
-                recordData:[
-                    {
+                recordData:[{
                         recordData:0,
                         quoteCount:0,
                         forwardCount:0
-                    }
-                ],//浏览次数等
+                    }],//浏览次数等
             }
         },
         components: {search, citation, citationAll},
@@ -270,6 +269,9 @@
             operateData(arr) {
                 this.list.forEach(item => {
                     item.isChecked = false;
+                    item.creators.forEach((item1,index)=>{//姓名去逗号
+                        item.creators[index].creator =item1.creator.replace(/,/,'')
+                    })
                 });
                 if (arr && arr.length > 0) {
                     arr.forEach(item => {
@@ -308,14 +310,14 @@
                 });
             },
             searchEvent() {
-                let _url = this.url + '&q=' + this.type + ':' + this.key;
+            // &q=${this.type}:${this.key}
+                let _url = `${this.url}&p=${this.pageSize}`;
                 this.loading = true;
                 $.ajax({
                     type: "get",
                     url: _url,
                     data: "",
                     success: res => {
-                        // this.total = Number(JSON.parse(res).result[0].total);
                         this.start = Number(JSON.parse(res).result[0].start);
                         this.list = JSON.parse(res).records;
                         this.year = JSON.parse(res).facets[3].values;
@@ -331,7 +333,7 @@
                             item.isActive = false;
                         });
                         //二次请求
-                        let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
                         $.ajax({
                             type: "get",
                             url: _urls,
@@ -352,7 +354,7 @@
                 if (Number(page) == totalPage) {
                     this.endNum = this.total;
                 }
-                let _url = this.url + '&q=' + this.type + ':' + this.key + '&s=' + page;
+                let _url = `${this.url}&p=${this.pageSize}&s=${page}&q=${this.type}:${this.key}` ;
                 this.loading = true;
                 $.ajax({
                     type: "get",
@@ -362,7 +364,8 @@
                         // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + '&content_type=' + this.types + '&article_title=' + this.key + '&start_record=' + page;
+
+                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${page}&content_type=${this.types}&article_title=${this.key}`;
                         $.ajax({
                             type: "get",
                             url: _urls,
@@ -397,15 +400,15 @@
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ')';
+                let _url = this.url + `&p=${this.pageSize}`+'&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ')';
                 if (this.subjectFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
                 }
                 if (this.publishFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
                 if (this.subjectFactor && this.publishFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
                         ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
                 this.loading = true;
@@ -417,9 +420,9 @@
                         // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
+                        let _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
                         if (this.publishFactor) {
-                            _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
+                            _urls = this.urls + `&max_records=${this.pageSize}`+  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
                         }
                         $.ajax({
                             type: "get",
@@ -442,15 +445,15 @@
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + this.subjectFactor + ')';
+                let _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + this.subjectFactor + ')';
                 if (this.yearFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` +  '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
                 }
                 if (this.publishFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` +  '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
                 }
                 if (this.yearFactor && this.publishFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
                         ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
                 $.ajax({
@@ -461,15 +464,15 @@
                         // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+                        let _urls = this.urls + `&max_records=${this.pageSize}`+'&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
                         if (this.yearFactor) {
-                            _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
+                            _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
                         }
                         if (this.publishFactor) {
-                            _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
+                            _urls = this.urls +  `&max_records=${this.pageSize}`+ '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
                         }
                         if (this.yearFactor && this.publishFactor) {
-                            _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
+                            _urls = this.urls + `&max_records=${this.pageSize}`+ '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
                         }
                         $.ajax({
                             type: "get",
@@ -491,15 +494,15 @@
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ')';
+                let _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ')';
                 if (this.yearFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
                 if (this.subjectFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
                 }
                 if (this.yearFactor && this.subjectFactor) {
-                    _url = this.url + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
+                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
                         ' AND ' + 'pub:' + this.publishFactor + ')';
                 }
                 $.ajax({
@@ -510,9 +513,9 @@
                         // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+                        let _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
                         if (this.yearFactor) {
-                            _urls = this.urls + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
+                            _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
                         }
                         $.ajax({
                             type: "get",

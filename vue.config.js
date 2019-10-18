@@ -18,17 +18,17 @@ module.exports = {
     port: 8080,
     https: false,
     open: true, //配置自动启动浏览器
-    // proxy: api1 // 配置跨域处理,只有一个代理
+    proxy: api1 // 配置跨域处理,只有一个代理
     // 配置多个代理
-    proxy: {
-      "/": {
-        target: api1,
-        changeOrigin: true,   //是否跨域
-        pathRewrite: {
-          '^/': ''
-        }
-      },
-    }
+    // proxy: {
+    //   "/": {
+    //     target: api1,
+    //     changeOrigin: true,   //是否跨域
+    //     pathRewrite: {
+    //       '^/': ''
+    //     }
+    //   },
+    // }
   },
   // 插件
   configureWebpack: {

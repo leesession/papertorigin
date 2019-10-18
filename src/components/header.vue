@@ -2,8 +2,8 @@
   <div class="head">
     <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
     <div class="header-right" v-if="isLogin">
-      Welcome,<b>{{isLogin.loginmail}}</b>
-      <span >ResetPWD</span>
+      Welcome,<b>{{JSON.parse(isLogin).loginmail}}</b>
+      <span @click="resetPwd">ResetPWD</span>
       <span @click="loginOut">Logout</span>
     </div>
     <div class="header-right" v-else>
@@ -30,6 +30,9 @@ export default {
       },
       loginMsg: {
         loginShow: true
+      },
+      resetMsg: {
+        resetShow: true
       }
     }
   },
@@ -45,6 +48,10 @@ export default {
     loginOut(){
       this.$message.success('logout was successfully');
       this.$store.commit('userLoginOut');
+    },
+    resetPwd(){
+      $('body').css('overflow','hidden')
+      this.$emit('lintenResetPwd', this.resetMsg);
     }
   }
 }

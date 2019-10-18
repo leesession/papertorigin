@@ -84,12 +84,13 @@ export default {
         loginpassword: this.password
       };
       http.login(data, res => {
-        if (res.code === 'SUCCES') {
+        if (res.code === 'SUCCESS') {
           if (this.isChecked === true) {
             localStorage.setItem('USER', JSON.stringify(data));
           } else {
             localStorage.clear();
           }
+          $('body').css('overflow','auto');
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
           this.$store.commit('userLogin',JSON.stringify(data))
