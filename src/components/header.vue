@@ -2,7 +2,7 @@
   <div class="head">
     <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
     <div class="header-right" v-if="isLogin">
-      Welcome,<b>{{JSON.parse(isLogin).loginmail}}</b>
+      Welcome, <b>{{JSON.parse(isLogin).loginmail}}</b>
       <span @click="resetPwd">ResetPWD</span>
       <span @click="loginOut">Logout</span>
     </div>

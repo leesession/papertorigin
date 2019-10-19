@@ -1,8 +1,8 @@
 <template>
     <div class="searchList">
-        <search title="Home" index="0" ref="searchBox" @listenFun="getChildParams"></search>
-        <div class="list">
-            <div class="list-cont"  v-loading="loading">
+        <search title="Home" index="0" ref="searchBox" @listenFun="getChildParams" :type="type" :keys="key"></search>
+        <div class="list" v-loading="loading">
+            <div class="list-cont">
                 <div class="title">
                     <span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
                 </div>
@@ -16,14 +16,15 @@
                                              @change="colChangeEvent(item)"></el-checkbox>
                                 <h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
                             </div>
-                            <p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}<span v-if="item.creators.length-1 > i">, </span></i></p>
-                            <p>
-                                <em>{{item.publisher}}</em> | <em @click="jumpPage(item)">{{item.publicationName}}</em>
-                                | Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} |
-                                {{item.publicationDate}}
-                            </p>
+                            <p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}<span
+                                    v-if="item.creators.length-1 > i">, </span></i></p>
+                            <p><em>{{item.publisher}}</em></p>
+                            <p><em @click="jumpPage(item)">{{item.publicationName}}</em></p>
+                            <p>Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} |
+                                {{item.publicationDate}}</p>
                             <p @click="jumpPage(item)" style="cursor: pointer;">DOI：<span>{{item.doi}}</span></p>
                             <p>ISSN：{{item.issn}}</p>
+                            <p>ISBN：{{item.isbn}}</p>
                             <div class="tools">
                                 <div class="col">
                                     <i class="icon icon-eyes"></i>
@@ -52,13 +53,9 @@
             <aside class="my-aside">
                 <div class="col">
                     <h3>Published Date:</h3>
-                    <div v-if="!yearFlag">
-                        <p v-for="(item, index) in year" :key="index" v-if="index < 4"
-                           :class="{active: item.isActive == true}"
-                           @click="yearClickEvent(item.value)">~{{item.value}}</p>
-                    </div>
-                    <div v-if="yearFlag">
-                        <p v-for="(item, index) in year" :key="index"
+                    <div>
+                        <!--查看更多+前4个 -->
+                        <p v-for="(item, index) in year" :key="index" v-if="(!yearFlag && index < 5) || yearFlag"
                            :class="{active: item.isActive == true}"
                            @click="yearClickEvent(item.value)">~{{item.value}}</p>
                     </div>
@@ -66,13 +63,10 @@
                 </div>
                 <div class="col">
                     <h3>Subjects:</h3>
-                    <div v-if="!subjectsFlag">
-                        <p v-for="(item, index) in subjects" :key="index" v-if="index < 5"
-                           :class="{active: item.isActive == true}"
-                           @click="subjectClickEvent(item.value)">{{item.value}}</p>
-                    </div>
-                    <div v-if="subjectsFlag">
+                    <div>
+                        <!--查看更多+前5个 -->
                         <p v-for="(item, index) in subjects" :key="index"
+                           v-if="(!subjectsFlag && index < 5) || subjectsFlag"
                            :class="{active: item.isActive == true}"
                            @click="subjectClickEvent(item.value)">{{item.value}}</p>
                     </div>
@@ -80,13 +74,9 @@
                 </div>
                 <div class="col">
                     <h3>Publisher:</h3>
-                    <div v-if="!publisherFlag">
-                        <p v-for="(item, index) in publisher" :key="index" v-if="index < 5"
-                           :class="{active: item.isActive == true}"
-                           @click="publishClickEvent(item.value)">{{item.value}}</p>
-                    </div>
-                    <div v-if="publisherFlag">
+                    <div>
                         <p v-for="(item, index) in publisher" :key="index"
+                           v-if="(!publisherFlag && index < 5) || publisherFlag"
                            :class="{active: item.isActive == true}"
                            @click="publishClickEvent(item.value)">{{item.value}}</p>
                     </div>
@@ -112,12 +102,12 @@
         name: 'searchList',
         data() {
             return {
-                loading:true,
+                loading: true,
                 checkAll: false,
                 citationShow: false,
                 citationAllShow: false,
                 pagination: {},
-                pageSize:5,
+                pageSize: 5,
                 total: 0,
                 start: 1,
                 startNum: 1,
@@ -139,11 +129,11 @@
                 publishFactor: '',
                 stringObj: '',
                 stringAllObj: [],
-                recordData:[{
-                        recordData:0,
-                        quoteCount:0,
-                        forwardCount:0
-                    }],//浏览次数等
+                recordData: [{
+                    lookCount: 0,
+                    quoteCount: 0,
+                    forwardCount: 0
+                }],//浏览次数等
             }
         },
         components: {search, citation, citationAll},
@@ -269,8 +259,8 @@
             operateData(arr) {
                 this.list.forEach(item => {
                     item.isChecked = false;
-                    item.creators.forEach((item1,index)=>{//姓名去逗号
-                        item.creators[index].creator =item1.creator.replace(/,/,'')
+                    item.creators.forEach((item1, index) => {//姓名去逗号
+                        item.creators[index].creator = item1.creator.replace(/,/, '')
                     })
                 });
                 if (arr && arr.length > 0) {
@@ -294,9 +284,9 @@
                 }
                 this.getRecord()
             },
-            getRecord(){
+            getRecord() {
                 let doiList = [];
-                this.list.forEach(item=>{
+                this.list.forEach(item => {
                     doiList.push(item.doi)
                 });
                 let data = {
@@ -310,12 +300,11 @@
                 });
             },
             searchEvent() {
-            // &q=${this.type}:${this.key}
                 let _url = `${this.url}&p=${this.pageSize}`;
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: _url,
+                    url: this.key ? `${_url}&q=${this.type}:${this.key}` : _url,
                     data: "",
                     success: res => {
                         this.start = Number(JSON.parse(res).result[0].start);
@@ -354,17 +343,15 @@
                 if (Number(page) == totalPage) {
                     this.endNum = this.total;
                 }
-                let _url = `${this.url}&p=${this.pageSize}&s=${page}&q=${this.type}:${this.key}` ;
+                let _url = `${this.url}&p=${this.pageSize}&s=${page}`;
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: _url,
+                    url: this.key ? `${_url}&q=${this.type}:${this.key}` : _url,
                     data: "",
                     success: res => {
-                        // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-
                         let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${page}&content_type=${this.types}&article_title=${this.key}`;
                         $.ajax({
                             type: "get",
@@ -380,6 +367,16 @@
                 });
             },
             goDetails(obj) {
+                let data = {
+                    forwardCount: 0,
+                    lookCount: 1,
+                    peperDoi: obj.doi,
+                    quoteCount: 0
+                };
+                http.addListNum(data, res => {
+                    if (res.code == 'SUCCESS') {
+                    }
+                });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
                 this.$router.push({path: '/searchDetails'});
             },
@@ -392,7 +389,15 @@
             publisherMore() {
                 this.publisherFlag = true;
             },
-            yearClickEvent(year) {
+            getTrueUrl(_url, clicked, clickName, confirmOne, nameOne, confirmTwo, nameTwo) {
+                if (confirmOne) {
+                    if (confirmTwo) _url = `${_url}${clickName}:${clicked}AND${nameOne}:${confirmOne}AND${nameTwo}:${confirmTwo}`;
+                    else _url = `${_url}${clickName}:${clicked}AND${nameOne}:${confirmOne}`;
+                } else if (confirmTwo) _url = `${_url}${clickName}:${clicked}AND${nameTwo}:${confirmTwo}`;
+                else _url = `${_url}${clickName}:${clicked}`;
+                return _url
+            },
+            yearClickEvent(year) {//点击年
                 this.yearFactor = year;
                 this.year.forEach(item => {
                     item.isActive = false;
@@ -400,29 +405,25 @@
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + `&p=${this.pageSize}`+'&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ')';
-                if (this.subjectFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
-                }
-                if (this.publishFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
-                }
-                if (this.subjectFactor && this.publishFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
-                        ' AND ' + 'pub:' + this.publishFactor + ')';
-                }
+                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                //做判断
+                // if(this.subjectFactor){
+                //     if(this.publishFactor) _url = `${_url}year:${this.yearFactor} AND subject:${this.subjectFactor} AND pub:${this.publishFactor}`;
+                //     else _url = `${_url}year:${this.yearFactor} AND subject:${this.subjectFactor}`;
+                // }else if(this.publishFactor) _url = `${_url}year:${this.yearFactor} AND pub:${this.publishFactor}`;
+                // else _url = `${_url}year:${this.yearFactor}`;
+                _url = this.getTrueUrl(_url, this.yearFactor, 'year', this.subjectFactor, 'subject', this.publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: _url,
+                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
                     data: "",
                     success: res => {
-                        // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
                         let _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
                         if (this.publishFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}`+  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
+                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
                         }
                         $.ajax({
                             type: "get",
@@ -437,48 +438,41 @@
                     }
                 });
             },
-            subjectClickEvent(subject) {
+            subjectClickEvent(subject) {//点击学科
                 this.subjectFactor = subject;
+                let subjectFactor = subject.replace(/&/g, '%26');
+                subjectFactor.indexOf(' and ') === -1 && (subjectFactor = subjectFactor.replace(/\s/g, ''));
+                // this.subjectFactor = this.subjectFactor .replace(/\s/g,'');
+                // this.subjectFactor = encodeURI(subject)
                 this.subjects.forEach(item => {
                     item.isActive = false;
                     if (item.value == subject) {
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'subject:' + this.subjectFactor + ')';
-                if (this.yearFactor) {
-                    _url = this.url + `&p=${this.pageSize}` +  '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
-                }
-                if (this.publishFactor) {
-                    _url = this.url + `&p=${this.pageSize}` +  '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
-                }
-                if (this.yearFactor && this.publishFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
-                        ' AND ' + 'pub:' + this.publishFactor + ')';
-                }
+                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                _url = this.getTrueUrl(_url, subjectFactor, 'subject', this.yearFactor, 'year', this.publishFactor, 'pub');
+                this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: _url,
+                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
                     data: "",
                     success: res => {
-                        // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + `&max_records=${this.pageSize}`+'&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+                        let _urls = '';
                         if (this.yearFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
-                        }
-                        if (this.publishFactor) {
-                            _urls = this.urls +  `&max_records=${this.pageSize}`+ '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
-                        }
-                        if (this.yearFactor && this.publishFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}`+ '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
-                        }
+                            if (this.publishFactor) _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
+                            else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
+                        } else if (this.publishFactor) {
+                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
+                        } else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
                         $.ajax({
                             type: "get",
                             url: _urls,
                             data: "",
                             success: ress => {
+                                this.loading = false;
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 let list = this.operateData(ress.articles);
                             }
@@ -494,28 +488,19 @@
                         item.isActive = true;
                     }
                 });
-                let _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ')';
-                if (this.yearFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'pub:' + this.publishFactor + ')';
-                }
-                if (this.subjectFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'pub:' + this.publishFactor + ' AND ' + 'subject:' + this.subjectFactor + ')';
-                }
-                if (this.yearFactor && this.subjectFactor) {
-                    _url = this.url + `&p=${this.pageSize}` + '&q=(' + this.type + ':' + this.key + ' AND ' + 'year:' + this.yearFactor + ' AND ' + 'subject:' + this.subjectFactor +
-                        ' AND ' + 'pub:' + this.publishFactor + ')';
-                }
+                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                _url = this.getTrueUrl(_url, this.publishFactor, 'pub', this.subjectFactor, 'subject', this.yearFactor, 'year');
                 $.ajax({
                     type: "get",
-                    url: _url,
+                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
                     data: "",
                     success: res => {
                         // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+                        let _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
                         if (this.yearFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` +  '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
+                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
                         }
                         $.ajax({
                             type: "get",
@@ -565,7 +550,7 @@
                 padding: 28px 50px 25px 40px;
                 border-bottom: 1px solid #D9E5E7;
                 cursor: pointer;
-                &:hover{
+                &:hover {
                     background-color: #F8F8FC;
                 }
                 .cont-title {
@@ -620,7 +605,7 @@
                         span {
                             color: #2950EB;
                             font-size: 18px;
-                            &:hover{
+                            &:hover {
                                 border-bottom: 1px solid #2950EB;
                             }
                         }

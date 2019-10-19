@@ -11,10 +11,10 @@
           <span>Journal</span>
         </div>
         <div class="box-cont">
-          <img src="../../assets/images/resours-01.png" alt="">
-          <img src="../../assets/images/resours-01.png" alt="">
-          <img src="../../assets/images/resours-01.png" alt="">
-          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/logo-springernature.svg" alt="">
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
       <div class="row">
@@ -22,8 +22,8 @@
           <span>Conference</span>
         </div>
         <div class="box-cont">
-          <img src="../../assets/images/resours-01.png" alt="">
-          <img src="../../assets/images/resours-01.png" alt="">
+          <img src="../../assets/images/logo-springernature.svg" alt="">
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
       <div class="row">
@@ -31,11 +31,11 @@
           <span>Thesis</span>
         </div>
         <div class="box-cont">
-          <img src="../../assets/images/resours-01.png" alt="">
-          <img src="../../assets/images/resours-01.png" alt="">
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
+          <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
-      
+
     </div>
   </div>
 </template>

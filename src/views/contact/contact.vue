@@ -28,33 +28,12 @@
 
     <div class="footer">
       <ul>
-        <li>
-          <h4>Administrative Management</h4>
-          <p>Telephone: +86 028-6162-6264</p>
-          <p>Mobilephone: +86 13367537892</p>
-          <p>E-mail: yanfeng@tasselpaper.com</p>
-          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
-        </li>
-        <li>
-          <h4>Market and Cooperation</h4>
-          <p>Telephone: +86 028-6162-6266</p>
-          <p>Mobilephone: +86 13367533362</p>
-          <p>E-mail: yangjunjie@tasselpaper.com</p>
-          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
-        </li>
-        <li>
-          <h4>Product and Service</h4>
-          <p>Telephone: +86 028-6162-6268</p>
-          <p>Mobilephone: +86 13362347865</p>
-          <p>E-mail: ruhang@tasselpaper.com</p>
-          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
-        </li>
-        <li>
-          <h4>Technology and Design</h4>
-          <p>Telephone: +86 028-6162-6270</p>
-          <p>Mobilephone: +86 13362343628</p>
-          <p>E-mail: shenghao@tasselpaper.com</p>
-          <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
+        <li v-for="(item,index) in concatArr" :key="index">
+          <h4>{{item.name}}</h4>
+          <p>{{item.Landline}}</p>
+          <p>{{item.mobile}}</p>
+          <p>{{item.email}}</p>
+          <p>{{item.address}}</p>
         </li>
       </ul>
     </div>
@@ -69,7 +48,32 @@ export default {
   data() {
     return {
       address: 'NO.366, North Hupan Road, Chengdu 610000, China',
-      icon: require("../../assets/images/icon.png")
+      icon: require("../../assets/images/icon.png"),
+        concatArr:[{
+                name:'Administrative Management',
+                Landline:'Telephone: +86 028-6162-6264',
+                mobile:'Mobilephone: +86 13367537892',
+                email:'E-mail: yanfeng@tasselpaper.com',
+                address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
+            },{
+            name:'Market and Cooperation',
+            Landline:'Telephone: +86 028-6162-6266',
+            mobile:'Mobilephone: +86 13367533362',
+            email:'E-mail: yangjunjie@tasselpaper.com',
+            address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
+        },{
+            name:'Product and Service',
+            Landline:'Telephone: +86 028-6162-6268',
+            mobile:'Mobilephone: +86 13362347865',
+            email:'E-mail: ruhang@tasselpaper.com',
+            address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
+        },{
+            name:'Technology and Design',
+            Landline:'Telephone: +86 028-6162-6270',
+            mobile:'Mobilephone: +86 13362343628',
+            email:'E-mail: shenghao@tasselpaper.com',
+            address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
+        }]
     }
   },
   components: { search },

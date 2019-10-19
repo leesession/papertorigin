@@ -14,7 +14,7 @@
                     <div class="cont">
                         <img src="../../assets/images/service-blue.png" alt="">
                         <div>
-                            <h4>{{item.name}}<span>{{item.role}}</span></h4>
+                            <h4>{{item.name}} <span>{{item.role}}</span></h4>
                             <p>{{item.intro}}</p>
                         </div>
                     </div>
