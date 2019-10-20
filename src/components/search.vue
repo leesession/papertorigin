@@ -18,13 +18,13 @@
         <div class="search-box">
             <div class="search">
                 <el-dropdown trigger="click" class="search-key">
-          <span class="el-dropdown-link">
-            <span>{{ showVal}}</span>
-            <i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
+                      <span class="el-dropdown-link">
+                        <span>{{ showVal}}</span>
+                        <i class="el-icon-caret-bottom el-icon--right"></i>
+                      </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="(item, index) in selectList" :key="index">
-                            <span @click="selectEvent(item)">{{item.showName}}</span>
+                            <span @click="selectEvent(item)" style="display: inline-block;width: 100%">{{item.showName}}</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -74,8 +74,9 @@
         methods: {
             // 搜索下拉
             selectEvent(item) {
+                console.log(item.showName)
                 this.selectVal = item.value;
-                this.showVal = item.showName
+                this.showVal = item.showName;
             },
             navClickEvent(index) {
                 if (index == 0) {

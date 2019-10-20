@@ -7,8 +7,16 @@
                     <span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
                 </div>
                 <div class="cont">
-                    <el-checkbox v-model="checkAll" class="check-all" @change="allChangeEvent(checkAll)">select all
-                    </el-checkbox>
+                    <div class="select">
+                        <el-checkbox
+                                v-model="checkAll"
+                                @change="selectChange"
+                                class="check-all">
+                            select all
+                        </el-checkbox>
+                        <el-button size="small" @click="allChangeEvent">Cite Selected</el-button>
+                    </div>
+
                     <ul>
                         <li v-for="(item, index) in list" :key="index">
                             <div class="cont-title">
@@ -84,7 +92,6 @@
                 </div>
             </aside>
         </div>
-
         <citation v-if="citationShow" :show="citationShow" :params="stringObj" @listenFun="getCitationMsg"></citation>
         <citation-all v-if="citationAllShow" :show="citationAllShow" :params="stringAllObj"
                       @listenFun="getCitationAllMsg"></citation-all>
@@ -152,75 +159,24 @@
             this.$refs.searchBox.selectVal = this.type;
         },
         methods: {
-            allChangeEvent(data) {
-                if (data == true) {
+            allChangeEvent() {
+                if (this.checkAll) {
                     this.citationAllShow = true;
-                    let list = this.list;
-                    list.forEach(item => {
-                        item.isChecked = true;
-                        this.list = list;
-                    });
-                    let arr1 = [], arr2 = [], arr3 = [];
+                    this.checkCitation(this.list);
+                }else {
+                    let index = 0 , checkedList = [];
                     this.list.forEach(item => {
-                        let authors = '';   //作者
-                        item.creators.forEach(o => {
-                            if (o.creator) {
-                                // authors += item.creator.replace(',', '') + ',';
-                                authors += o.creator + ',';
-                            } else {
-                                authors += o.full_name + ',';
-                            }
-                        });
-                        authors = authors.slice(0, -1) + '.';
-                        let title = item.title;  //论文名称
-                        let publicationName = item.publicationName ? item.publicationName : item.publication_title; //期刊名称
-                        let year = item.publicationDate;  //出版年份
-                        let volume = item.volume ? item.volume : '';  //卷数
-                        let startPage = item.startingPage;  //开始页码
-                        let endPage = item.endingPage;  //结束页码
-                        let stringObj = {};
-                        stringObj.string1 = authors + title + '[J].' + publicationName + ',' + year + ',' + '(' + volume + '):' + startPage + '-' + endPage;
-                        stringObj.string2 = authors + '"' + title + '."' + publicationName + ',' + volume + '(' + year + '):' + startPage + '-' + endPage;
-                        stringObj.string3 = authors + '(' + year + ').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage;
-                        arr1.push(stringObj.string1);
-                        arr2.push(stringObj.string2);
-                        arr3.push(stringObj.string3);
-                        this.stringAllObj = [arr1, arr2, arr3];
+                        //用来判断 select数量
+                        if(item.isChecked){
+                            index++;
+                            checkedList.push(item)
+                        }
                     });
-                    console.log(this.stringAllObj);
+                    if(index){
+                        this.citationAllShow = true;
+                        this.checkCitation(checkedList);
+                    }else this.$message.info('Please Select !')
                 }
-            },
-            colChangeEvent(obj) {
-                this.citationShow = true;
-                let list = this.list;
-                list.forEach(item => {
-                    item.isChecked = false;
-                    if (item.doi == obj.doi) {
-                        item.isChecked = true;
-                        this.list = list;
-                    }
-                });
-                let authors = '';   //作者
-                obj.creators.forEach(item => {
-                    if (item.creator) {
-                        // authors += item.creator.replace(',', '') + ',';
-                        authors += item.creator + ',';
-                    } else {
-                        authors += item.full_name + ',';
-                    }
-                });
-                authors = authors.slice(0, -1) + '.';
-                let title = obj.title;  //论文名称
-                let publicationName = obj.publicationName ? obj.publicationName : obj.publication_title; //期刊名称
-                let year = obj.publicationDate;  //出版年份
-                let volume = obj.volume ? obj.volume : '';  //卷数
-                let startPage = obj.startingPage;  //开始页码
-                let endPage = obj.endingPage;  //结束页码
-                let stringObj = {};
-                stringObj.string1 = authors + title + '[J].' + publicationName + ',' + year + ',' + '(' + volume + '):' + startPage + '-' + endPage;
-                stringObj.string2 = authors + '"' + title + '."' + publicationName + ',' + volume + '(' + year + '):' + startPage + '-' + endPage;
-                stringObj.string3 = authors + '(' + year + ').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage;
-                this.stringObj = JSON.stringify(stringObj);
             },
             getChildParams(data) {
                 this.type = data.type ? data.type : '';
@@ -234,20 +190,15 @@
             },
             getCitationMsg(data) {
                 this.citationShow = data;
-                let list = this.list;
-                list.forEach(item => {
-                    item.isChecked = false;
-                    this.list = list;
-                });
             },
             getCitationAllMsg(data) {
                 this.citationAllShow = data;
-                this.checkAll = false;
-                let list = this.list;
-                list.forEach(item => {
-                    item.isChecked = false;
-                    this.list = list;
-                });
+                // this.checkAll = false;
+                // let list = this.list;
+                // list.forEach(item => {
+                //     item.isChecked = false;
+                //     this.list = list;
+                // });
             },
             jumpPage(obj) {
                 if (obj.url && obj.url[0].value) {
@@ -274,6 +225,7 @@
                         obj.startingPage = item.start_page;
                         obj.endingPage = item.end_page;
                         obj.publicationDate = item.publication_date;
+                        obj.publicationYear = item.publication_year;
                         obj.doi = item.doi;
                         obj.issn = item.issn;
                         obj.abstract = item.abstract;
@@ -375,10 +327,10 @@
                 };
                 http.addListNum(data, res => {
                     if (res.code == 'SUCCESS') {
+                        this.$router.push({path: '/searchDetails'});
                     }
                 });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
-                this.$router.push({path: '/searchDetails'});
             },
             yearMore() {
                 this.yearFlag = true;
@@ -513,7 +465,54 @@
                         });
                     }
                 });
-            }
+            },
+            selectChange(){
+                let list = JSON.parse(JSON.stringify(this.list));
+                list.forEach(item => {
+                    item.isChecked = this.checkAll;
+                });
+                this.list = list
+            },
+            colChangeEvent(obj) {
+                let index = 0 ,list = JSON.parse(JSON.stringify(this.list));
+                list.forEach(item => {
+                    //设置当前点击的select
+                    item.doi === obj.doi && (item.isChecked =  obj.isChecked);
+                    // //用来判断 selectAll
+                    item.isChecked && index++;
+                });
+                list.length === index ? this.checkAll = true : this.checkAll = false;
+                this.list = list;
+            },
+            checkCitation(arr){
+                let arr1 = [], arr2 = [], arr3 = [];
+                arr.forEach(item => {
+                    let authors = '';   //作者
+                    item.creators.forEach((o,index) => {
+                        authors += o.creator || o.full_name;
+                        index !== item.creators.length - 1 && (authors += ', ')
+                    });
+                    authors = authors.slice(0, -1) + '. ';
+                    let title = item.title;  //论文名称
+                    let publicationName = item.publicationName ? item.publicationName : item.publication_title; //期刊名称
+                    let year = item.publicationYear ? item.publicationYear : item.publicationDate;  //出版年份
+                    console.log(item.publication_year)
+                    let volume = item.volume ? item.volume : '';  //卷数
+                    let startPage = item.startingPage;  //开始页码
+                    let endPage = item.endingPage;  //结束页码
+                    let stringObj = {};
+                    // authors + title + '[J]. ' + publicationName + ', ' + year + ', ' + '(' + volume + '): ' + startPage + '-' + endPage
+                    stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`;
+                    // authors + '"' + title + '." ' + publicationName + ', ' + volume + '(' + year + '): ' + startPage + '-' + endPage
+                    stringObj.string2 = `${authors}"${title}." ${publicationName}, ${volume}, (${year}): ${startPage}-${endPage}`;
+                    // authors + '(' + year + ').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage
+                    stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}, ${volume}, ${startPage}-${endPage}`;
+                    arr1.push(stringObj.string1);
+                    arr2.push(stringObj.string2);
+                    arr3.push(stringObj.string3);
+                    this.stringAllObj = [arr1, arr2, arr3];
+                });
+            },
         }
     }
 </script>
@@ -546,6 +545,20 @@
         }
 
         .cont {
+            >.select{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-right: 50px;
+                button{
+                    height: 32px;
+                    background-color: #54A7C4;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    color: #fff;
+                    font-size: 18px;
+                }
+            }
             li {
                 padding: 28px 50px 25px 40px;
                 border-bottom: 1px solid #D9E5E7;

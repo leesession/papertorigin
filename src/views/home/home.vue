@@ -27,7 +27,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item v-for="(item, index) in selectList" :key="index">
-                                <span @click="selectEvent(item)">{{item.showName}}</span>
+                                <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">>{{item.showName}}</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>

@@ -39,17 +39,12 @@ export default {
       info: null
     }
   },
-  created() {
-    console.log(this.params[1]);
-    // this.info = JSON.parse(this.params);
-    console.log(this.info);
-  },
   methods: {
     closeDialog() {
       this.$emit('listenFun', this.msg);
     }
   }
-  
+
 }
 </script>
 
