@@ -7,10 +7,12 @@
                     <i class="icon icon-note"></i>
                     <span>{{details.title}}</span>
                 </div>
-                <p><i v-for="(o, i) in details.creators" :key="i">{{o.creator || o.full_name}}<span v-if="details.creators.length-1 > i">, </span></i></p>
+                <p><i v-for="(o, i) in details.creators" :key="i">{{o.creator || o.full_name}}<span
+                        v-if="details.creators.length-1 > i">, </span></i></p>
                 <p><em>{{details.publisher}}</em></p>
                 <p><em @click="jumpPage">{{details.publicationName}}</em></p>
-                <p>Volume {{details.volume}} | Page {{details.startingPage}}-{{details.endingPage}} | {{details.publicationDate}}</p>
+                <p>Volume {{details.volume}} | Page {{details.startingPage}}-{{details.endingPage}} |
+                    {{details.publicationDate}}</p>
                 <p style="cursor: pointer;" @click="jumpPage">DOI：<span>{{details.doi}}</span></p>
                 <p>ISSN：{{details.issn}}</p>
                 <p>ISBN：{{details.isbn}}</p>
@@ -18,7 +20,8 @@
                     <i class="icon icon-zero"></i>
                     <span>Abstract</span>
                 </div>
-                <p class="tips">{{details.abstract.indexOf('Abstract') === -1?details.abstract : details.abstract.replace(/Abstract/,'')}}</p>
+                <p class="tips">{{details.abstract.indexOf('Abstract') === -1?details.abstract :
+                    details.abstract.replace(/Abstract/,'')}}</p>
                 <div class="list-cont-title" v-if="details.keyword">
                     <i class="icon icon-zero"></i>
                     <span>Keyword</span>
@@ -49,34 +52,65 @@
                     <a v-else href="javascript:void(0)" @click="notLogin">DOWNLOAD</a>
                 </div>
             </div>
-            <!-- <aside class="my-aside">
-                      <div class="col">
-                          <h3>Published Date:</h3>
-                          <p>~2018</p>
-                          <p>~2017</p>
-                          <p>~2016</p>
-                          <p>~2015</p>
-                          <span>See More</span>
-                      </div>
-                      <div class="col">
-                          <h3>Subjects:</h3>
-                          <p>Inorganic Chemistry</p>
-                          <p>Material Science</p>
-                          <p>Nanotechnology</p>
-                          <p>Optics and Optoelectronics</p>
-                          <p>Plasmonics and Optical Devices</p>
-                          <span>More</span>
-                      </div>
-                      <div class="col">
-                          <h3>Publisher:</h3>
-                          <p>journal of Nanoparticle Research</p>
-                          <p>Nature physics</p>
-                          <p>Advanced Nanomaterials</p>
-                          <p>Optics Letter</p>
-                          <p>Chinese Optics Leter</p>
-                          <span>More</span>
-                      </div>
-                  </!-->
+            <aside class="my-aside" v-loading="loading">
+                <div class="col">
+                    <h3>Published Date:</h3>
+                    <div>
+                        <!--查看更多+前4个 -->
+                        <p v-for="(item, index) in year" :key="index" v-if="(!yearFlag && index < 5) || yearFlag"
+                           :class="{active: item.isActive == true}"
+                           @click="yearClickEvent(item.value)">~{{item.value}}</p>
+                    </div>
+                    <span @click="yearMore" v-show="!yearFlag">See More</span>
+                </div>
+                <div class="col">
+                    <h3>Subjects:</h3>
+                    <div>
+                        <!--查看更多+前5个 -->
+                        <p v-for="(item, index) in subjects" :key="index"
+                           v-if="(!subjectsFlag && index < 5) || subjectsFlag"
+                           :class="{active: item.isActive == true}"
+                           @click="subjectClickEvent(item.value)">{{item.value}}</p>
+                    </div>
+                    <span @click="subjectsMore" v-show="!subjectsFlag">See More</span>
+                </div>
+                <div class="col">
+                    <h3>Publisher:</h3>
+                    <div>
+                        <p v-for="(item, index) in publisher" :key="index"
+                           v-if="(!publisherFlag && index < 5) || publisherFlag"
+                           :class="{active: item.isActive == true}"
+                           @click="publishClickEvent(item.value)">{{item.value}}</p>
+                    </div>
+                    <span @click="publisherMore" v-show="!publisherFlag">See More</span>
+                </div>
+                <!--<div class="col">-->
+                    <!--<h3>Published Date:</h3>-->
+                    <!--<p>~2018</p>-->
+                    <!--<p>~2017</p>-->
+                    <!--<p>~2016</p>-->
+                    <!--<p>~2015</p>-->
+                    <!--<span>See More</span>-->
+                <!--</div>-->
+                <!--<div class="col">-->
+                    <!--<h3>Subjects:</h3>-->
+                    <!--<p>Inorganic Chemistry</p>-->
+                    <!--<p>Material Science</p>-->
+                    <!--<p>Nanotechnology</p>-->
+                    <!--<p>Optics and Optoelectronics</p>-->
+                    <!--<p>Plasmonics and Optical Devices</p>-->
+                    <!--<span>More</span>-->
+                <!--</div>-->
+                <!--<div class="col">-->
+                    <!--<h3>Publisher:</h3>-->
+                    <!--<p>journal of Nanoparticle Research</p>-->
+                    <!--<p>Nature physics</p>-->
+                    <!--<p>Advanced Nanomaterials</p>-->
+                    <!--<p>Optics Letter</p>-->
+                    <!--<p>Chinese Optics Leter</p>-->
+                    <!--<span>More</span>-->
+                <!--</div>-->
+            </aside>
         </div>
 
     </div>
@@ -96,15 +130,27 @@
         },
         data() {
             return {
+                loading:true,
                 checkAll: false,
                 details: {},
-                numObj: {}
+                numObj: {},
+                year: [],
+                subjects: [],
+                publisher: [],
+                yearFlag: false,
+                subjectsFlag: false,
+                publisherFlag: false,
+                // yearFactor: '',
+                // subjectFactor: '',
+                // publishFactor: '',
+                url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924'
             }
         },
         components: {search},
         created() {
             this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.getListNum();
+            this.searchEvent();
         },
         methods: {
             jumpPage() {
@@ -145,19 +191,65 @@
                     }
                 });
             },
-            downLoadPdfByUrl(){
+            downLoadPdfByUrl() {
                 // let loginMsg = JSON.parse(this.loginMsg)
                 let data = {
                     url: this.details.doi,
                     userEmail: JSON.parse(this.loginMsg).loginmail
                 };
                 http.downLoadPdfByUrl(data, res => {
-                    if (res.code == 'SUCCESS') {}
+                    if (res.code == 'SUCCESS') {
+                    }
                 });
             },
-            notLogin(){
+            notLogin() {
                 this.$message.info('Please Login !')
-            }
+            },
+            searchEvent() {
+                // let _url = `${this.url}&p=1`;
+                $.ajax({
+                    type: "get",
+                    url:  `${this.url}&p=1`,
+                    data: "",
+                    success: res => {
+                        this.loading = false;
+                        let facets = JSON.parse(res).facets;
+                        this.year = facets[3].values;
+                        this.year.map(item => {
+                            item.isActive = false;
+                        });
+                        this.subjects = facets[0].values;
+                        this.subjects.map(item => {
+                            item.isActive = false;
+                        });
+                        this.publisher = facets[2].values;
+                        this.publisher.map(item => {
+                            item.isActive = false;
+                        });
+                    }
+                });
+            },
+            yearClickEvent(value){
+               let detailquery = `year:"${value}"`;
+                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+            },
+            yearMore(){
+                this.yearFlag = true;
+            },
+            subjectClickEvent(value){
+                let detailquery = `subject:"${value}"`
+                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+            },
+            subjectsMore(){
+                this.subjectsFlag = true;
+            },
+            publishClickEvent(value){
+                let detailquery = `pub:"${value}"`
+                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+            },
+            publisherMore(){
+                this.publisherFlag = true;
+            },
         }
     }
 </script>

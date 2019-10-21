@@ -1,7 +1,8 @@
 <template>
     <div class="searchList">
         <search title="Search Results" index="0" ref="searchBox" @listenFun="getChildParams" :type="type" :keys="key"></search>
-        <div class="list" v-loading="loading">
+        <!--v-loading="loading"-->
+        <div class="list" >
             <div class="list-cont">
                 <div class="title">
                     <span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
@@ -155,6 +156,7 @@
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
             }
+            console.log(this.$route.query.detailquery)
             this.getAPIKEY()
         },
         mounted() {
@@ -270,29 +272,49 @@
                 });
             },
             searchEvent() {
-                let _url = `${this.url}&p=${this.pageSize}`;
+                let detailquery = this.$route.query.detailquery ,_url = '';
+                detailquery = detailquery.replace(/&/g, '%26');
+                if(detailquery){
+                    _url = `${this.url}&p=${this.pageSize}&q=(${detailquery}`;
+                    _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
+                }else {
+                    _url = `${this.url}&p=${this.pageSize}`;
+                    _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
+                }
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url}&q=${this.type}:${this.key}` : _url,
+                    url: _url,
                     data: "",
                     success: res => {
                         this.start = Number(JSON.parse(res).result[0].start);
                         this.list = JSON.parse(res).records;
                         this.year = JSON.parse(res).facets[3].values;
-                        this.year.map(item => {
-                            item.isActive = false;
+                        //判断detail页面返回值没有？
+                        this.year.map((item,index) => {
+                            detailquery.indexOf('year:"')>-1 && index === 0 ? (item.isActive =true) : item.isActive = false;
                         });
                         this.subjects = JSON.parse(res).facets[0].values;
-                        this.subjects.map(item => {
-                            item.isActive = false;
+                        this.subjects.map((item,index) => {
+                            detailquery.indexOf('subject:"')>-1 && index === 0 ? (item.isActive =true) : item.isActive = false;
                         });
                         this.publisher = JSON.parse(res).facets[2].values;
-                        this.publisher.map(item => {
-                            item.isActive = false;
+                        this.publisher.map((item,index) => {
+                            detailquery.indexOf('pub:"')>-1 && index === 0 ? item.isActive =true : item.isActive = false;
                         });
+                        //无用的之后删除
+                        this.operateData([])
                         //二次请求
                         let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
+                        if(detailquery){
+                            if(detailquery.indexOf('year:"')>-1){
+                                let year = detailquery.slice(6,detailquery.length - 1);
+                                _urls = `${_urls}&publication_year=${year}`
+                            }else if(detailquery.indexOf('pub:"')>-1){
+                                let pub = detailquery.slice(5,detailquery.length - 1);
+                                _urls = `${_urls}&publication_year=${pub}`
+                            }
+                        }
                         $.ajax({
                             type: "get",
                             url: _urls,
@@ -303,7 +325,7 @@
                                 this.loading = false;
                             },
                             error:(xhr)=> {
-                                this.getAPIKEY();
+                                // this.getAPIKEY();
                             }
                         });
                     }
