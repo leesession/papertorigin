@@ -27,7 +27,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item v-for="(item, index) in selectList" :key="index">
-                                <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">>{{item.showName}}</span>
+                                <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">{{item.showName}}</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -152,7 +152,6 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
-
         <div class="footer-box">
             <div class="footer">
                 <div class="wrap1300">
@@ -171,16 +170,21 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
-    import xhr from '../../utils/xhr.js'
     import {http} from '../../api/http.js'
+    import {getBrowse , getBrowseData ,getCity ,getIp ,getDate ,getTime} from '../../utils/searchUp.js'
+    import {mapState} from 'vuex'
 
     export default {
         name: 'home',
+        computed: {
+            ...mapState({
+                loginMsg: 'loginMsg'
+            }),
+        },
         data() {
             return {
                 key: '',
@@ -287,6 +291,20 @@
             },
             // 搜索
             searchEvent() {
+                let data = {
+                    browser: getBrowse().browser,
+                    browserData: getBrowseData(),
+                    city: getCity(),
+                    contry: "",
+                    date: getDate(),
+                    ipAddress: getIp(),
+                    queryData: `{type: ${this.selectVal}, key: ${this.key}}`,
+                    time: getTime(),
+                    userEmail: this.loginMsg ? JSON.parse(this.loginMsg).loginmail :''
+                };
+                http.userSearchRecord(data, res => {
+                    if (res.code === 'SUCCESS') {}
+                });
                 this.$router.push({path: '/searchList', query: {type: this.selectVal, key: this.key}});
             }
         }

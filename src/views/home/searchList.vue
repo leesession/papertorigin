@@ -1,6 +1,6 @@
 <template>
     <div class="searchList">
-        <search title="Home" index="0" ref="searchBox" @listenFun="getChildParams" :type="type" :keys="key"></search>
+        <search title="Search Results" index="0" ref="searchBox" @listenFun="getChildParams" :type="type" :keys="key"></search>
         <div class="list" v-loading="loading">
             <div class="list-cont">
                 <div class="title">
@@ -78,7 +78,7 @@
                            :class="{active: item.isActive == true}"
                            @click="subjectClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="subjectsMore" v-show="!subjectsFlag">More</span>
+                    <span @click="subjectsMore" v-show="!subjectsFlag">See More</span>
                 </div>
                 <div class="col">
                     <h3>Publisher:</h3>
@@ -88,7 +88,7 @@
                            :class="{active: item.isActive == true}"
                            @click="publishClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="publisherMore" v-show="!publisherFlag">More</span>
+                    <span @click="publisherMore" v-show="!publisherFlag">See More</span>
                 </div>
             </aside>
         </div>
@@ -122,8 +122,10 @@
                 type: '',
                 types: '',
                 key: '',
-                url: `http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924`,
-                urls: `http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&sort_order=asc&sort_field=article_number`,
+                // http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924
+                url: ``,
+                // http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&sort_order=asc&sort_field=article_number
+                urls: ``,
                 list: [],
                 year: [],
                 subjects: [],
@@ -141,6 +143,7 @@
                     quoteCount: 0,
                     forwardCount: 0
                 }],//浏览次数等
+                ieeAPIKEY:'7d2xu2qsmryfuuhnfvc3jzdx'
             }
         },
         components: {search, citation, citationAll},
@@ -152,13 +155,28 @@
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
             }
-            this.searchEvent();
+            this.getAPIKEY()
         },
         mounted() {
             this.$refs.searchBox.key = this.key;
             this.$refs.searchBox.selectVal = this.type;
         },
         methods: {
+            getAPIKEY(){
+                let data = '';
+                http.getAPIKEY(data, res => {
+                    if (res.code === 'SUCCESS') {
+                        res.data.forEach(item=>{
+                            if(item.publisher === 'springernature'){
+                                this.url = `http://api.springernature.com/metadata/json?api_key=${item.apiKey}`
+                            }else if(item.publisher === 'ieee'){
+                                this.urls = `http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=${item.apiKey}&format=json&sort_order=asc&sort_field=article_number`
+                            }
+                        });
+                        this.searchEvent();
+                    }
+                });
+            },
             allChangeEvent() {
                 if (this.checkAll) {
                     this.citationAllShow = true;
@@ -283,28 +301,59 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
+                            },
+                            error:(xhr)=> {
+                                this.getAPIKEY();
                             }
                         });
                     }
                 });
             },
-            handleCurrentChange: function (page) {
+            handleCurrentChange(page) {
                 let totalPage = Math.ceil(this.total / 10);
                 this.startNum = 1 + (Number(page) - 1) * 10;
                 this.endNum = 10 + (Number(page) - 1) * 10;
                 if (Number(page) == totalPage) {
                     this.endNum = this.total;
                 }
-                let _url = `${this.url}&p=${this.pageSize}&s=${page}`;
+                //searchUrl : spring nature请求的链接 , _urls : ieee 请求的链接
+                let _url = '', url = `${this.url}&p=${this.pageSize}&s=${page}&q=(` , searchUrl = '' ,
+                    _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${(page-1)*5+1}&content_type=${this.types}&article_title=${this.key}`;
+                //分页时，看 year subject publish 选中没
+                if(this.subjectFactor){
+                    let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
+                    url = `${url}subject:${subjectFactor}`;
+                    if(this.publishFactor){
+                        if(this.yearFactor){
+                            url = `${url}year:"${this.yearFactor}" AND subject:"${subjectFactor}" AND pub:"${this.publishFactor}"`
+                        }else url = `${url}subject:"${subjectFactor}" AND pub:"${this.publishFactor}"`
+                    }else if(this.yearFactor){
+                        url = `${url}year:"${this.yearFactor}" AND subject:"${subjectFactor}"`
+                    }
+                }else if(this.publishFactor){
+                    if(this.yearFactor){
+                        url = `${url}year:"${this.yearFactor}" AND pub:"${this.publishFactor}"`;
+                        _urls = `${_urls}&publication_year=${this.yearFactor}&publisher=${this.publishFactor}`
+                    }else {
+                        url = `${url}pub:"${this.publishFactor}"`;
+                        _urls = `${_urls}&publisher=${this.publishFactor}`
+                    }
+                }else if(this.yearFactor){
+                    url = `${url}year:"${this.yearFactor}"`;//
+                    _urls = `${_urls}&publication_year=${this.yearFactor}`
+                }else _url = `${this.url}&p=${this.pageSize}&s=${page}`;
+                //添上尾部字符串
+                if(_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
+                else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
+                //请求spring nature
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url}&q=${this.type}:${this.key}` : _url,
+                    url: searchUrl,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
-                        //二次请求
-                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${page}&content_type=${this.types}&article_title=${this.key}`;
+                        //请求ieee
                         $.ajax({
                             type: "get",
                             url: _urls,
@@ -313,6 +362,9 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
+                            },
+                            error:(xhr)=> {
+                                this.getAPIKEY();
                             }
                         });
                     }
@@ -343,10 +395,10 @@
             },
             getTrueUrl(_url, clicked, clickName, confirmOne, nameOne, confirmTwo, nameTwo) {
                 if (confirmOne) {
-                    if (confirmTwo) _url = `${_url}${clickName}:${clicked}AND${nameOne}:${confirmOne}AND${nameTwo}:${confirmTwo}`;
-                    else _url = `${_url}${clickName}:${clicked}AND${nameOne}:${confirmOne}`;
-                } else if (confirmTwo) _url = `${_url}${clickName}:${clicked}AND${nameTwo}:${confirmTwo}`;
-                else _url = `${_url}${clickName}:${clicked}`;
+                    if (confirmTwo) _url = `${_url}${clickName}:"${clicked}" AND ${nameOne}:"${confirmOne}" AND ${nameTwo}:"${confirmTwo}"`;
+                    else _url = `${_url}${clickName}:"${clicked}" AND ${nameOne}:"${confirmOne}"`;
+                } else if (confirmTwo) _url = `${_url}${clickName}:"${clicked}" AND ${nameTwo}:"${confirmTwo}"`;
+                else _url = `${_url}${clickName}:"${clicked}"`;
                 return _url
             },
             yearClickEvent(year) {//点击年
@@ -359,23 +411,19 @@
                 });
                 let _url = `${this.url}&p=${this.pageSize}&q=(`;
                 //做判断
-                // if(this.subjectFactor){
-                //     if(this.publishFactor) _url = `${_url}year:${this.yearFactor} AND subject:${this.subjectFactor} AND pub:${this.publishFactor}`;
-                //     else _url = `${_url}year:${this.yearFactor} AND subject:${this.subjectFactor}`;
-                // }else if(this.publishFactor) _url = `${_url}year:${this.yearFactor} AND pub:${this.publishFactor}`;
-                // else _url = `${_url}year:${this.yearFactor}`;
-                _url = this.getTrueUrl(_url, this.yearFactor, 'year', this.subjectFactor, 'subject', this.publishFactor, 'pub');
+                let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
+                _url = this.getTrueUrl(_url, this.yearFactor, 'year', subjectFactor, 'subject', this.publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
+                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year;
+                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
                         if (this.publishFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + year + '&publisher=' + this.publishFactor;
+                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${this.publishFactor}` ;
                         }
                         $.ajax({
                             type: "get",
@@ -385,6 +433,9 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
+                            },
+                            error:(xhr)=> {
+                                this.getAPIKEY();
                             }
                         });
                     }
@@ -393,9 +444,6 @@
             subjectClickEvent(subject) {//点击学科
                 this.subjectFactor = subject;
                 let subjectFactor = subject.replace(/&/g, '%26');
-                subjectFactor.indexOf(' and ') === -1 && (subjectFactor = subjectFactor.replace(/\s/g, ''));
-                // this.subjectFactor = this.subjectFactor .replace(/\s/g,'');
-                // this.subjectFactor = encodeURI(subject)
                 this.subjects.forEach(item => {
                     item.isActive = false;
                     if (item.value == subject) {
@@ -407,7 +455,7 @@
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
+                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
@@ -426,7 +474,10 @@
                             success: ress => {
                                 this.loading = false;
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                let list = this.operateData(ress.articles);
+                                this.operateData(ress.articles);
+                            },
+                            error:(xhr)=> {
+                                this.getAPIKEY();
                             }
                         });
                     }
@@ -441,26 +492,31 @@
                     }
                 });
                 let _url = `${this.url}&p=${this.pageSize}&q=(`;
-                _url = this.getTrueUrl(_url, this.publishFactor, 'pub', this.subjectFactor, 'subject', this.yearFactor, 'year');
+                let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
+                _url = this.getTrueUrl(_url, this.publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
+                this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:${this.key})` : `${_url})`,
+                    url: this.key ? `${_url} AND ${this.type}:"${this.key})"` : `${_url})`,
                     data: "",
                     success: res => {
-                        // this.total = Number(JSON.parse(res).result[0].total);
                         this.list = JSON.parse(res).records;
                         //二次请求
-                        let _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish;
+                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publish}`;
                         if (this.yearFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publish + '&publication_year=' + this.year;
+                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publish}&publication_year=${this.year}`;
                         }
                         $.ajax({
                             type: "get",
                             url: _urls,
                             data: "",
                             success: ress => {
+                                this.loading = false;
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                let list = this.operateData(ress.articles);
+                                this.operateData(ress.articles);
+                            },
+                            error:(xhr)=> {
+                                this.getAPIKEY();
                             }
                         });
                     }

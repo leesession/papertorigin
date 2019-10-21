@@ -37,6 +37,10 @@
 </template>
 
 <script>
+    import {getBrowse , getBrowseData ,getCity ,getIp ,getDate ,getTime} from '../utils/searchUp.js'
+    import {http} from '../api/http.js'
+    import {mapState} from 'vuex'
+
     export default {
         name: 'search',
         props: ['title', 'index','type','keys'],
@@ -59,12 +63,14 @@
             }
         },
         mounted(){
-            console.log(this.type);
             this.selectVal = this.type ? this.type:'journal';
             this.showVal = this.type ? this.type[0].toUpperCase()+this.type.slice(1): 'Journal';
             this.key = this.keys?this.keys:''
         },
         computed: {
+            ...mapState({
+                loginMsg: 'loginMsg'
+            }),
             activeNum() {
                 if (this.index) {
                     return this.index;
@@ -74,7 +80,6 @@
         methods: {
             // 搜索下拉
             selectEvent(item) {
-                console.log(item.showName)
                 this.selectVal = item.value;
                 this.showVal = item.showName;
             },
@@ -92,6 +97,20 @@
                 }
             },
             searchEvent() {
+                let data = {
+                    browser: getBrowse().browser,
+                    browserData: getBrowseData(),
+                    city: getCity(),
+                    contry: "",
+                    date: getDate(),
+                    ipAddress: getIp(),
+                    queryData: `{type: ${this.selectVal}, key: ${this.key}}`,
+                    time: getTime(),
+                    userEmail: this.loginMsg ? JSON.parse(this.loginMsg).loginmail :''
+                };
+                http.userSearchRecord(data, res => {
+                    if (res.code === 'SUCCESS') {}
+                });
                 if (this.$route.path == '/searchList') {
                     let query = {type: this.selectVal, key: this.key};
                     this.$router.replace({

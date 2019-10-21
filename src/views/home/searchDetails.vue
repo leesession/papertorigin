@@ -1,6 +1,6 @@
 <template>
     <div class="searchList">
-        <search title="Home" index="0"></search>
+        <search title="Search Results" index="0"></search>
         <div class="list">
             <div class="list-cont">
                 <div class="title">

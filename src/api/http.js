@@ -89,6 +89,29 @@ export const http = {
             successFun(res);
         });
     },
+	//用于search的时候，
+	userSearchRecord(data, successFun) {
+		xhr({
+			method: 'post',
+			url: 'nonAuthorityQuery/userSearchRecord',
+			data: data,
+			type: 'json'
+		}).then(res => {
+			successFun(res);
+		});
+	},
+    //获取心的apikey
+    getAPIKEY(data, successFun) {
+        xhr({
+            method: 'post',
+            url: 'management/getAPIKEY',
+            data: data,
+            type: 'json'
+        }).then(res => {
+            successFun(res);
+        });
+    },
+
 
 
     // 查询主页面选项的值
