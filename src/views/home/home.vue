@@ -77,6 +77,7 @@
                              indicator-position="none">
                     <el-carousel-item>
                         <img src="../../assets/images/logo-springernature.svg" alt="">
+                        <img src="../../assets/images/ieee.jpg" alt="">
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -424,7 +425,7 @@
                 margin-top: 30px;
                 img {
                     width: 216px;
-                    height: 70px;
+                    /*height: 70px;*/
                     margin: 0 32px;
                 }
                 .el-carousel__item {

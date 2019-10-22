@@ -12,8 +12,7 @@
         </div>
         <div class="box-cont">
           <img src="../../assets/images/logo-springernature.svg" alt="">
-          <!--<img src="../../assets/images/resours-01.png" alt="">-->
-          <!--<img src="../../assets/images/resours-01.png" alt="">-->
+          <img src="../../assets/images/ieee.jpg" alt="">
           <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
@@ -23,7 +22,7 @@
         </div>
         <div class="box-cont">
           <img src="../../assets/images/logo-springernature.svg" alt="">
-          <!--<img src="../../assets/images/resours-01.png" alt="">-->
+          <img src="../../assets/images/ieee.jpg" alt="">
         </div>
       </div>
       <div class="row">
@@ -31,7 +30,6 @@
           <span>Thesis</span>
         </div>
         <div class="box-cont">
-          <!--<img src="../../assets/images/resours-01.png" alt="">-->
           <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
@@ -95,6 +93,7 @@ export default {
     align-items: center;
     img{
       margin: 0 50px 0 0;
+      width: 216px;
     }
   }
 }

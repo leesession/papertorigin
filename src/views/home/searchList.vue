@@ -56,7 +56,7 @@
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
-                            :page-size="truePageSize"
+                            :page-size="pageSize*2"
                             :current-page.sync="currentPage"
                             @current-change="handleCurrentChange">
                     </el-pagination>
@@ -121,14 +121,15 @@
                 pageSize: 5,
                 total: 0,
                 start: 1,
-                startNum: 0,
-                endNum: 0,
+                startNum: 1,
+                endNum: 10,
                 type: '',
                 types: '',
                 key: '',
                 url: ``,
                 urls: ``,
                 list: [],
+                doubleList:[],//用于2倍数量的spring nature
                 year: [],
                 subjects: [],
                 publisher: [],
@@ -142,8 +143,7 @@
                 stringAllObj: [],
                 recordData: [],//浏览次数等
                 ieeAPIKEY: '7d2xu2qsmryfuuhnfvc3jzdx',
-                currentPage: 1,
-                truePageSize: 0,
+                currentPage: 1
             }
         },
         components: {search, citation, citationAll},
@@ -252,15 +252,36 @@
                     window.open(obj.urls);
                 }
             },
-            operateData(arr, endNumber) {
+            operateData(arr) {
+                //concatArr,最终 ieee用上的数组
+                let concatArr = [];
+                //有2个数据，list 与 arr (都取10条，),pageSize = 5
+                //在这里拼接好2条数据（数组A + 数组B = List）
+                if(this.list.length<this.pageSize){
+                    if(arr.length<this.pageSize){
+                        //两个数组拼接，是最后一页
+                        concatArr = [...arr];
+                    }else {//list，用arr中的来补上
+                        concatArr = [...arr.slice(0,arr.length - this.list.length)]
+                    }
+                }else if(arr.length<this.pageSize){//arr不够，list
+                    concatArr = [...arr];
+                    this.list = [...this.list.slice(0,this.list.length - arr.length)]
+                }else {
+                    concatArr = [...arr.slice(0,this.pageSize)];
+                    this.list = [...this.list.slice(0,this.pageSize)]
+                }
+                //更新list
                 this.list.forEach(item => {
                     item.isChecked = false;
                     item.creators.forEach((item1, index) => {//姓名去逗号
                         item.creators[index].creator = item1.creator.replace(/,/, '')
                     })
                 });
-                if (arr && arr.length > 0) {
-                    arr.forEach(item => {
+                //结构化数组
+                //注意：此处加上 isbn
+                if (concatArr && concatArr.length > 0) {
+                    concatArr.forEach(item => {
                         let obj = {};
                         obj.title = item.title;
                         obj.creators = item.authors.authors;
@@ -279,8 +300,6 @@
                         this.list.push(obj);
                     });
                 }
-                this.startNum = endNumber + 1;
-                this.endNum = this.startNum + this.list.length - 1;
                 this.getRecord()
             },
             getRecord() {
@@ -302,7 +321,7 @@
                 let detailquery = this.$route.query.detailquery, _url = '';
                 if (detailquery) {
                     detailquery = detailquery.replace(/&/g, '%26');
-                    _url = `${this.url}&p=${this.pageSize}&q=(${detailquery}`;
+                    _url = `${this.url}&p=${2*this.pageSize}&q=(${detailquery}`;
                     _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
                 } else {
                     _url = `${this.url}&p=${this.pageSize}`;
@@ -330,7 +349,11 @@
                             detailquery && detailquery.indexOf('pub:"') > -1 && index === 0 ? item.isActive = true : item.isActive = false;
                         });
                         //二次请求
-                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
+                        // let ieeePageSize = this.list.length;
+                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
+                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
+                        // }
+                        let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
                         if (detailquery) {
                             let query = this.$route.query.detailquery;
                             if (detailquery.indexOf('year:"') > -1) {
@@ -350,12 +373,8 @@
                             url: _urls,
                             data: "",
                             success: ress => {
-                                //判断确切的页条数：
-                                if (ress.articles) {
-                                    this.truePageSize = ress.articles.length + this.list.length
-                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles, 0);
+                                this.operateData(ress.articles);
                                 this.loading = false;
                             },
                             error: (xhr) => {
@@ -366,15 +385,14 @@
                 });
             },
             handleCurrentChange(page) {
-                // let totalPage = Math.ceil(this.total / 10);
-                // this.startNum = 1 + (Number(page) - 1) * 10;
-                // this.endNum = 10 + (Number(page) - 1) * 10;
-                // if (Number(page) == totalPage) {
-                //     this.endNum = this.total;
-                // }
+                let totalPage = Math.ceil(this.total / this.pageSize*2);
+                this.startNum = 1 + (Number(page) - 1) * this.pageSize*2;
+                this.endNum = this.pageSize*2 + (Number(page) - 1) * this.pageSize*2;
+                if (Number(page) == totalPage) {
+                    this.endNum = this.total;
+                }
                 //searchUrl : spring nature请求的链接 , _urls : ieee 请求的链接
-                let _url = '', url = `${this.url}&p=${this.pageSize}&s=${(page - 1) * this.pageSize + 1}&q=(`, searchUrl = '',
-                    _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${(page - 1) * this.pageSize + 1}&content_type=${this.types}&article_title=${this.key}`;
+                let _url = '', url = `${this.url}&p=${2*this.pageSize}&s=${(page - 1) * this.pageSize + 1}&q=(`, searchUrl = '';
                 //分页时，看 year subject publish 选中没
                 if (this.subjectFactor) {
                     let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
@@ -396,7 +414,7 @@
                     }
                 } else if (this.yearFactor) {
                     url = `${url}year:"${this.yearFactor}"`;//
-                } else _url = `${this.url}&p=${this.pageSize}&s=${(page - 1) * this.pageSize + 1}`;
+                } else _url = `${this.url}&p=${2*this.pageSize}&s=${(page - 1) * this.pageSize + 1}`;
                 //添上尾部字符串
                 if (_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
                 else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
@@ -409,6 +427,11 @@
                     success: res => {
                         this.list = JSON.parse(res).records;
                         //_urls,用于ieee
+                        // let ieeePageSize = this.list.length;
+                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
+                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
+                        // }
+                        let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=${(page - 1) * this.pageSize + 1}&content_type=${this.types}&article_title=${this.key}`
                         if (this.publishFactor) {
                             let publishFactor = this.publishFactor.replace(/&/g, '%26');
                             if (this.yearFactor) {
@@ -426,7 +449,7 @@
                             data: "",
                             success: ress => {
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles, (page - 1) * this.truePageSize);
+                                this.operateData(ress.articles);
                                 this.loading = false;
                             },
                             error: (xhr) => {
@@ -476,7 +499,7 @@
                         item.isActive = true;
                     }
                 });
-                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 //做判断
                 let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
                 let publishFactor = this.publishFactor.replace(/&/g, '%26');
@@ -494,21 +517,21 @@
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
+                        // let ieeePageSize = this.list.length;
+                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
+                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
+                        // }
+                        let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
                         if (this.publishFactor) {
-                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${publishFactor}`;
+                            _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${publishFactor}`;
                         }
                         $.ajax({
                             type: "get",
                             url: _urls,
                             data: "",
                             success: ress => {
-                                //判断确切的页条数：
-                                if (ress.articles) {
-                                    this.truePageSize = ress.articles.length + this.list.length
-                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles, 0);
+                                this.operateData(ress.articles);
                                 this.loading = false;
                                 //重置当前页
                                 this.currentPage = 1;
@@ -530,7 +553,7 @@
                         item.isActive = true;
                     }
                 });
-                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 _url = this.getTrueUrl(_url, subjectFactor, 'subject', this.yearFactor, 'year', publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
@@ -545,25 +568,25 @@
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
+                        // let ieeePageSize = this.list.length;
+                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
+                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
+                        // }
                         let _urls = '';
                         if (this.yearFactor) {
-                            if (this.publishFactor) _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + publishFactor;
-                            else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
+                            if (this.publishFactor) _urls = this.urls + `&max_records=${2*this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + publishFactor;
+                            else _urls = this.urls + `&max_records=${2*this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
                         } else if (this.publishFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publishFactor;
-                        } else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
+                            _urls = this.urls + `&max_records=${2*this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publishFactor;
+                        } else _urls = this.urls + `&max_records=${2*this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
                         $.ajax({
                             type: "get",
                             url: _urls,
                             data: "",
                             success: ress => {
                                 this.loading = false;
-                                //判断确切的页条数：
-                                if (ress.articles) {
-                                    this.truePageSize = ress.articles.length + this.list.length
-                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles, 0);
+                                this.operateData(ress.articles);
                                 this.currentPage = 1;
                             },
                             error: (xhr) => {
@@ -581,7 +604,7 @@
                         item.isActive = true;
                     }
                 });
-                let _url = `${this.url}&p=${this.pageSize}&q=(`;
+                let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
                 let publishFactor = publish.replace(/&/g, '%26');
                 _url = this.getTrueUrl(_url, publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
@@ -598,9 +621,13 @@
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}`;
+                        // let ieeePageSize = this.list.length;
+                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
+                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
+                        // }
+                        let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}`;
                         if (this.yearFactor) {
-                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}&publication_year=${this.yearFactor}`;
+                            _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}&publication_year=${this.yearFactor}`;
                         }
                         $.ajax({
                             type: "get",
@@ -608,12 +635,8 @@
                             data: "",
                             success: ress => {
                                 this.loading = false;
-                                //判断确切的页条数：
-                                if (ress.articles) {
-                                    this.truePageSize = ress.articles.length + this.list.length
-                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles, 0);
+                                this.operateData(ress.articles);
                                 //重置当前页
                                 this.currentPage = 1;
                             },
