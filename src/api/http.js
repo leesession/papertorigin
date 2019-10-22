@@ -111,6 +111,17 @@ export const http = {
             successFun(res);
         });
     },
+    //批量更新quote
+    updateRecordForList(data, successFun) {
+        xhr({
+            method: 'post',
+            url: 'management/updateRecordForList',
+            data: data,
+            type: 'json'
+        }).then(res => {
+            successFun(res);
+        });
+    },
 
 
 

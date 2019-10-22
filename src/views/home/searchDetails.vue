@@ -84,32 +84,6 @@
                     </div>
                     <span @click="publisherMore" v-show="!publisherFlag">See More</span>
                 </div>
-                <!--<div class="col">-->
-                    <!--<h3>Published Date:</h3>-->
-                    <!--<p>~2018</p>-->
-                    <!--<p>~2017</p>-->
-                    <!--<p>~2016</p>-->
-                    <!--<p>~2015</p>-->
-                    <!--<span>See More</span>-->
-                <!--</div>-->
-                <!--<div class="col">-->
-                    <!--<h3>Subjects:</h3>-->
-                    <!--<p>Inorganic Chemistry</p>-->
-                    <!--<p>Material Science</p>-->
-                    <!--<p>Nanotechnology</p>-->
-                    <!--<p>Optics and Optoelectronics</p>-->
-                    <!--<p>Plasmonics and Optical Devices</p>-->
-                    <!--<span>More</span>-->
-                <!--</div>-->
-                <!--<div class="col">-->
-                    <!--<h3>Publisher:</h3>-->
-                    <!--<p>journal of Nanoparticle Research</p>-->
-                    <!--<p>Nature physics</p>-->
-                    <!--<p>Advanced Nanomaterials</p>-->
-                    <!--<p>Optics Letter</p>-->
-                    <!--<p>Chinese Optics Leter</p>-->
-                    <!--<span>More</span>-->
-                <!--</div>-->
             </aside>
         </div>
 
@@ -140,9 +114,6 @@
                 yearFlag: false,
                 subjectsFlag: false,
                 publisherFlag: false,
-                // yearFactor: '',
-                // subjectFactor: '',
-                // publishFactor: '',
                 url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924'
             }
         },

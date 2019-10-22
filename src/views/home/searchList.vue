@@ -1,8 +1,9 @@
 <template>
     <div class="searchList">
-        <search title="Search Results" index="0" ref="searchBox" @listenFun="getChildParams" :type="type" :keys="key"></search>
-        <!--v-loading="loading"-->
-        <div class="list" >
+        <search title="Search Results" index="0" ref="searchBox" @listenFun="getChildParams" :type="type"
+                :keys="key"></search>
+
+        <div class="list" v-loading="loading">
             <div class="list-cont">
                 <div class="title">
                     <span>Results:{{startNum}}-{{endNum}}/{{total}}</span>
@@ -37,15 +38,15 @@
                             <div class="tools">
                                 <div class="col">
                                     <i class="icon icon-eyes"></i>
-                                    <span>{{recordData[index].lookCount}}</span>
+                                    <span>{{recordData[index] && recordData[index].lookCount}}</span>
                                 </div>
                                 <div class="col">
                                     <i class="icon icon-quote"></i>
-                                    <span>{{recordData[index].quoteCount}}</span>
+                                    <span>{{recordData[index] && recordData[index].quoteCount}}</span>
                                 </div>
                                 <div class="col">
                                     <i class="icon icon-share"></i>
-                                    <span>{{recordData[index].forwardCount}}</span>
+                                    <span>{{recordData[index] && recordData[index].forwardCount}}</span>
                                 </div>
                             </div>
                         </li>
@@ -55,6 +56,8 @@
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
+                            :page-size="truePageSize"
+                            :current-page.sync="currentPage"
                             @current-change="handleCurrentChange">
                     </el-pagination>
                 </div>
@@ -118,14 +121,12 @@
                 pageSize: 5,
                 total: 0,
                 start: 1,
-                startNum: 1,
-                endNum: 10,
+                startNum: 0,
+                endNum: 0,
                 type: '',
                 types: '',
                 key: '',
-                // http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924
                 url: ``,
-                // http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=7d2xu2qsmryfuuhnfvc3jzdx&format=json&sort_order=asc&sort_field=article_number
                 urls: ``,
                 list: [],
                 year: [],
@@ -139,12 +140,10 @@
                 publishFactor: '',
                 stringObj: '',
                 stringAllObj: [],
-                recordData: [{
-                    lookCount: 0,
-                    quoteCount: 0,
-                    forwardCount: 0
-                }],//浏览次数等
-                ieeAPIKEY:'7d2xu2qsmryfuuhnfvc3jzdx'
+                recordData: [],//浏览次数等
+                ieeAPIKEY: '7d2xu2qsmryfuuhnfvc3jzdx',
+                currentPage: 1,
+                truePageSize: 0,
             }
         },
         components: {search, citation, citationAll},
@@ -156,7 +155,6 @@
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
             }
-            console.log(this.$route.query.detailquery)
             this.getAPIKEY()
         },
         mounted() {
@@ -164,14 +162,14 @@
             this.$refs.searchBox.selectVal = this.type;
         },
         methods: {
-            getAPIKEY(){
+            getAPIKEY() {//获取新的APIKEY
                 let data = '';
                 http.getAPIKEY(data, res => {
                     if (res.code === 'SUCCESS') {
-                        res.data.forEach(item=>{
-                            if(item.publisher === 'springernature'){
+                        res.data.forEach(item => {
+                            if (item.publisher === 'springernature') {
                                 this.url = `http://api.springernature.com/metadata/json?api_key=${item.apiKey}`
-                            }else if(item.publisher === 'ieee'){
+                            } else if (item.publisher === 'ieee') {
                                 this.urls = `http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=${item.apiKey}&format=json&sort_order=asc&sort_field=article_number`
                             }
                         });
@@ -179,24 +177,44 @@
                     }
                 });
             },
-            allChangeEvent() {
+            allChangeEvent() {//点击 cite selected
                 if (this.checkAll) {
                     this.citationAllShow = true;
+                    if (!this.list.length) return;
                     this.checkCitation(this.list);
-                }else {
-                    let index = 0 , checkedList = [];
+                    this.updateQuote(this.list)
+                } else {
+                    let index = 0, checkedList = [];
                     this.list.forEach(item => {
                         //用来判断 select数量
-                        if(item.isChecked){
+                        if (item.isChecked) {
                             index++;
                             checkedList.push(item)
                         }
                     });
-                    if(index){
+                    if (index) {
                         this.citationAllShow = true;
+                        if (!checkedList.length) return;
                         this.checkCitation(checkedList);
-                    }else this.$message.info('Please Select !')
+                        this.updateQuote(checkedList)
+                    } else this.$message.info('Please Select !')
                 }
+            },
+            updateQuote(arr) {//更新选中的论文
+                let data = [];
+                arr.forEach(item => {
+                    data.push({
+                        forwardCount: 0,
+                        lookCount: 0,
+                        peperDoi: item.doi,
+                        quoteCount: 1
+                    })
+                });
+                http.updateRecordForList(data, res => {
+                    if (res.code == 'SUCCESS') {
+                        this.getRecord()
+                    }
+                });
             },
             getChildParams(data) {
                 this.type = data.type ? data.type : '';
@@ -206,6 +224,13 @@
                 } else if (this.type == 'conference') {
                     this.types = 'Conferences';
                 }
+                this.yearFlag = false;
+                this.subjectsFlag = false;
+                this.publisherFlag = false;
+                this.yearFactor = '';
+                this.subjectFactor = '';
+                this.publishFactor = '';
+                this.currentPage = 1;
                 this.searchEvent();
             },
             getCitationMsg(data) {
@@ -227,7 +252,7 @@
                     window.open(obj.urls);
                 }
             },
-            operateData(arr) {
+            operateData(arr, endNumber) {
                 this.list.forEach(item => {
                     item.isChecked = false;
                     item.creators.forEach((item1, index) => {//姓名去逗号
@@ -254,6 +279,8 @@
                         this.list.push(obj);
                     });
                 }
+                this.startNum = endNumber + 1;
+                this.endNum = this.startNum + this.list.length - 1;
                 this.getRecord()
             },
             getRecord() {
@@ -272,12 +299,12 @@
                 });
             },
             searchEvent() {
-                let detailquery = this.$route.query.detailquery ,_url = '';
-                detailquery = detailquery.replace(/&/g, '%26');
-                if(detailquery){
+                let detailquery = this.$route.query.detailquery, _url = '';
+                if (detailquery) {
+                    detailquery = detailquery.replace(/&/g, '%26');
                     _url = `${this.url}&p=${this.pageSize}&q=(${detailquery}`;
                     _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
-                }else {
+                } else {
                     _url = `${this.url}&p=${this.pageSize}`;
                     _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
                 }
@@ -290,29 +317,32 @@
                         this.start = Number(JSON.parse(res).result[0].start);
                         this.list = JSON.parse(res).records;
                         this.year = JSON.parse(res).facets[3].values;
-                        //判断detail页面返回值没有？
-                        this.year.map((item,index) => {
-                            detailquery.indexOf('year:"')>-1 && index === 0 ? (item.isActive =true) : item.isActive = false;
+                        //判断detail页面返回值没有，并且赋值给对应的
+                        this.year.map((item, index) => {
+                            detailquery && detailquery.indexOf('year:"') > -1 && index === 0 ? (item.isActive = true) : item.isActive = false;
                         });
                         this.subjects = JSON.parse(res).facets[0].values;
-                        this.subjects.map((item,index) => {
-                            detailquery.indexOf('subject:"')>-1 && index === 0 ? (item.isActive =true) : item.isActive = false;
+                        this.subjects.map((item, index) => {
+                            detailquery && detailquery.indexOf('subject:"') > -1 && index === 0 ? (item.isActive = true) : item.isActive = false;
                         });
                         this.publisher = JSON.parse(res).facets[2].values;
-                        this.publisher.map((item,index) => {
-                            detailquery.indexOf('pub:"')>-1 && index === 0 ? item.isActive =true : item.isActive = false;
+                        this.publisher.map((item, index) => {
+                            detailquery && detailquery.indexOf('pub:"') > -1 && index === 0 ? item.isActive = true : item.isActive = false;
                         });
-                        //无用的之后删除
-                        this.operateData([])
                         //二次请求
                         let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
-                        if(detailquery){
-                            if(detailquery.indexOf('year:"')>-1){
-                                let year = detailquery.slice(6,detailquery.length - 1);
+                        if (detailquery) {
+                            let query = this.$route.query.detailquery;
+                            if (detailquery.indexOf('year:"') > -1) {
+                                let year = detailquery.slice(6, detailquery.length - 1);
+                                this.yearFactor = year;
                                 _urls = `${_urls}&publication_year=${year}`
-                            }else if(detailquery.indexOf('pub:"')>-1){
-                                let pub = detailquery.slice(5,detailquery.length - 1);
-                                _urls = `${_urls}&publication_year=${pub}`
+                            } else if (detailquery.indexOf('pub:"') > -1) {
+                                let pub = detailquery.slice(5, detailquery.length - 1);
+                                this.publishFactor = query.slice(5, query.length - 1);
+                                _urls = `${_urls}&publisher=${pub}`
+                            } else {
+                                this.subjectFactor = query.slice(9, query.length - 1);
                             }
                         }
                         $.ajax({
@@ -320,11 +350,15 @@
                             url: _urls,
                             data: "",
                             success: ress => {
+                                //判断确切的页条数：
+                                if (ress.articles) {
+                                    this.truePageSize = ress.articles.length + this.list.length
+                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles);
+                                this.operateData(ress.articles, 0);
                                 this.loading = false;
                             },
-                            error:(xhr)=> {
+                            error: (xhr) => {
                                 // this.getAPIKEY();
                             }
                         });
@@ -332,40 +366,39 @@
                 });
             },
             handleCurrentChange(page) {
-                let totalPage = Math.ceil(this.total / 10);
-                this.startNum = 1 + (Number(page) - 1) * 10;
-                this.endNum = 10 + (Number(page) - 1) * 10;
-                if (Number(page) == totalPage) {
-                    this.endNum = this.total;
-                }
+                // let totalPage = Math.ceil(this.total / 10);
+                // this.startNum = 1 + (Number(page) - 1) * 10;
+                // this.endNum = 10 + (Number(page) - 1) * 10;
+                // if (Number(page) == totalPage) {
+                //     this.endNum = this.total;
+                // }
                 //searchUrl : spring nature请求的链接 , _urls : ieee 请求的链接
-                let _url = '', url = `${this.url}&p=${this.pageSize}&s=${page}&q=(` , searchUrl = '' ,
-                    _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${(page-1)*5+1}&content_type=${this.types}&article_title=${this.key}`;
+                let _url = '', url = `${this.url}&p=${this.pageSize}&s=${(page - 1) * this.pageSize + 1}&q=(`, searchUrl = '',
+                    _urls = `${this.urls}&max_records=${this.pageSize}&start_record=${(page - 1) * this.pageSize + 1}&content_type=${this.types}&article_title=${this.key}`;
                 //分页时，看 year subject publish 选中没
-                if(this.subjectFactor){
+                if (this.subjectFactor) {
                     let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
-                    url = `${url}subject:${subjectFactor}`;
-                    if(this.publishFactor){
-                        if(this.yearFactor){
-                            url = `${url}year:"${this.yearFactor}" AND subject:"${subjectFactor}" AND pub:"${this.publishFactor}"`
-                        }else url = `${url}subject:"${subjectFactor}" AND pub:"${this.publishFactor}"`
-                    }else if(this.yearFactor){
-                        url = `${url}year:"${this.yearFactor}" AND subject:"${subjectFactor}"`
+                    url = `${url}subject:"${subjectFactor}"`;
+                    if (this.publishFactor) {
+                        let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                        if (this.yearFactor) {
+                            url = `${url} AND year:"${this.yearFactor}" AND pub:"${publishFactor}"`
+                        } else url = `${url} AND pub:"${publishFactor}"`
+                    } else if (this.yearFactor) {
+                        url = `${url} AND year:"${this.yearFactor}"`
                     }
-                }else if(this.publishFactor){
-                    if(this.yearFactor){
-                        url = `${url}year:"${this.yearFactor}" AND pub:"${this.publishFactor}"`;
-                        _urls = `${_urls}&publication_year=${this.yearFactor}&publisher=${this.publishFactor}`
-                    }else {
-                        url = `${url}pub:"${this.publishFactor}"`;
-                        _urls = `${_urls}&publisher=${this.publishFactor}`
+                } else if (this.publishFactor) {
+                    let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                    if (this.yearFactor) {
+                        url = `${url}year:"${this.yearFactor}" AND pub:"${publishFactor}"`;
+                    } else {
+                        url = `${url}pub:"${publishFactor}"`;
                     }
-                }else if(this.yearFactor){
+                } else if (this.yearFactor) {
                     url = `${url}year:"${this.yearFactor}"`;//
-                    _urls = `${_urls}&publication_year=${this.yearFactor}`
-                }else _url = `${this.url}&p=${this.pageSize}&s=${page}`;
+                } else _url = `${this.url}&p=${this.pageSize}&s=${(page - 1) * this.pageSize + 1}`;
                 //添上尾部字符串
-                if(_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
+                if (_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
                 else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
                 //请求spring nature
                 this.loading = true;
@@ -375,6 +408,17 @@
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        //_urls,用于ieee
+                        if (this.publishFactor) {
+                            let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                            if (this.yearFactor) {
+                                _urls = `${_urls}&publication_year=${this.yearFactor}&publisher=${publishFactor}`
+                            } else {
+                                _urls = `${_urls}&publisher=${publishFactor}`
+                            }
+                        } else if (this.yearFactor) {
+                            _urls = `${_urls}&publication_year=${this.yearFactor}`
+                        }
                         //请求ieee
                         $.ajax({
                             type: "get",
@@ -382,10 +426,10 @@
                             data: "",
                             success: ress => {
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles);
+                                this.operateData(ress.articles, (page - 1) * this.truePageSize);
                                 this.loading = false;
                             },
-                            error:(xhr)=> {
+                            error: (xhr) => {
                                 this.getAPIKEY();
                             }
                         });
@@ -399,6 +443,7 @@
                     peperDoi: obj.doi,
                     quoteCount: 0
                 };
+                this.loading = true;
                 http.addListNum(data, res => {
                     if (res.code == 'SUCCESS') {
                         this.$router.push({path: '/searchDetails'});
@@ -423,7 +468,7 @@
                 else _url = `${_url}${clickName}:"${clicked}"`;
                 return _url
             },
-            yearClickEvent(year) {//点击年
+            yearClickEvent(year) {
                 this.yearFactor = year;
                 this.year.forEach(item => {
                     item.isActive = false;
@@ -434,7 +479,8 @@
                 let _url = `${this.url}&p=${this.pageSize}&q=(`;
                 //做判断
                 let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
-                _url = this.getTrueUrl(_url, this.yearFactor, 'year', subjectFactor, 'subject', this.publishFactor, 'pub');
+                let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                _url = this.getTrueUrl(_url, this.yearFactor, 'year', subjectFactor, 'subject', publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
                     type: "get",
@@ -442,21 +488,32 @@
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        //更新右侧栏
+                        this.year = JSON.parse(res).facets[3].values;
+                        this.subjects = JSON.parse(res).facets[0].values;
+                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
                         let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
                         if (this.publishFactor) {
-                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${this.publishFactor}` ;
+                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${publishFactor}`;
                         }
                         $.ajax({
                             type: "get",
                             url: _urls,
                             data: "",
                             success: ress => {
+                                //判断确切的页条数：
+                                if (ress.articles) {
+                                    this.truePageSize = ress.articles.length + this.list.length
+                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles);
+                                this.operateData(ress.articles, 0);
                                 this.loading = false;
+                                //重置当前页
+                                this.currentPage = 1;
                             },
-                            error:(xhr)=> {
+                            error: (xhr) => {
                                 this.getAPIKEY();
                             }
                         });
@@ -466,6 +523,7 @@
             subjectClickEvent(subject) {//点击学科
                 this.subjectFactor = subject;
                 let subjectFactor = subject.replace(/&/g, '%26');
+                let publishFactor = this.publishFactor.replace(/&/g, '%26');
                 this.subjects.forEach(item => {
                     item.isActive = false;
                     if (item.value == subject) {
@@ -473,7 +531,7 @@
                     }
                 });
                 let _url = `${this.url}&p=${this.pageSize}&q=(`;
-                _url = this.getTrueUrl(_url, subjectFactor, 'subject', this.yearFactor, 'year', this.publishFactor, 'pub');
+                _url = this.getTrueUrl(_url, subjectFactor, 'subject', this.yearFactor, 'year', publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
                     type: "get",
@@ -481,13 +539,18 @@
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        //更新右侧栏
+                        this.year = JSON.parse(res).facets[3].values;
+                        this.subjects = JSON.parse(res).facets[0].values;
+                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
                         let _urls = '';
                         if (this.yearFactor) {
-                            if (this.publishFactor) _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + this.publishFactor;
+                            if (this.publishFactor) _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + publishFactor;
                             else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor;
                         } else if (this.publishFactor) {
-                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + this.publishFactor;
+                            _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publisher=' + publishFactor;
                         } else _urls = this.urls + `&max_records=${this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key;
                         $.ajax({
                             type: "get",
@@ -495,10 +558,15 @@
                             data: "",
                             success: ress => {
                                 this.loading = false;
+                                //判断确切的页条数：
+                                if (ress.articles) {
+                                    this.truePageSize = ress.articles.length + this.list.length
+                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles);
+                                this.operateData(ress.articles, 0);
+                                this.currentPage = 1;
                             },
-                            error:(xhr)=> {
+                            error: (xhr) => {
                                 this.getAPIKEY();
                             }
                         });
@@ -515,7 +583,8 @@
                 });
                 let _url = `${this.url}&p=${this.pageSize}&q=(`;
                 let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
-                _url = this.getTrueUrl(_url, this.publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
+                let publishFactor = publish.replace(/&/g, '%26');
+                _url = this.getTrueUrl(_url, publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
                 this.loading = true;
                 $.ajax({
                     type: "get",
@@ -523,10 +592,15 @@
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        //更新右侧栏
+                        this.year = JSON.parse(res).facets[3].values;
+                        this.subjects = JSON.parse(res).facets[0].values;
+                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publish}`;
+                        let _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}`;
                         if (this.yearFactor) {
-                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publish}&publication_year=${this.year}`;
+                            _urls = `${this.urls}&max_records=${this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}&publication_year=${this.yearFactor}`;
                         }
                         $.ajax({
                             type: "get",
@@ -534,17 +608,34 @@
                             data: "",
                             success: ress => {
                                 this.loading = false;
+                                //判断确切的页条数：
+                                if (ress.articles) {
+                                    this.truePageSize = ress.articles.length + this.list.length
+                                } else this.truePageSize = this.list.length
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
-                                this.operateData(ress.articles);
+                                this.operateData(ress.articles, 0);
+                                //重置当前页
+                                this.currentPage = 1;
                             },
-                            error:(xhr)=> {
+                            error: (xhr) => {
                                 this.getAPIKEY();
                             }
                         });
                     }
                 });
             },
-            selectChange(){
+            updateSlide(clickTab, otherTab1, otherTab2) {//更新右边栏
+                clickTab.map((item, index) => {
+                    this.yearFactor == item.value ? item.isActive = true : item.isActive = false;
+                });
+                otherTab1.map((item, index) => {
+                    this.subjectFactor == item.value ? item.isActive = true : item.isActive = false;
+                });
+                otherTab2.map((item, index) => {
+                    this.publishFactor == item.value ? item.isActive = true : item.isActive = false;
+                });
+            },
+            selectChange() {
                 let list = JSON.parse(JSON.stringify(this.list));
                 list.forEach(item => {
                     item.isChecked = this.checkAll;
@@ -552,21 +643,21 @@
                 this.list = list
             },
             colChangeEvent(obj) {
-                let index = 0 ,list = JSON.parse(JSON.stringify(this.list));
+                let index = 0, list = JSON.parse(JSON.stringify(this.list));
                 list.forEach(item => {
                     //设置当前点击的select
-                    item.doi === obj.doi && (item.isChecked =  obj.isChecked);
+                    item.doi === obj.doi && (item.isChecked = obj.isChecked);
                     // //用来判断 selectAll
                     item.isChecked && index++;
                 });
                 list.length === index ? this.checkAll = true : this.checkAll = false;
                 this.list = list;
             },
-            checkCitation(arr){
+            checkCitation(arr) {
                 let arr1 = [], arr2 = [], arr3 = [];
                 arr.forEach(item => {
                     let authors = '';   //作者
-                    item.creators.forEach((o,index) => {
+                    item.creators.forEach((o, index) => {
                         authors += o.creator || o.full_name;
                         index !== item.creators.length - 1 && (authors += ', ')
                     });
@@ -579,11 +670,8 @@
                     let startPage = item.startingPage;  //开始页码
                     let endPage = item.endingPage;  //结束页码
                     let stringObj = {};
-                    // authors + title + '[J]. ' + publicationName + ', ' + year + ', ' + '(' + volume + '): ' + startPage + '-' + endPage
                     stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`;
-                    // authors + '"' + title + '." ' + publicationName + ', ' + volume + '(' + year + '): ' + startPage + '-' + endPage
                     stringObj.string2 = `${authors}"${title}." ${publicationName}, ${volume}, (${year}): ${startPage}-${endPage}`;
-                    // authors + '(' + year + ').' + title + '.' + publicationName + ',' + volume + ',' + startPage + '-' + endPage
                     stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}, ${volume}, ${startPage}-${endPage}`;
                     arr1.push(stringObj.string1);
                     arr2.push(stringObj.string2);
@@ -623,12 +711,13 @@
         }
 
         .cont {
-            >.select{
+            > .select {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 padding-right: 50px;
-                button{
+
+                button {
                     height: 32px;
                     background-color: #54A7C4;
                     padding-top: 0;
@@ -637,13 +726,16 @@
                     font-size: 18px;
                 }
             }
+
             li {
                 padding: 28px 50px 25px 40px;
                 border-bottom: 1px solid #D9E5E7;
                 cursor: pointer;
+
                 &:hover {
                     background-color: #F8F8FC;
                 }
+
                 .cont-title {
                     height: 38px;
                     display: flex;
@@ -659,9 +751,11 @@
                         cursor: pointer;
                     }
                 }
+
                 &:first-child {
                     padding: 0px 50px 25px 40px;
                 }
+
                 p {
                     color: #485764;
                     font-size: 18px;
@@ -693,13 +787,16 @@
                         justify-content: flex-start;
                         margin: 0 40px 0 0;
                         cursor: pointer;
+
                         span {
                             color: #2950EB;
                             font-size: 18px;
+
                             &:hover {
                                 border-bottom: 1px solid #2950EB;
                             }
                         }
+
                         .icon {
                             width: 22px;
                             height: 23px;
