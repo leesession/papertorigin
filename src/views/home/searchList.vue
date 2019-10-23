@@ -96,9 +96,18 @@
                 </div>
             </aside>
         </div>
-        <citation v-if="citationShow" :show="citationShow" :params="stringObj" @listenFun="getCitationMsg"></citation>
-        <citation-all v-if="citationAllShow" :show="citationAllShow" :params="stringAllObj"
-                      @listenFun="getCitationAllMsg"></citation-all>
+        <citation
+                v-if="citationShow"
+                :show="citationShow"
+                :params="stringObj"
+                @listenFun="getCitationMsg">
+        </citation>
+        <citation-all
+                v-if="citationAllShow"
+                :show="citationAllShow"
+                :params="stringAllObj"
+                @listenFun="getCitationAllMsg"
+        ></citation-all>
     </div>
 </template>
 
@@ -129,7 +138,6 @@
                 url: ``,
                 urls: ``,
                 list: [],
-                doubleList:[],//用于2倍数量的spring nature
                 year: [],
                 subjects: [],
                 publisher: [],
@@ -143,7 +151,9 @@
                 stringAllObj: [],
                 recordData: [],//浏览次数等
                 ieeAPIKEY: '7d2xu2qsmryfuuhnfvc3jzdx',
-                currentPage: 1
+                currentPage: 1,
+                springTotal:0,
+                ieeeTotal:0,
             }
         },
         components: {search, citation, citationAll},
@@ -253,6 +263,7 @@
                 }
             },
             operateData(arr) {
+                arr = arr?arr:[];
                 //concatArr,最终 ieee用上的数组
                 let concatArr = [];
                 //有2个数据，list 与 arr (都取10条，),pageSize = 5
@@ -262,14 +273,14 @@
                         //两个数组拼接，是最后一页
                         concatArr = [...arr];
                     }else {//list，用arr中的来补上
-                        concatArr = [...arr.slice(0,arr.length - this.list.length)]
+                        concatArr = [...arr.slice(0,arr.length - this.list.length)];
                     }
                 }else if(arr.length<this.pageSize){//arr不够，list
                     concatArr = [...arr];
-                    this.list = [...this.list.slice(0,this.list.length - arr.length)]
+                    this.list = [...this.list.slice(0,this.list.length - arr.length)];
                 }else {
                     concatArr = [...arr.slice(0,this.pageSize)];
-                    this.list = [...this.list.slice(0,this.pageSize)]
+                    this.list = [...this.list.slice(0,this.pageSize)];
                 }
                 //更新list
                 this.list.forEach(item => {
@@ -278,8 +289,9 @@
                         item.creators[index].creator = item1.creator.replace(/,/, '')
                     })
                 });
+                //每次改变页面时，都将置为 全部选择 false
+                this.checkAll = false;
                 //结构化数组
-                //注意：此处加上 isbn
                 if (concatArr && concatArr.length > 0) {
                     concatArr.forEach(item => {
                         let obj = {};
@@ -297,6 +309,8 @@
                         obj.abstract = item.abstract;
                         obj.urls = item.abstract_url;
                         obj.isChecked = false;
+                        obj.number = item.rank;
+                        obj.conferenceLocation = item.conference_location
                         this.list.push(obj);
                     });
                 }
@@ -322,10 +336,12 @@
                 if (detailquery) {
                     detailquery = detailquery.replace(/&/g, '%26');
                     _url = `${this.url}&p=${2*this.pageSize}&q=(${detailquery}`;
-                    _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
+                    // _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
+                    _url = `${_url} AND ${this.type}:"${this.key}")`
                 } else {
-                    _url = `${this.url}&p=${this.pageSize}`;
-                    _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
+                    _url = `${this.url}&p=${2*this.pageSize}`;
+                    _url = `${_url}&q=${this.type}:${this.key}`
+                    // _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
                 }
                 this.loading = true;
                 $.ajax({
@@ -336,6 +352,8 @@
                         this.start = Number(JSON.parse(res).result[0].start);
                         this.list = JSON.parse(res).records;
                         this.year = JSON.parse(res).facets[3].values;
+                        //
+                        this.springTotal = Number(JSON.parse(res).result[0].total);
                         //判断detail页面返回值没有，并且赋值给对应的
                         this.year.map((item, index) => {
                             detailquery && detailquery.indexOf('year:"') > -1 && index === 0 ? (item.isActive = true) : item.isActive = false;
@@ -349,10 +367,6 @@
                             detailquery && detailquery.indexOf('pub:"') > -1 && index === 0 ? item.isActive = true : item.isActive = false;
                         });
                         //二次请求
-                        // let ieeePageSize = this.list.length;
-                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
-                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
-                        // }
                         let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}`;
                         if (detailquery) {
                             let query = this.$route.query.detailquery;
@@ -376,6 +390,7 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
+                                this.ieeeTotal = ress.total_records
                             },
                             error: (xhr) => {
                                 // this.getAPIKEY();
@@ -391,8 +406,16 @@
                 if (Number(page) == totalPage) {
                     this.endNum = this.total;
                 }
+                //判断total的值
+                let springStart = (page - 1) * this.pageSize + 1,ieeeStart = (page - 1) * this.pageSize + 1;
+                if(this.springTotal < (page-1)*this.pageSize){
+                    //需要的条数的开始 (5 * 10) - 18 -10 +1
+                    ieeeStart = page*this.pageSize*2 - this.springTotal - this.pageSize*2 + 1;
+                }else if(this.ieeeTotal < (page-1)*this.pageSize){
+                    springStart = page*this.pageSize*2 - this.ieeeTotal - this.pageSize*2 + 1;
+                }
                 //searchUrl : spring nature请求的链接 , _urls : ieee 请求的链接
-                let _url = '', url = `${this.url}&p=${2*this.pageSize}&s=${(page - 1) * this.pageSize + 1}&q=(`, searchUrl = '';
+                let _url = '', url = `${this.url}&p=${this.pageSize*2}&s=${springStart}&q=(`, searchUrl = '';
                 //分页时，看 year subject publish 选中没
                 if (this.subjectFactor) {
                     let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
@@ -416,8 +439,10 @@
                     url = `${url}year:"${this.yearFactor}"`;//
                 } else _url = `${this.url}&p=${2*this.pageSize}&s=${(page - 1) * this.pageSize + 1}`;
                 //添上尾部字符串
-                if (_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
-                else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
+                // if (_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
+                // else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
+                if (_url) searchUrl =  `${_url}&q=${this.type}:${this.key}` ;
+                else searchUrl = `${url} AND ${this.type}:"${this.key}")`;
                 //请求spring nature
                 this.loading = true;
                 $.ajax({
@@ -427,11 +452,7 @@
                     success: res => {
                         this.list = JSON.parse(res).records;
                         //_urls,用于ieee
-                        // let ieeePageSize = this.list.length;
-                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
-                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
-                        // }
-                        let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=${(page - 1) * this.pageSize + 1}&content_type=${this.types}&article_title=${this.key}`
+                        let _urls = `${this.urls}&max_records=${this.pageSize*2}&start_record=${ieeeStart}&content_type=${this.types}&article_title=${this.key}`
                         if (this.publishFactor) {
                             let publishFactor = this.publishFactor.replace(/&/g, '%26');
                             if (this.yearFactor) {
@@ -469,7 +490,7 @@
                 this.loading = true;
                 http.addListNum(data, res => {
                     if (res.code == 'SUCCESS') {
-                        this.$router.push({path: '/searchDetails'});
+                        this.$router.push({path: '/searchDetails',query:{type:this.type}});
                     }
                 });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
@@ -507,20 +528,18 @@
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
+                    url:  `${_url} AND ${this.type}:"${this.key}")` ,
+                    // url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        this.springTotal = Number(JSON.parse(res).result[0].total);
                         //更新右侧栏
                         this.year = JSON.parse(res).facets[3].values;
                         this.subjects = JSON.parse(res).facets[0].values;
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        // let ieeePageSize = this.list.length;
-                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
-                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
-                        // }
                         let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
                         if (this.publishFactor) {
                             _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}&publisher=${publishFactor}`;
@@ -533,6 +552,7 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
+                                this.ieeeTotal = ress.total_records
                                 //重置当前页
                                 this.currentPage = 1;
                             },
@@ -558,20 +578,18 @@
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
+                    url: `${_url} AND ${this.type}:"${this.key}")` ,
+                    // url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        this.springTotal = Number(JSON.parse(res).result[0].total);
                         //更新右侧栏
                         this.year = JSON.parse(res).facets[3].values;
                         this.subjects = JSON.parse(res).facets[0].values;
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        // let ieeePageSize = this.list.length;
-                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
-                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
-                        // }
                         let _urls = '';
                         if (this.yearFactor) {
                             if (this.publishFactor) _urls = this.urls + `&max_records=${2*this.pageSize}` + '&start_record=1&content_type=' + this.types + '&article_title=' + this.key + '&publication_year=' + this.yearFactor + '&publisher=' + publishFactor;
@@ -588,6 +606,7 @@
                                 this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.currentPage = 1;
+                                this.ieeeTotal = ress.total_records
                             },
                             error: (xhr) => {
                                 this.getAPIKEY();
@@ -611,20 +630,18 @@
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key})"` : `${_url})`,
+                    url: `${_url} AND ${this.type}:"${this.key})"` ,
+                    // url: this.key ? `${_url} AND ${this.type}:"${this.key})"` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
+                        this.springTotal = Number(JSON.parse(res).result[0].total);
                         //更新右侧栏
                         this.year = JSON.parse(res).facets[3].values;
                         this.subjects = JSON.parse(res).facets[0].values;
                         this.publisher = JSON.parse(res).facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
-                        // let ieeePageSize = this.list.length;
-                        // if(ieeePageSize<this.pageSize){//判断当前的条数够不够
-                        //     ieeePageSize = 2*this.pageSize - ieeePageSize
-                        // }
                         let _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}`;
                         if (this.yearFactor) {
                             _urls = `${this.urls}&max_records=${2*this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}&publication_year=${this.yearFactor}`;
@@ -639,6 +656,7 @@
                                 this.operateData(ress.articles);
                                 //重置当前页
                                 this.currentPage = 1;
+                                this.ieeeTotal = ress.total_records
                             },
                             error: (xhr) => {
                                 this.getAPIKEY();
@@ -688,14 +706,19 @@
                     let title = item.title;  //论文名称
                     let publicationName = item.publicationName ? item.publicationName : item.publication_title; //期刊名称
                     let year = item.publicationYear ? item.publicationYear : item.publicationDate;  //出版年份
-                    console.log(item.publication_year)
                     let volume = item.volume ? item.volume : '';  //卷数
                     let startPage = item.startingPage;  //开始页码
                     let endPage = item.endingPage;  //结束页码
                     let stringObj = {};
-                    stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`;
-                    stringObj.string2 = `${authors}"${title}." ${publicationName}, ${volume}, (${year}): ${startPage}-${endPage}`;
-                    stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}, ${volume}, ${startPage}-${endPage}`;
+                    if(this.type === 'journal'){
+                        stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, ${volume} (${item.number}): ${startPage}-${endPage}`;
+                        stringObj.string2 = `${authors}"${title}." ${publicationName}, ${volume}. ${item.number}, (${year}): ${startPage}-${endPage}`;
+                        stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}, ${volume} (${item.number}), ${startPage}-${endPage}`;
+                    }else if(this.type === 'conference'){
+                        stringObj.string1 = `${authors}${title}[C]. ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, ${year} : ${startPage}-${endPage}`;
+                        stringObj.string2 = `${authors}"${title}." ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, (${year}): ${startPage}-${endPage}`;
+                        stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, ${startPage}-${endPage}`;
+                    }
                     arr1.push(stringObj.string1);
                     arr2.push(stringObj.string2);
                     arr3.push(stringObj.string3);

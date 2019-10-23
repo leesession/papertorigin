@@ -40,14 +40,14 @@ export default {
     }
   },
   created() {
-    this.info = JSON.parse(this.params);
+    this.info = this.params;
   },
   methods: {
     closeDialog() {
       this.$emit('listenFun', this.msg);
     }
   }
-  
+
 }
 </script>
 

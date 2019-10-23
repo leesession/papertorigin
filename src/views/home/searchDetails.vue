@@ -28,11 +28,11 @@
                 </div>
                 <p class="tips" v-if="details.keyword">{{details.keyword}}</p>
                 <div class="tools">
-                    <div class="col" @click="addListNum(1)">
+                    <div class="col">
                         <i class="icon icon-eyes"></i>
                         <span>{{numObj.lookCount}}</span>
                     </div>
-                    <div class="col" @click="addListNum(2)">
+                    <div class="col" @click="quoteShow">
                         <i class="icon icon-quote"></i>
                         <span>{{numObj.quoteCount}}</span>
                     </div>
@@ -45,10 +45,10 @@
                     <span>Data Provided By {{details.publisher}}</span>
                     <a v-if="loginMsg"
                        @click="downLoadPdfByUrl"
-                       href="javascript:void(0)">
+                       target="_blank"
+                       :href="downLoadUrl">
                         DOWNLOAD
                     </a>
-                    <!--href=" http://api.springernature.com/metadata/json?q=(doi:10.1007/s10853-019-03707-1)&api_key=eded390c0074daf47de31d49ab06d924"-->
                     <a v-else href="javascript:void(0)" @click="notLogin">DOWNLOAD</a>
                 </div>
             </div>
@@ -86,7 +86,12 @@
                 </div>
             </aside>
         </div>
-
+        <citation
+                v-if="citationShow"
+                :show="citationShow"
+                :params="stringObj"
+                @listenFun="getCitationMsg">
+        </citation>
     </div>
 </template>
 
@@ -94,6 +99,7 @@
     import {http} from '../../api/http.js'
     import search from '../../components/search.vue'
     import {mapState} from 'vuex'
+    import citation from '../../components/citation.vue'
 
     export default {
         name: 'searchList',
@@ -104,6 +110,12 @@
         },
         data() {
             return {
+                citationShow:false,
+                stringObj:{
+                    string1:'',
+                    string2:'',
+                    string3:''
+                },
                 loading:true,
                 checkAll: false,
                 details: {},
@@ -114,14 +126,19 @@
                 yearFlag: false,
                 subjectsFlag: false,
                 publisherFlag: false,
-                url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924'
+                url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924',
+                type:'',
+                downLoadUrl:'',
             }
         },
-        components: {search},
+        components: {search , citation},
         created() {
             this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
+            this.type = this.$route.query.type ? this.$route.query.type : '';
+            this.details.publisher === 'IEEE' ? this.downLoadUrl= '' : this.downLoadUrl= `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
             this.getListNum();
             this.searchEvent();
+            this.getObjMsg();
         },
         methods: {
             jumpPage() {
@@ -139,26 +156,6 @@
                 http.getListNum(data, res => {
                     if (res.code === 'SUCCESS') {
                         this.numObj = res.data[0];
-                    }
-                });
-            },
-            addListNum(index) {
-                let data = {
-                    forwardCount: 0,
-                    lookCount: 0,
-                    peperDoi: this.details.doi,
-                    quoteCount: 0
-                }
-                if (index == 1) {
-                    data.lookCount = 1;
-                } else if (index == 2) {
-                    data.quoteCount = 1;
-                } else if (index == 3) {
-                    data.forwardCount = 1;
-                }
-                http.addListNum(data, res => {
-                    if (res.code == 'SUCCESS') {
-                        this.getListNum();
                     }
                 });
             },
@@ -199,6 +196,58 @@
                         });
                     }
                 });
+            },
+            quoteShow(){
+                this.citationShow = true;
+                this.addListNum(2)
+            },
+            addListNum(index) {
+                let data = {
+                    forwardCount: 0,
+                    lookCount: 0,
+                    peperDoi: this.details.doi,
+                    quoteCount: 0
+                }
+                if (index === 2) {
+                    data.quoteCount = 1;
+                } else if (index === 3) {
+                    data.forwardCount = 1;
+                }
+                http.addListNum(data, res => {
+                    if (res.code === 'SUCCESS') {
+                        this.getListNum();
+                    }
+                });
+            },
+            getObjMsg(){
+                let authors = '';   //作者
+                this.details.creators.forEach((o, index) => {
+                    authors += o.creator || o.full_name;
+                    index !== this.details.creators.length - 1 && (authors += ', ')
+                });
+                authors = authors.slice(0, -1) + '. ';
+                let title = this.details.title;  //论文名称
+                let publicationName = this.details.publicationName ? this.details.publicationName : this.details.publication_title; //期刊名称
+                let year = this.details.publicationYear ? this.details.publicationYear : this.details.publicationDate;  //出版年份
+                let volume = this.details.volume ? this.details.volume : '';  //卷数
+                let startPage = this.details.startingPage;  //开始页码
+                let endPage = this.details.endingPage;  //结束页码
+                if(this.type === 'journal'){
+                    this.stringObj= {
+                        string1:`${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`,
+                        string2:`${authors}"${title}." ${publicationName}, ${volume}, (${year}): ${startPage}-${endPage}`,
+                        string3:`${authors}(${year}). ${title}. ${publicationName}, ${volume}, ${startPage}-${endPage}`
+                    }
+                }else if(this.type === 'conference'){
+                    this.stringObj= {
+                        string1:`${authors}${title}[C]. ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, ${year} : ${startPage}-${endPage}`,
+                        string2:`${authors}"${title}." ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, (${year}): ${startPage}-${endPage}`,
+                        string3:`${authors}(${year}). ${title}. ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, ${startPage}-${endPage}`
+                    }
+                }
+            },
+            getCitationMsg(data) {
+                this.citationShow = data;
             },
             yearClickEvent(value){
                let detailquery = `year:"${value}"`;
