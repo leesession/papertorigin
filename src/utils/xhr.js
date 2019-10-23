@@ -82,9 +82,10 @@ export default function xhr(params) {
             }
         }).then(
             response => {
-                if (response.data.code === 'SUCCES' || response.data.code === 'SUCCESS') {
+                if (response.data.success && response.data.code === 'SUCCESS') {
                     resolve(response.data);
                 } else {
+                    resolve(response.data);
                     dialog.error(response.data.msg);
                 }
             },

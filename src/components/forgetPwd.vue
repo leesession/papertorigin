@@ -48,7 +48,7 @@
                 <p class="tips" @click="goLogin">Login Now >></p>
                 <div class="dialog-footer">
                     <button class="btn cancel" @click="closeDialog">Cancel</button>
-                    <button class="btn confirm" @click="confirmEvent">Submit</button>
+                    <button class="btn confirm" @click="confirmEvent" :disabled="disabled">{{disabled?'Submit...':'Submit'}}</button>
                 </div>
             </div>
         </div>
@@ -79,16 +79,20 @@
                 },
                 emailText: '',//邮箱字段
                 timer:null,
+                disabled: false,
             }
         },
         methods: {
             getEmailCode(){
+
                 if(!this.email || !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(this.email)) return;
+                this.isDisabled = true;
                 this.$axios.post('/login/ifHasEmail', {email: this.email}).then(res => {
                     let {data} = res;
                     if (data.code === 'SUCCESS') {
                         this.confirmMsg.email = false;
-                        this.emailText = 'email not register'
+                        this.emailText = 'email not register';
+                        this.isDisabled = false;
                     } else {
                         this.confirmMsg.email = true;
                         this.sendCode();
@@ -108,7 +112,6 @@
                 });
             },
             restTime() {
-                this.isDisabled = true;
                 this.timer = window.setInterval(()=>{
                     this.buttonName = `（${this.time}）s`;
                     --this.time;
@@ -140,9 +143,11 @@
                            newPassword: this.password,
                            code: this.code
                        };
-                       this.$emit('listenFun', this.msg);
+                       this.disabled = true;
                        http.findPasswordByCode(data, res => {
-                           if (res.code === 'SUCCESS') {
+                           this.disabled = false;
+                           if (res.code === 'SUCCESS' && res.success) {
+                               this.$emit('listenFun', this.msg);
                                this.$message.success('NewPassword set successfully')
                                $('body').css('overflow','auto')
                            }

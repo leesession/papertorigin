@@ -86,7 +86,7 @@
                 <p class="tips" @click="goLogin">Login Now >></p>
                 <div class="dialog-footer">
                     <button class="btn cancel" @click="closeDialog">Cancel</button>
-                    <button class="btn confirm" @click="registerEvent">Register</button>
+                    <button class="btn confirm" @click="registerEvent" :disabled="disabled">{{disabled?'Register...':'Register'}}</button>
                 </div>
             </div>
         </div>
@@ -139,6 +139,7 @@
                     code: true
                 },
                 emailText: '',//邮箱字段
+                disabled: false,
             }
         },
         components: {vueImgVerify},
@@ -184,6 +185,10 @@
                         this.$message.error('please read and agree to the the TASSEL SCHOLAR privacy policy')
                         return
                     }
+                    if (this.password !== this.confirmPassword) {
+                        this.$message.error('password confirm error !')
+                        return
+                    }
                     if (this.checkConfirmMsg()) {
                         let data = {
                             country: this.country,
@@ -197,7 +202,9 @@
                             role: "",
                             username: ""
                         };
+                        this.disabled = true;
                         http.register(data, res => {
+                            this.disabled = false;
                             if (res.code === 'SUCCESS') {
                                 dialog.success('registered was successfully');
                                 this.$emit('listenFun', this.msg);

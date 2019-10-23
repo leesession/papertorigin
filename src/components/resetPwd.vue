@@ -48,7 +48,7 @@
                 </div>
                 <div class="dialog-footer">
                     <button class="btn cancel" @click="closeDialog">Cancel</button>
-                    <button class="btn confirm" @click="confirmEvent">Submit</button>
+                    <button class="btn confirm" @click="confirmEvent" :disabled="disabled">{{disabled?'Submit...':'Submit'}}</button>
                 </div>
             </div>
         </div>
@@ -75,6 +75,7 @@
                     confirmPassword: true
                 },
                 emailText: '',//邮箱字段
+                disabled: false,
             }
         },
         methods: {
@@ -94,8 +95,9 @@
                             newPWD: this.password,
                             oldPWD: this.oldPassword
                         };
-
+                        this.disabled = true;
                         http.changePWDByOldPwd(data, res => {
+                            this.disabled = false;
                             if (res.code === 'SUCCESS') {
                                 this.$message.success('NewPassword set successfully, Please login again.');
                                 this.$emit('listenFun', this.msg);

@@ -16,7 +16,7 @@
         </div>
         <div class="dialog-body">
           <div class="row">
-            <label><i>*</i>E-mail / name</label>
+            <label><i>*</i>E-mail</label>
             <input v-model="userName" class="ipt" />
           </div>
           <div class="row">
@@ -34,7 +34,7 @@
         <p class="tips" @click="goRegister">Register Now >></p>
         <div class="dialog-footer">
           <button class="btn cancel" @click="closeDialog">Cancel</button>
-          <button class="btn confirm" @click="loginEvent">Login</button>
+          <button class="btn confirm" @click="loginEvent" :disabled="disabled">{{disabled?'Login...':'Login'}}</button>
         </div>
       </div>
     </div>
@@ -55,7 +55,8 @@ export default {
       msg: false,
       registerMsg: true,
       isChecked: true,
-      forgetMsg: true
+      forgetMsg: true,
+      disabled: false
     }
   },
   methods: {
@@ -79,11 +80,13 @@ export default {
       this.$emit('listenForgetFun', this.forgetMsg);
     },
     loginEvent() {
+      this.disabled = true;
       let data = {
         loginmail: this.userName,
         loginpassword: this.password
       };
       http.login(data, res => {
+        this.disabled = false;
         if (res.code === 'SUCCESS') {
           if (this.isChecked === true) {
             localStorage.setItem('USER', JSON.stringify(data));
@@ -93,6 +96,7 @@ export default {
           $('body').css('overflow','auto');
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
+          data.name = `${res.data.giveName} ${res.data.familyName}`;
           this.$store.commit('userLogin',JSON.stringify(data))
         }
       });
