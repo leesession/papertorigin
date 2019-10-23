@@ -239,12 +239,6 @@
             },
             getCitationAllMsg(data) {
                 this.citationAllShow = data;
-                // this.checkAll = false;
-                // let list = this.list;
-                // list.forEach(item => {
-                //     item.isChecked = false;
-                //     this.list = list;
-                // });
             },
             jumpPage(obj) {
                 if (obj.url && obj.url[0].value) {
@@ -326,7 +320,7 @@
             searchEvent() {
                 let detailquery = this.$route.query.detailquery, _url = '';
                 if (detailquery) {
-                    detailquery = detailquery.replace(/&/g, '%26');
+                    detailquery = escape(detailquery);//detailquery.replace(/&/g, '%26')
                     _url = `${this.url}&p=${2*this.pageSize}&q=(${detailquery}`;
                     // _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
                     _url = `${_url} AND ${this.type}:"${this.key}")`
@@ -410,10 +404,10 @@
                 let _url = '', url = `${this.url}&p=${this.pageSize*2}&s=${springStart}&q=(`, searchUrl = '';
                 //分页时，看 year subject publish 选中没
                 if (this.subjectFactor) {
-                    let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
+                    let subjectFactor = escape(this.subjectFactor);//this.subjectFactor.replace(/&/g, '%26')
                     url = `${url}subject:"${subjectFactor}"`;
                     if (this.publishFactor) {
-                        let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                        let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                         if (this.yearFactor) {
                             url = `${url} AND year:"${this.yearFactor}" AND pub:"${publishFactor}"`
                         } else url = `${url} AND pub:"${publishFactor}"`
@@ -421,7 +415,7 @@
                         url = `${url} AND year:"${this.yearFactor}"`
                     }
                 } else if (this.publishFactor) {
-                    let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                    let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                     if (this.yearFactor) {
                         url = `${url}year:"${this.yearFactor}" AND pub:"${publishFactor}"`;
                     } else {
@@ -446,7 +440,7 @@
                         //_urls,用于ieee
                         let _urls = `${this.urls}&max_records=${this.pageSize*2}&start_record=${ieeeStart}&content_type=${this.types}&article_title=${this.key}`
                         if (this.publishFactor) {
-                            let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                            let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                             if (this.yearFactor) {
                                 _urls = `${_urls}&publication_year=${this.yearFactor}&publisher=${publishFactor}`
                             } else {
@@ -514,8 +508,8 @@
                 });
                 let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 //做判断
-                let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
-                let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                let subjectFactor = escape(this.subjectFactor);//this.subjectFactor.replace(/&/g, '%26')
+                let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                 _url = this.getTrueUrl(_url, this.yearFactor, 'year', subjectFactor, 'subject', publishFactor, 'pub');
                 this.loading = true;
                 $.ajax({
@@ -557,8 +551,8 @@
             },
             subjectClickEvent(subject) {//点击学科
                 this.subjectFactor = subject;
-                let subjectFactor = subject.replace(/&/g, '%26');
-                let publishFactor = this.publishFactor.replace(/&/g, '%26');
+                let subjectFactor = escape(subject);//subject.replace(/&/g, '%26')
+                let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                 this.subjects.forEach(item => {
                     item.isActive = false;
                     if (item.value == subject) {
@@ -616,13 +610,15 @@
                     }
                 });
                 let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
-                let subjectFactor = this.subjectFactor.replace(/&/g, '%26');
-                let publishFactor = publish.replace(/&/g, '%26');
+                let subjectFactor = escape(this.subjectFactor);//this.subjectFactor.replace(/&/g, '%26')
+
+                // let publishFactor = publish.replace(/&/g, '%26');
+                let publishFactor = escape(publish);
                 _url = this.getTrueUrl(_url, publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
                 this.loading = true;
                 $.ajax({
                     type: "get",
-                    url: `${_url} AND ${this.type}:"${this.key})"` ,
+                    url: `${_url} AND ${this.type}:"${this.key}")` ,
                     // url: this.key ? `${_url} AND ${this.type}:"${this.key})"` : `${_url})`,
                     data: "",
                     success: res => {
