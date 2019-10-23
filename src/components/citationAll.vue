@@ -11,15 +11,15 @@
         <ul>
           <li>
             <h4>GB/T7714</h4>
-            <p v-for="(item, index) in params[0]" :key="index">{{item}}</p>
+            <p v-for="(item, index) in params[0]" :key="index"  v-html="item"></p>
           </li>
           <li>
             <h4>MLA</h4>
-            <p v-for="(item, index) in params[1]" :key="index">{{item}}</p>
+            <p v-for="(item, index) in params[1]" :key="index"  v-html="item"></p>
           </li>
           <li>
             <h4>APA</h4>
-            <p v-for="(item, index) in params[2]" :key="index">{{item}}</p>
+            <p v-for="(item, index) in params[2]" :key="index"  v-html="item"></p>
           </li>
         </ul>
       </div>

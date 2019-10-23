@@ -20,8 +20,8 @@
                     <i class="icon icon-zero"></i>
                     <span>Abstract</span>
                 </div>
-                <p class="tips">{{details.abstract.indexOf('Abstract') === -1?details.abstract :
-                    details.abstract.replace(/Abstract/,'')}}</p>
+                <p class="tips">{{details.abstract?details.abstract.indexOf('Abstract') === -1?details.abstract :
+                    details.abstract.replace(/Abstract/,''):''}}</p>
                 <div class="list-cont-title" v-if="details.keyword">
                     <i class="icon icon-zero"></i>
                     <span>Keyword</span>
@@ -111,11 +111,7 @@
         data() {
             return {
                 citationShow:false,
-                stringObj:{
-                    string1:'',
-                    string2:'',
-                    string3:''
-                },
+                stringObj:{},
                 loading:true,
                 checkAll: false,
                 details: {},
@@ -135,7 +131,7 @@
         created() {
             this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.type = this.$route.query.type ? this.$route.query.type : '';
-            this.details.publisher === 'IEEE' ? this.downLoadUrl= '' : this.downLoadUrl= `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
+            this.details.isIEE ? this.downLoadUrl= '' : this.downLoadUrl= `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
             this.getListNum();
             this.searchEvent();
             this.getObjMsg();
@@ -235,14 +231,14 @@
                 if(this.type === 'journal'){
                     this.stringObj= {
                         string1:`${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`,
-                        string2:`${authors}"${title}." ${publicationName}, ${volume}, (${year}): ${startPage}-${endPage}`,
-                        string3:`${authors}(${year}). ${title}. ${publicationName}, ${volume}, ${startPage}-${endPage}`
+                        string2:`${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>, ${volume}, (${year}): ${startPage}-${endPage}`,
+                        string3:`${authors}(${year}). ${title}. <i style="font-style: italic;">${publicationName}</i>, ${volume}, ${startPage}-${endPage}`
                     }
                 }else if(this.type === 'conference'){
                     this.stringObj= {
                         string1:`${authors}${title}[C]. ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, ${year} : ${startPage}-${endPage}`,
-                        string2:`${authors}"${title}." ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, (${year}): ${startPage}-${endPage}`,
-                        string3:`${authors}(${year}). ${title}. ${publicationName}. ${this.details.publisher}, ${this.details.conferenceLocation}, ${startPage}-${endPage}`
+                        string2:`${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>. ${this.details.publisher}, ${this.details.conferenceLocation}, (${year}): ${startPage}-${endPage}`,
+                        string3:`${authors}(${year}). ${title}. <i style="font-style: italic;">${publicationName}</i>. ${this.details.publisher}, ${this.details.conferenceLocation}, ${startPage}-${endPage}`
                     }
                 }
             },

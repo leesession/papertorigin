@@ -96,12 +96,6 @@
                 </div>
             </aside>
         </div>
-        <citation
-                v-if="citationShow"
-                :show="citationShow"
-                :params="stringObj"
-                @listenFun="getCitationMsg">
-        </citation>
         <citation-all
                 v-if="citationAllShow"
                 :show="citationAllShow"
@@ -113,7 +107,6 @@
 
 <script>
     import search from '../../components/search.vue'
-    import citation from '../../components/citation.vue'
     import citationAll from '../../components/citationAll.vue'
     import {constants} from 'crypto';
     import {http} from '../../api/http.js'
@@ -124,7 +117,6 @@
             return {
                 loading: true,
                 checkAll: false,
-                citationShow: false,
                 citationAllShow: false,
                 pagination: {},
                 pageSize: 5,
@@ -156,7 +148,7 @@
                 ieeeTotal:0,
             }
         },
-        components: {search, citation, citationAll},
+        components: {search, citationAll},
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
@@ -164,6 +156,8 @@
                 this.types = 'Journals';
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
+            }else if (this.type === 'thesis'){
+                this.types = 'Theses';
             }
             this.getAPIKEY()
         },
@@ -243,9 +237,6 @@
                 this.currentPage = 1;
                 this.searchEvent();
             },
-            getCitationMsg(data) {
-                this.citationShow = data;
-            },
             getCitationAllMsg(data) {
                 this.citationAllShow = data;
                 // this.checkAll = false;
@@ -310,7 +301,8 @@
                         obj.urls = item.abstract_url;
                         obj.isChecked = false;
                         obj.number = item.rank;
-                        obj.conferenceLocation = item.conference_location
+                        obj.conferenceLocation = item.conference_location;
+                        obj.isIEE = true;
                         this.list.push(obj);
                     });
                 }
@@ -712,12 +704,12 @@
                     let stringObj = {};
                     if(this.type === 'journal'){
                         stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, ${volume} (${item.number}): ${startPage}-${endPage}`;
-                        stringObj.string2 = `${authors}"${title}." ${publicationName}, ${volume}. ${item.number}, (${year}): ${startPage}-${endPage}`;
-                        stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}, ${volume} (${item.number}), ${startPage}-${endPage}`;
+                        stringObj.string2 = `${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>, ${volume}. ${item.number}, (${year}): ${startPage}-${endPage}`;
+                        stringObj.string3 = `${authors}(${year}). ${title}. <i style="font-style: italic;">${publicationName}</i>, ${volume} (${item.number}), ${startPage}-${endPage}`;
                     }else if(this.type === 'conference'){
                         stringObj.string1 = `${authors}${title}[C]. ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, ${year} : ${startPage}-${endPage}`;
-                        stringObj.string2 = `${authors}"${title}." ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, (${year}): ${startPage}-${endPage}`;
-                        stringObj.string3 = `${authors}(${year}). ${title}. ${publicationName}. ${item.publisher}, ${item.conferenceLocation}, ${startPage}-${endPage}`;
+                        stringObj.string2 = `${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>. ${item.publisher}, ${item.conferenceLocation}, (${year}): ${startPage}-${endPage}`;
+                        stringObj.string3 = `${authors}(${year}). ${title}. <i style="font-style: italic;">${publicationName}</i>. ${item.publisher}, ${item.conferenceLocation}, ${startPage}-${endPage}`;
                     }
                     arr1.push(stringObj.string1);
                     arr2.push(stringObj.string2);

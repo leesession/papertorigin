@@ -11,15 +11,15 @@
         <ul>
           <li>
             <h4>GB/T7714</h4>
-            <p>{{info.string1}}</p>
+            <p v-html="info.string1"></p>
           </li>
           <li>
             <h4>MLA</h4>
-            <p>{{info.string2}}</p>
+            <p v-html="info.string2"></p>
           </li>
           <li>
             <h4>APA</h4>
-            <p>{{info.string3}}</p>
+            <p v-html="info.string3"></p>
           </li>
         </ul>
       </div>
