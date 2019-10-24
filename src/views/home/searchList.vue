@@ -733,7 +733,8 @@
     .list {
         display: flex;
         justify-content: flex-start;
-
+        max-width: 1440px;
+        margin: 0 auto;
         .list-cont {
             width: calc(100% - 368px);
         }
