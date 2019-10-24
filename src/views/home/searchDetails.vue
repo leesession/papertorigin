@@ -131,7 +131,7 @@
         created() {
             this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.type = this.$route.query.type ? this.$route.query.type : '';
-            this.details.isIEE ? this.downLoadUrl= '' : this.downLoadUrl= `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
+            this.downLoadUrl= this.details.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
             this.getListNum();
             this.searchEvent();
             this.getObjMsg();
@@ -156,7 +156,6 @@
                 });
             },
             downLoadPdfByUrl() {
-                // let loginMsg = JSON.parse(this.loginMsg)
                 let data = {
                     url: this.details.doi,
                     userEmail: JSON.parse(this.loginMsg).loginmail
@@ -170,7 +169,6 @@
                 this.$message.info('Please Login !')
             },
             searchEvent() {
-                // let _url = `${this.url}&p=1`;
                 $.ajax({
                     type: "get",
                     url:  `${this.url}&p=1`,

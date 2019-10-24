@@ -89,6 +89,7 @@ export default {
         this.disabled = false;
         if (res.code === 'SUCCESS') {
           if (this.isChecked === true) {
+            data.name = `${res.data.giveName} ${res.data.familyName}`
             localStorage.setItem('USER', JSON.stringify(data));
           } else {
             localStorage.clear();
@@ -96,7 +97,6 @@ export default {
           $('body').css('overflow','auto');
           dialog.success('login was successfully');
           this.$emit('listenFun', this.msg);
-          data.name = `${res.data.giveName} ${res.data.familyName}`;
           this.$store.commit('userLogin',JSON.stringify(data))
         }
       });

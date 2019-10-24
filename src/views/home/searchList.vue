@@ -297,6 +297,7 @@
                         obj.number = item.rank;
                         obj.conferenceLocation = item.conference_location;
                         obj.isIEE = true;
+                        obj.IEEEpdfLink = item.pdf_url;
                         this.list.push(obj);
                     });
                 }

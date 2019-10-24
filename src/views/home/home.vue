@@ -26,7 +26,7 @@
                           <i class="el-icon-caret-bottom el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="(item, index) in selectList" :key="index">
+                            <el-dropdown-item v-for="(item, index) in selectList" :key="index" :disabled="index === 2">
                                 <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">{{item.showName}}</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -221,8 +221,8 @@
                     showName: 'Conference',
                     value: 'conference'
                 }, {
-                    showName: 'Thesis',
-                    value: 'thesis'
+                    showName: 'Dissertation',
+                    value: 'dissertation'
                 }],
                 currentNum: 0,
                 aboutList: [
