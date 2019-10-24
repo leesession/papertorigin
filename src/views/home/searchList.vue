@@ -119,11 +119,11 @@
                 checkAll: false,
                 citationAllShow: false,
                 pagination: {},
-                pageSize: 5,
+                pageSize: 10,
                 total: 0,
                 start: 1,
                 startNum: 1,
-                endNum: 10,
+                endNum: 0,
                 type: '',
                 types: '',
                 key: '',
@@ -164,6 +164,7 @@
         mounted() {
             this.$refs.searchBox.key = this.key;
             this.$refs.searchBox.selectVal = this.type;
+            this.endNum = 2 * this.pageSize
         },
         methods: {
             getAPIKEY() {//获取新的APIKEY
@@ -235,6 +236,7 @@
                 this.subjectFactor = '';
                 this.publishFactor = '';
                 this.currentPage = 1;
+                this.list = [];
                 this.searchEvent();
             },
             getCitationAllMsg(data) {
@@ -432,6 +434,7 @@
                 else searchUrl = `${url} AND ${this.type}:"${this.key}")`;
                 //请求spring nature
                 this.loading = true;
+                this.list =[];
                 $.ajax({
                     type: "get",
                     url: searchUrl,
@@ -513,6 +516,7 @@
                 let publishFactor = escape(this.publishFactor);//this.publishFactor.replace(/&/g, '%26')
                 _url = this.getTrueUrl(_url, this.yearFactor, 'year', subjectFactor, 'subject', publishFactor, 'pub');
                 this.loading = true;
+                this.list =[];
                 $.ajax({
                     type: "get",
                     url:  `${_url} AND ${this.type}:"${this.key}")` ,
@@ -563,6 +567,7 @@
                 let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 _url = this.getTrueUrl(_url, subjectFactor, 'subject', this.yearFactor, 'year', publishFactor, 'pub');
                 this.loading = true;
+                this.list =[];
                 $.ajax({
                     type: "get",
                     url: `${_url} AND ${this.type}:"${this.key}")` ,
@@ -612,11 +617,11 @@
                 });
                 let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 let subjectFactor = escape(this.subjectFactor);//this.subjectFactor.replace(/&/g, '%26')
-
                 // let publishFactor = publish.replace(/&/g, '%26');
                 let publishFactor = escape(publish);
                 _url = this.getTrueUrl(_url, publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
                 this.loading = true;
+                this.list =[];
                 $.ajax({
                     type: "get",
                     url: `${_url} AND ${this.type}:"${this.key}")` ,
@@ -684,6 +689,7 @@
                 this.list = list;
             },
             checkCitation(arr) {
+                $('body').css('overflow','hidden')
                 let arr1 = [], arr2 = [], arr3 = [];
                 arr.forEach(item => {
                     let authors = '';   //作者

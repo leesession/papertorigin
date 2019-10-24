@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     closeDialog() {
+      $('body').css('overflow','auto');
       this.$emit('listenFun', this.msg);
     }
   }

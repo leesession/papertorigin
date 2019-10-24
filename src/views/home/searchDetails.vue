@@ -193,6 +193,7 @@
             },
             quoteShow(){
                 this.citationShow = true;
+                $('body').css('overflow','hidden')
                 this.addListNum(2)
             },
             addListNum(index) {
