@@ -116,6 +116,9 @@ html, body {
     font-size: 18px;
     color: #fff;
     cursor: pointer;
+    &:hover{
+      background: linear-gradient(to right, #00AEF4 , #00AEF4);
+    }
   }
 }
 

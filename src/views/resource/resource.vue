@@ -27,7 +27,7 @@
       </div>
       <div class="row">
         <div class="box-title">
-          <span>Thesis</span>
+          <span>Dissertation</span>
         </div>
         <div class="box-cont">
           <!--<img src="../../assets/images/resours-01.png" alt="">-->

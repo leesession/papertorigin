@@ -124,8 +124,8 @@
                 start: 1,
                 startNum: 1,
                 endNum: 0,
-                type: '',
-                types: '',
+                type: '',//spring查
+                types: '',//ieee查
                 key: '',
                 url: ``,
                 urls: ``,
@@ -146,7 +146,6 @@
                 currentPage: 1,
                 springTotal:0,
                 ieeeTotal:0,
-                isFromDetail:false,
             }
         },
         components: {search, citationAll},
@@ -157,8 +156,8 @@
                 this.types = 'Journals';
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
-            }else if (this.type === 'thesis'){
-                this.types = 'Theses';
+            }else if (this.type === 'dissertation'){
+                this.types = 'Dissertation';
             }
             this.getAPIKEY()
         },
@@ -166,7 +165,6 @@
             this.$refs.searchBox.key = this.key;
             this.$refs.searchBox.selectVal = this.type;
             this.endNum = 2 * this.pageSize;
-            this.isFromDetail = this.$route.query.detailquery ? true : false;
         },
         methods: {
             getAPIKEY() {//获取新的APIKEY
@@ -238,6 +236,7 @@
                 this.subjectFactor = '';
                 this.publishFactor = '';
                 this.currentPage = 1;
+                //
                 this.list = [];
                 this.searchEvent();
             },
@@ -331,7 +330,7 @@
                     // _url = `${_url} AND ${this.type}:"${this.key}")`
                 } else {
                     _url = `${this.url}&p=${2*this.pageSize}`;
-                    // _url = `${_url}&q=${this.type}:${this.key}`
+                    // _url = `${_url}&q=(${this.type}:"${this.key}")`
                     _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
                 }
                 this.loading = true;
@@ -483,7 +482,7 @@
                 this.loading = true;
                 http.addListNum(data, res => {
                     if (res.code == 'SUCCESS') {
-                        this.$router.push({path: '/searchDetails',query:{type:this.type}});
+                        this.$router.push({path: '/searchDetails',query:{type:this.type , key:this.key}});
                     }
                 });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
@@ -620,7 +619,6 @@
                 });
                 let _url = `${this.url}&p=${2*this.pageSize}&q=(`;
                 let subjectFactor = escape(this.subjectFactor);//this.subjectFactor.replace(/&/g, '%26')
-                // let publishFactor = publish.replace(/&/g, '%26');
                 let publishFactor = escape(publish);
                 _url = this.getTrueUrl(_url, publishFactor, 'pub', subjectFactor, 'subject', this.yearFactor, 'year');
                 this.loading = true;

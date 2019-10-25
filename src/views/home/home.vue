@@ -292,21 +292,23 @@
             },
             // 搜索
             searchEvent() {
-                let data = {
-                    browser: getBrowse().browser,
-                    browserData: getBrowseData(),
-                    city: getCity(),
-                    contry: "",
-                    date: getDate(),
-                    ipAddress: getIp(),
-                    queryData: `{type: ${this.selectVal}, key: ${this.key}}`,
-                    time: getTime(),
-                    userEmail: this.loginMsg ? JSON.parse(this.loginMsg).loginmail :''
-                };
-                http.userSearchRecord(data, res => {
-                    if (res.code === 'SUCCESS') {}
-                });
-                this.$router.push({path: '/searchList', query: {type: this.selectVal, key: this.key}});
+                if(this.key.replace(/\s/g,'')){
+                    let data = {
+                        browser: getBrowse().browser,
+                        browserData: getBrowseData(),
+                        city: getCity(),
+                        contry: "",
+                        date: getDate(),
+                        ipAddress: getIp(),
+                        queryData: `{type: ${this.selectVal}, key: ${this.key}}`,
+                        time: getTime(),
+                        userEmail: this.loginMsg ? JSON.parse(this.loginMsg).loginmail :''
+                    };
+                    http.userSearchRecord(data, res => {
+                        if (res.code === 'SUCCESS') {}
+                    });
+                    this.$router.push({path: '/searchList', query: {type: this.selectVal, key: this.key}});
+                }
             }
         }
     }

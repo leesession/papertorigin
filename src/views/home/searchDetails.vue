@@ -1,6 +1,6 @@
 <template>
     <div class="searchList">
-        <search title="Search Results" index="0"></search>
+        <search title="Search Results" index="0" :type="type" :keys="key"></search>
         <div class="list">
             <div class="list-cont">
                 <div class="title">
@@ -123,14 +123,17 @@
                 subjectsFlag: false,
                 publisherFlag: false,
                 url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924',
-                type:'',
                 downLoadUrl:'',
+                type:'',
+                key:'',
             }
         },
         components: {search , citation},
         created() {
-            this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.type = this.$route.query.type ? this.$route.query.type : '';
+            this.key = this.$route.query.key ? this.$route.query.key : '';
+            this.url = `${this.url}&p=1&q=${this.type}:${this.key}`;
+            this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.downLoadUrl= this.details.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
             this.getListNum();
             this.searchEvent();
@@ -171,7 +174,7 @@
             searchEvent() {
                 $.ajax({
                     type: "get",
-                    url:  `${this.url}&p=1`,
+                    url:  `${this.url}`,
                     data: "",
                     success: res => {
                         this.loading = false;
@@ -246,21 +249,21 @@
             },
             yearClickEvent(value){
                let detailquery = `year:"${value}"`;
-                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+                this.$router.push({path: '/searchList', query: {type: this.type, key: this.key, detailquery:detailquery}});
             },
             yearMore(){
                 this.yearFlag = true;
             },
             subjectClickEvent(value){
                 let detailquery = `subject:"${value}"`
-                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+                this.$router.push({path: '/searchList', query: {type: this.type, key: this.key,detailquery:detailquery}});
             },
             subjectsMore(){
                 this.subjectsFlag = true;
             },
             publishClickEvent(value){
                 let detailquery = `pub:"${value}"`
-                this.$router.push({path: '/searchList', query: {type: 'journal', key: '',detailquery:detailquery}});
+                this.$router.push({path: '/searchList', query: {type: this.type, key: this.key,detailquery:detailquery}});
             },
             publisherMore(){
                 this.publisherFlag = true;
