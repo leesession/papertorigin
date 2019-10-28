@@ -300,6 +300,7 @@
                         obj.conferenceLocation = item.conference_location;
                         obj.isIEE = true;
                         obj.IEEEpdfLink = item.pdf_url;
+                        obj.openaccess = item.access_type === 'LOCKED'? 'false':'true';
                         this.list.push(obj);
                     });
                 }

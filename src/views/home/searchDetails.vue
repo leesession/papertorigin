@@ -43,9 +43,10 @@
                 </div>
                 <div class="btn-box">
                     <span>Data Provided By <b>{{details.publisher}}</b></span>
-                    <a v-if="loginMsg"
+                    <a v-if="loginMsg && details.openaccess === 'true'"
+                       class="login"
                        @click="downLoadPdfByUrl"
-                       target="_blank"
+                       download="pdf"
                        :href="downLoadUrl">
                         DOWNLOAD
                     </a>
@@ -169,7 +170,8 @@
                 });
             },
             notLogin() {
-                this.$message.info('Please Login !')
+                if(this.details.openaccess === 'true')
+                    this.$message.info('Please Login !')
             },
             searchEvent() {
                 $.ajax({
@@ -399,9 +401,14 @@
                     height: 40px;
                     line-height: 40px;
                     text-align: center;
-                    background: linear-gradient(to right, #5DC1E2, #427387);
-                    color: #fff;
                     font-size: 22px;
+                    color: #fff;
+                    background-color: gray;
+                    cursor: not-allowed;
+                }
+                .login{
+                    cursor: pointer;
+                    background: linear-gradient(to right, #5DC1E2, #427387);
                 }
             }
         }
