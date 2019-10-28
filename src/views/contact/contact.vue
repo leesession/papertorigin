@@ -6,13 +6,12 @@
       <div id="map" class="map"></div>
       <div class="info">
         <div class="info-left">
-          <span>How to</span>
-          <b>find us</b>
+          <b>How to find us</b>
         </div>
         <div class="info-right">
           <div class="col">
             <i class="icon icon-phone"></i>
-            <span>+86 028-6162-6262</span>
+            <span>+86 028-8888-8888</span>
           </div>
           <div class="col">
             <i class="icon icon-email"></i>
@@ -51,26 +50,26 @@ export default {
       icon: require("../../assets/images/icon.png"),
         concatArr:[{
                 name:'Administrative Management',
-                Landline:'Telephone: +86 028-6162-6264',
-                mobile:'Mobilephone: +86 13367537892',
+                Landline:'Telephone: +86 028-8888-8888',
+                mobile:'Mobilephone: +86 18270890446',
                 email:'E-mail: yanfeng@tasselpaper.com',
                 address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
             },{
             name:'Market and Cooperation',
-            Landline:'Telephone: +86 028-6162-6266',
-            mobile:'Mobilephone: +86 13367533362',
+            Landline:'Telephone: +86 028-8888-8888',
+            mobile:'Mobilephone: +86 15889666049',
             email:'E-mail: yangjunjie@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
         },{
             name:'Product and Service',
-            Landline:'Telephone: +86 028-6162-6268',
-            mobile:'Mobilephone: +86 13362347865',
+            Landline:'Telephone: +86 028-8888-8888',
+            mobile:'Mobilephone: +86 13361642689',
             email:'E-mail: ruhang@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
         },{
             name:'Technology and Design',
-            Landline:'Telephone: +86 028-6162-6270',
-            mobile:'Mobilephone: +86 13362343628',
+            Landline:'Telephone: +86 028-8888-8888',
+            mobile:'Mobilephone: +86 17308055063',
             email:'E-mail: shenghao@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
         }]
@@ -83,27 +82,18 @@ export default {
     //创建实例
     var map = new BMap.Map("map");
     map.enableScrollWheelZoom(true);
-    // 创建地址解析器实例
-    var myGeo = new BMap.Geocoder();
-    // 将地址解析结果显示在地图上
-    myGeo.getPoint("中国成都市湖畔北路366号", point =>{
-      if (point) {
-        map.centerAndZoom(point, 15);
-        var marker = new BMap.Marker(point);
-        map.addOverlay(marker);
-        var opts = {
-          width : 200,     // 信息窗口宽度
-          height: 80,     // 信息窗口高度
-          title : "Address:",  // 信息窗口标题
-          offset: new BMap.Size(0, -24),
-        }
-        var infoWindow = new BMap.InfoWindow(this.address, opts);
-        // marker.addEventListener("click", function(){
-        //   map.openInfoWindow(infoWindow,point); //开启信息窗口
-        // });
-        map.openInfoWindow(infoWindow, point);
-      }
-    });
+    var point = new BMap.Point(104.0886656614,30.4077001089);
+    map.centerAndZoom(point,12);
+    var marker = new BMap.Marker(point);
+    map.addOverlay(marker);
+    var opts = {
+      width : 200,     // 信息窗口宽度
+      height: 80,     // 信息窗口高度
+      title : "Address:",  // 信息窗口标题
+      offset: new BMap.Size(0, -24),
+    }
+    var infoWindow = new BMap.InfoWindow(this.address, opts);
+    map.openInfoWindow(infoWindow, point);
 
   }
 }
@@ -139,15 +129,11 @@ export default {
     display: flex;
     justify-content: flex-start;
     .info-left{
-      width: 300px;
+      width: 380px;
       overflow: hidden;
-      padding: 0 0 0 32px;
-      span{
-        display: block;
-        font-size: 18px;
-        color: #667C83;
-        margin: 45px 0 5px 0;
-      }
+      padding: 0 2px 0 8px;
+      display: flex;
+      align-items: center;
       b{
         font-size: 26px;
         color: #262828;
@@ -197,6 +183,7 @@ export default {
   overflow: hidden;
   background: linear-gradient(to right, #575281 , #517e98);
   padding: 115px 0 0 0;
+  margin-bottom: 25px;
   li{
     float: left;
     width: 33.3%;

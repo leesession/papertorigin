@@ -15,7 +15,7 @@
                     {{details.publicationDate}}</p>
                 <p style="cursor: pointer;" @click="jumpPage">DOI：<span>{{details.doi}}</span></p>
                 <p>ISSN：{{details.issn}}</p>
-                <p>ISBN：{{details.isbn}}</p>
+                <!--<p>ISBN：{{details.isbn}}</p>-->
                 <div class="list-cont-title">
                     <i class="icon icon-zero"></i>
                     <span>Abstract</span>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="btn-box">
-                    <span>Data Provided By {{details.publisher}}</span>
+                    <span>Data Provided By <b>{{details.publisher}}</b></span>
                     <a v-if="loginMsg"
                        @click="downLoadPdfByUrl"
                        target="_blank"
@@ -227,6 +227,7 @@
                 let title = this.details.title;  //论文名称
                 let publicationName = this.details.publicationName ? this.details.publicationName : this.details.publication_title; //期刊名称
                 let year = this.details.publicationYear ? this.details.publicationYear : this.details.publicationDate;  //出版年份
+                year = `${year}`.slice(0,4);
                 let volume = this.details.volume ? this.details.volume : '';  //卷数
                 let startPage = this.details.startingPage;  //开始页码
                 let endPage = this.details.endingPage;  //结束页码
@@ -277,7 +278,7 @@
         display: flex;
         justify-content: flex-start;
         max-width: 1440px;
-        margin: 0 auto;
+        margin: 0 auto 25px;
         .list-cont {
             width: calc(100% - 368px);
             padding: 35px 0 0 0;
@@ -388,6 +389,10 @@
                 border-top: 1px solid #D5E0E2;
                 margin: 30px 0 0 0;
                 font-size: 20px;
+                b{
+                    color: #3356E3;
+                    font-size: 22px;
+                }
                 a {
                     display: inline-block;
                     width: 165px;

@@ -3,10 +3,8 @@
         <search title="About Us" index="3"></search>
         <div class="title wrap1150">
             <h3>Team Member</h3>
-            <p>Group members in TASSEL SCHOLAR are from different famous universities and corporations in the global,
-                each of them has</p>
-            <p>experiences for management, operation, technology, data analysis, business development to provide the
-                best service for every user</p>
+            <p>Group members in TASSEL SCHOLAR are from different famous universities and corporations in the global, each of them has</p>
+            <p>experiences for management, operation, technology, data analysis, business development to provide the best service for every user.</p>
         </div>
         <div class="box wrap1150">
             <ul>
@@ -22,8 +20,6 @@
                 </li>
             </ul>
         </div>
-
-
     </div>
 </template>
 
@@ -39,37 +35,37 @@
                         name: 'Feng Yan',
                         role: 'Management',
                         img: '',
-                        intro: 'Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 organization cooperation in undergraduate university.He is responding to management and business development'
+                        intro:'Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been authorized more than 35 Chinese patents, and he possesses international contest, national contest, provincial contest and several contest prizes, as well as owns rich experiences about corporation cooperation. He is responding to management and business development.'
                     }, {
                         name: 'Rui Zhou',
                         role: 'Administration',
                         img: '',
-                        intro: 'Ms. Zhou is the Master of Industry Engineering at the University of Tennessee, and she ever obtained silver prizes in two national entrepreneurship contests in China. She is responding to product operation and business administration'
+                        intro:'Ms. Zhou is the Master of Industry Engineering at the University of Tennessee, and she ever obtained silver prizes in two national entrepreneurship contests in China. She is responding to product operation and business administration.'
                     }, {
                         name: 'Hang Ru',
                         role: 'Market',
                         img: '',
-                        intro: 'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever competed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics'
+                        intro:'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever competed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics.'
                     }, {
-                        name: 'Hang Sheng',
+                        name: 'Hao Sheng',
                         role: 'Technology',
                         img: '',
-                        intro: 'Mr. Sheng has 5 years software developing experience and now he the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design'
+                        intro:'Mr. Sheng has 5 years software developing experience and now he the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design.'
                     }, {
                         name: 'Qipeng Lv',
                         role: 'Advisor',
                         img: '',
-                        intro: 'Mr. Lv is the master of Southeast University in China,  and possessed 10+ years working experience in Intel as senior director in software, and hold an Intel patent for software encryption verification, as well as worked as advanced operation senior in iQiyi. He is responding to guide and develop business strategy and management'
+                        intro:'Mr. Lv is the master of Southeast University in China, and possessed 10+ years working experience in Intel as senior director in software, and hold an Intel patent for software encryption verification, as well as worked as advanced operation senior in iQIYI. He is responding to guide and develop business strategy and management.'
                     }, {
                         name: 'Junjie Yang',
                         role: 'Operation',
                         img: '',
-                        intro: 'Mr. Yang is the master of Shenzhen University in China,  and he ever obtained two second prizes in scientific contest of undergraduate and mathematic modeling contest of graduate in China. He is responding to product operation and function  development'
+                        intro:'Mr. Yang is the master of Shenzhen University in China, and he ever obtained two second prizes in scientific contest of undergraduate and mathematic modeling contest of graduate in China. He is responding to product operation and function development.'
                     }, {
                         name: 'Yue Li',
                         role: 'Finance',
                         img: '',
-                        intro: 'Ms. Li is the master of Sydney University in Australia,  and she ever obtained the outstanding prizes in national undergraduate  business contest in China and  in mathematic modeling contest of American. She has Chinese and international certificate  of accountant qualification and is responding to financial analysis and cost management.'
+                        intro:'Ms. Li is the master of Sydney University in Australia, and she ever obtained the outstanding prizes in national undergraduate business contest in China and in mathematic modeling contest of American. She has Chinese and international certificate of accountant qualification and is responding to financial analysis and cost management.'
                     }
                 ]
             }

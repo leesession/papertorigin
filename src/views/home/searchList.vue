@@ -34,17 +34,17 @@
                                 {{item.publicationDate}}</p>
                             <p @click="jumpPage(item)" style="cursor: pointer;">DOI：<span>{{item.doi}}</span></p>
                             <p>ISSN：{{item.issn}}</p>
-                            <p>ISBN：{{item.isbn}}</p>
+                            <!--<p>ISBN：{{item.isbn}}</p>-->
                             <div class="tools">
-                                <div class="col">
+                                <div class="col" title="view">
                                     <i class="icon icon-eyes"></i>
                                     <span>{{recordData[index] && recordData[index].lookCount}}</span>
                                 </div>
-                                <div class="col">
+                                <div class="col" title="cite" @click="openCitation(item)">
                                     <i class="icon icon-quote"></i>
                                     <span>{{recordData[index] && recordData[index].quoteCount}}</span>
                                 </div>
-                                <div class="col">
+                                <div class="col" title="share">
                                     <i class="icon icon-share"></i>
                                     <span>{{recordData[index] && recordData[index].forwardCount}}</span>
                                 </div>
@@ -139,7 +139,6 @@
                 yearFactor: '',
                 subjectFactor: '',
                 publishFactor: '',
-                stringObj: '',
                 stringAllObj: [],
                 recordData: [],//浏览次数等
                 ieeAPIKEY: '7d2xu2qsmryfuuhnfvc3jzdx',
@@ -148,7 +147,7 @@
                 ieeeTotal:0,
             }
         },
-        components: {search, citationAll},
+        components: {search, citationAll },
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
@@ -274,7 +273,7 @@
                 this.list.forEach(item => {
                     item.isChecked = false;
                     item.creators.forEach((item1, index) => {//姓名去逗号
-                        item.creators[index].creator = item1.creator.replace(/,/, '')
+                        item.creators[index].creator = item1.creator.indexOf(',')?item1.creator.replace(/,/, ''):item1.creator
                     })
                 });
                 //每次改变页面时，都将置为 全部选择 false
@@ -702,6 +701,7 @@
                     let title = item.title;  //论文名称
                     let publicationName = item.publicationName ? item.publicationName : item.publication_title; //期刊名称
                     let year = item.publicationYear ? item.publicationYear : item.publicationDate;  //出版年份
+                    year = `${year}`.slice(0,4);
                     let volume = item.volume ? item.volume : '';  //卷数
                     let startPage = item.startingPage;  //开始页码
                     let endPage = item.endingPage;  //结束页码
@@ -721,11 +721,22 @@
                     this.stringAllObj = [arr1, arr2, arr3];
                 });
             },
+            openCitation(obj){
+                this.updateQuote([obj]);
+                this.checkCitation([obj]);
+                this.citationAllShow = true;
+            },
+            getCitationMsg(data) {
+                this.citationShow = data;
+            },
         }
     }
 </script>
 
 <style scoped lang="scss">
+    .searchList{
+        margin-bottom: 25px;
+    }
     .page-box {
         padding: 20px 0;
         text-align: center;

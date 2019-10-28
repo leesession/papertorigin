@@ -3,7 +3,7 @@
     <search title="Our Resource" index="2"></search>
     <div class="title wrap1300">
       <h1>What resources do we have?</h1>
-      <h6>TASSEL SCHOLAR make cooperation with below journal publishers to provide academic paper information searching and retrieving</h6>
+      <h6>TASSEL SCHOLAR makes cooperation with below journal publishers to provide academic paper information searching and retrieving.</h6>
     </div>
     <div class="box wrap1300">
       <div class="row">
@@ -12,7 +12,7 @@
         </div>
         <div class="box-cont">
           <img src="../../assets/images/logo-springernature.svg" alt="">
-          <img src="../../assets/images/ieee.jpg" alt="">
+          <!--<img src="../../assets/images/ieee.jpg" alt="">-->
           <!--<img src="../../assets/images/resours-01.png" alt="">-->
         </div>
       </div>
@@ -22,7 +22,7 @@
         </div>
         <div class="box-cont">
           <img src="../../assets/images/logo-springernature.svg" alt="">
-          <img src="../../assets/images/ieee.jpg" alt="">
+          <!--<img src="../../assets/images/ieee.jpg" alt="">-->
         </div>
       </div>
       <div class="row">

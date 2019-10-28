@@ -6,6 +6,7 @@
     <login :show="loginShow" @listenFun="getLoginCloseMsg" @listenRegisterFun="getRegisterCloseMsg" @listenForgetFun="getForgetMsg"></login>
     <forget-pwd :show="forgetShow" @listenFun="getForgetCloseMsg" @listenForgetFun="getLoginCloseMsg"></forget-pwd>
     <reset-pwd :show="resetShow" @listenFun="getResetCloseMsg" ></reset-pwd>
+    <Foot></Foot>
   </div>
 </template>
 
@@ -15,10 +16,11 @@ import register from './components/register.vue'
 import login from './components/login.vue'
 import forgetPwd from './components/forgetPwd.vue'
 import resetPwd from './components/resetPwd.vue'
+import Foot from './components/Foot.vue'
 
 export default {
   name: "app",
-  components: { siteHeader, register, login, forgetPwd ,resetPwd},
+  components: { siteHeader, register, login, forgetPwd ,resetPwd , Foot},
   data() {
     return {
       registerShow: false,

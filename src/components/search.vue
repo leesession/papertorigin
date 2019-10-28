@@ -28,7 +28,7 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <input type="text" class="search-ipt" v-model="key">
+                <input type="text" class="search-ipt" v-model="key" @blur="keyCodeLeave" @focus="keyCodeEnter">
             </div>
             <button class="search-btn" @click="searchEvent">SEARCH</button>
         </div>
@@ -65,7 +65,7 @@
         mounted(){
             this.selectVal = this.type ? this.type:'journal';
             this.showVal = this.type ? this.type[0].toUpperCase()+this.type.slice(1): 'Journal';
-            this.key = this.keys?this.keys:''
+            this.key = this.keys?this.keys:'';
         },
         computed: {
             ...mapState({
@@ -78,6 +78,18 @@
             }
         },
         methods: {
+            keyCodeEnter(){
+                document.onkeydown = ()=>{
+                    if(window.event.keyCode === 13){
+                        this.searchEvent()
+                    }
+                }
+            },
+            keyCodeLeave(){
+                document.onkeydown = ()=>{
+                    if(window.event.keyCode === 13){}
+                }
+            },
             // 搜索下拉
             selectEvent(item) {
                 this.selectVal = item.value;

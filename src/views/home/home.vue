@@ -31,7 +31,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    <input type="text" class="search-ipt" v-model="key">
+                    <input type="text" class="search-ipt" v-model="key" @blur="keyCodeLeave" @focus="keyCodeEnter">
                 </div>
                 <button class="search-btn" @click="searchEvent">SEARCH</button>
             </div>
@@ -42,15 +42,13 @@
                 <h3 @click="goService">Our Service</h3>
             </div>
             <div class="cont">
-                <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving
-                    for global users. </p>
-                <p>Our data information will obtain from publishers to keep copyright and accuracy so that users can
-                    derive the most </p>
-                <p>qualified information searching service. tassels cholar will ensure every user can</p>
+                <p>TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users.</p>
+                <p>Our data information will obtain from publishers to keep copyright and accuracy so that users can derive the most </p>
+                <p>qualified information searching service. TASSEL SCHOLAR will ensure every user can </p>
                 <p>retrieve every academic paper information including titles, authors, DOI, </p>
                 <p>subjects, keywords, abstracts etc. Users can transfer to official </p>
                 <p>websites of publishers to obtain corresponding </p>
-                <p>full article of academic papers</p>
+                <p>full article of academic papers </p>
             </div>
         </div>
         <!--resource-->
@@ -69,8 +67,7 @@
                 </div>
                 <div class="wrap1100">
                     <h4>What resources do we have?</h4>
-                    <p>TASSEL SCHOLAR make cooperation with below journal publishers to provide academic paper
-                        information searching and retrieving</p>
+                    <p>TASSEL SCHOLAR make cooperation with below journal publishers to provide academic paper information searching and retrieving</p>
                 </div>
                 <el-carousel :interval="5000" v-if="currentNum !== 2" arrow="never" class="resource-banner wrap1150"
                              height="160px"
@@ -107,7 +104,7 @@
             <div class="contact wrap1150">
                 <div class="col">
                     <i class="icon icon-phone"></i>
-                    <span>+86 028-6162-6262</span>
+                    <span>+86 028-8888-8888</span>
                 </div>
                 <div class="col">
                     <i class="icon icon-email"></i>
@@ -122,22 +119,22 @@
                 <el-carousel-item>
                     <div class="card">
                         <h6>Administrative Management</h6>
-                        <p>Telephone: +86 028-6162-6264</p>
-                        <p>Mobilephone: +86 13367537892</p>
+                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Mobilephone: +86 18270890446</p>
                         <p>E-mail: yanfeng@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
                     <div class="card">
                         <h6>Market and Cooperation</h6>
-                        <p>Telephone: +86 028-6162-6266</p>
-                        <p>Mobilephone: +86 13367533362</p>
+                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Mobilephone: +86 15889666049</p>
                         <p>E-mail: yangjunjie@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
                     <div class="card">
                         <h6>Product and Service</h6>
-                        <p>Telephone: +86 028-6162-6268</p>
-                        <p>Mobilephone: +86 13362347865</p>
+                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Mobilephone: +86 13361642689</p>
                         <p>E-mail: ruhang@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
@@ -145,31 +142,13 @@
                 <el-carousel-item>
                     <div class="card">
                         <h6>Technology and Design</h6>
-                        <p>Telephone: +86 028-6162-6270</p>
-                        <p>Mobilephone: +86 13362343628</p>
+                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Mobilephone: +86 17308055063</p>
                         <p>E-mail: shenghao@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
                 </el-carousel-item>
             </el-carousel>
-        </div>
-        <div class="footer-box">
-            <div class="footer">
-                <div class="wrap1300">
-                    <div>
-                        <span>Social  Media</span>
-                        <i class="icon icon-f"></i>
-                        <i class="icon icon-xl"></i>
-                        <i class="icon icon-fg"></i>
-                        <i class="icon icon-wx"></i>
-                    </div>
-                    <div>
-                        <span>Supportable Mobile Terminal</span>
-                        <i class="icon icon-ios"></i>
-                        <i class="icon icon-android"></i>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -230,42 +209,54 @@
                         name: 'Feng Yan',
                         role: 'Management',
                         img: '',
-                        intro: 'Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been authorized more than 35 Chinese patents, and one of his scientific projects obtained ¥250000 organization cooperation in undergraduate university.He is responding to management and business development'
+                        intro:'Mr. Yan is the PhD of Biomedical Engineering at the University of Oklahoma, and he has been authorized more than 35 Chinese patents, and he possesses international contest, national contest, provincial contest and several contest prizes, as well as owns rich experiences about corporation cooperation. He is responding to management and business development.'
                     }, {
                         name: 'Rui Zhou',
                         role: 'Administration',
                         img: '',
-                        intro: 'Ms. Zhou is the Master of Industry Engineering at the University of Tennessee, and she ever obtained silver prizes in two national entrepreneurship contests in China. She is responding to product operation and business administration'
+                        intro:'Ms. Zhou is the Master of Industry Engineering at the University of Tennessee, and she ever obtained silver prizes in two national entrepreneurship contests in China. She is responding to product operation and business administration.'
                     }, {
                         name: 'Hang Ru',
                         role: 'Market',
                         img: '',
-                        intro: 'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever competed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics'
+                        intro:'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever competed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics.'
                     }, {
-                        name: 'Hang Sheng',
+                        name: 'Hao Sheng',
                         role: 'Technology',
                         img: '',
-                        intro: 'Mr. Sheng has 5 years software developing experience and now he the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design'
+                        intro:'Mr. Sheng has 5 years software developing experience and now he the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design.'
                     }, {
                         name: 'Qipeng Lv',
                         role: 'Advisor',
                         img: '',
-                        intro: 'Mr. Lv is the master of Southeast University in China,  and possessed 10+ years working experience in Intel as senior director in software, and hold an Intel patent for software encryption verification, as well as worked as advanced operation senior in iQiyi. He is responding to guide and develop business strategy and management'
+                        intro:'Mr. Lv is the master of Southeast University in China, and possessed 10+ years working experience in Intel as senior director in software, and hold an Intel patent for software encryption verification, as well as worked as advanced operation senior in iQIYI. He is responding to guide and develop business strategy and management.'
                     }, {
                         name: 'Junjie Yang',
                         role: 'Operation',
                         img: '',
-                        intro: 'Mr. Yang is the master of Shenzhen University in China,  and he ever obtained two second prizes in scientific contest of undergraduate and mathematic modeling contest of graduate in China. He is responding to product operation and function  development'
+                        intro:'Mr. Yang is the master of Shenzhen University in China, and he ever obtained two second prizes in scientific contest of undergraduate and mathematic modeling contest of graduate in China. He is responding to product operation and function development.'
                     }, {
                         name: 'Yue Li',
                         role: 'Finance',
                         img: '',
-                        intro: 'Ms. Li is the master of Sydney University in Australia,  and she ever obtained the outstanding prizes in national undergraduate  business contest in China and  in mathematic modeling contest of American. She has Chinese and international certificate  of accountant qualification and is responding to financial analysis and cost management.'
+                        intro:'Ms. Li is the master of Sydney University in Australia, and she ever obtained the outstanding prizes in national undergraduate business contest in China and in mathematic modeling contest of American. She has Chinese and international certificate of accountant qualification and is responding to financial analysis and cost management.'
                     }
-                ],
+                ]
             }
         },
         methods: {
+            keyCodeEnter(){
+                document.onkeydown = ()=>{
+                    if(window.event.keyCode === 13){
+                        this.searchEvent()
+                    }
+                }
+            },
+            keyCodeLeave(){
+                document.onkeydown = ()=>{
+                    if(window.event.keyCode === 13){}
+                }
+            },
             // 导航
             navClickEvent(obj) {
                 this.$router.push({path: obj.path});
@@ -553,76 +544,6 @@
         }
     }
 
-    .footer-box {
-        width: 100%;
-        height: 95px;
-        background: #f6f6f6;
-        .footer {
-            height: 70px;
-            line-height: 70px;
-            background: #D5E7E9;
-            .wrap1300 {
-                display: flex;
-                justify-content: space-between;
-            }
-            span {
-                float: left;
-                font-size: 20px;
-                color: #6C767E;
-            }
-            .icon {
-                float: left;
-                width: 36px;
-                height: 36px;
-                margin: 17px 0 0 25px;
-                cursor: pointer;
-                &.icon-f {
-                    background: url(../../assets/images/facebook.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/facebook-active.png) no-repeat center center;
-                    }
-                }
-                &.icon-xl {
-                    background: url(../../assets/images/microblog.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/microblog-active.png) no-repeat center center;
-                    }
-                }
-                &.icon-fg {
-                    background: url(../../assets/images/twitter.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/twitter-active.png) no-repeat center center;
-                    }
-                }
-                &.icon-wx {
-                    background: url(../../assets/images/wechat.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/wechat-active.png) no-repeat center center;
-                    }
-                }
-                &.icon-ios {
-                    width: 33px;
-                    height: 39px;
-                    background: url(../../assets/images/apple.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/apple-active.png) no-repeat center center;
-                    }
-                }
-                &.icon-android {
-                    height: 39px;
-                    background: url(../../assets/images/android.png) no-repeat center center;
-                    background-size: 100% 100%;
-                    &:hover {
-                        background: url(../../assets/images/android-active.png) no-repeat center center;
-                    }
-                }
-            }
-        }
-    }
+
 </style>
 

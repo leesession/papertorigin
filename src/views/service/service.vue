@@ -8,36 +8,30 @@
            <p>
             <i></i>
             <span>
-              TASSEL SCHOLAR will provide  the latest paper searching and the most comprehensive
-              article retrieving for global users. Our data information will obtain from publishers to keep
-              copyright and accuracy so that users can derive the most qualified information searching
-              service.
+              TASSEL SCHOLAR will provide the latest paper searching and the most comprehensive article retrieving for global users. Our data information will obtain from publishers to keep copyright and accuracy so that users can derive the most qualified information searching service.
             </span>
           </p>
           <p>
             <i></i>
             <span>
-              TASSEL SCHOLAR will ensure every user canretrieve every academic paper information
-              including titles, authors,  DOI,  subjects,  keywords,  abstracts etc.  Users cantransfer to
-              officialwebsites of publishers to obtain corresponding full article of academic papers.
+              TASSEL SCHOLAR will ensure every user can retrieve every academic paper information including titles, authors, DOI, subjects, keywords, abstracts etc. Users can transfer to official websites of publishers to obtain corresponding full article of academic papers.
             </span>
           </p>
         </div>
-        <img src="../../assets/images/service-blue.png" alt="">
+        <div class="img" ></div>
       </div>
     </div>
     <div class="citation-service">
       <div class="wrap1100">
         <h2>Citation Service!</h2>
-        <p>TASSEL SCHOLAR will help users to cite the latest articles and the most comprehensive academic papers for their paper writing</p>
+        <p>TASSEL SCHOLAR will help users to cite the latest articles and the most comprehensive academic papers for their paper writing.</p>
       </div>
     </div>
 
     <div class="shares-ervice">
       <div class="wrap1100">
         <h2>Share Service!</h2>
-        <p>TASSEL SCHOLAR will help users to share academic paper to others by social network tools so that authors and researchers can
-share and spread academic achievements.</p>
+        <p>TASSEL SCHOLAR will help users to share academic paper to others by social network tools so that authors and researchers can share and spread academic achievements.</p>
       </div>
     </div>
   </div>
@@ -69,9 +63,11 @@ export default {
   .cont{
     display: flex;
     justify-content: flex-start;
-    img{
+    .img{
       width: 263px;
       height: 296px;
+      background: url("../../assets/images/blue-logo.png") no-repeat center;
+      background-size: contain;
     }
     .cont-left{
       width: 805px;
@@ -124,6 +120,7 @@ export default {
   height: 202px;
   background: url(../../assets/images/service-bg3.png) no-repeat center center;
   background-size: 100%;
+  margin-bottom: 25px;
   h2{
     line-height: 95px;
     text-align: center;
