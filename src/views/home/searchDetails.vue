@@ -43,14 +43,15 @@
                 </div>
                 <div class="btn-box">
                     <span>Data Provided By <b>{{details.publisher}}</b></span>
-                    <a v-if="loginMsg && details.openaccess === 'true'"
-                       class="login"
+                    <!--loginMsg &&-->
+                    <a v-if="details.openaccess === 'true'"
+                       :class="{login:details.openaccess === 'true'}"
                        @click="downLoadPdfByUrl"
                        download="pdf"
-                       :href="downLoadUrl">
+                       :href="loginMsg?downLoadUrl:`javascript:void(0)`">
                         DOWNLOAD
                     </a>
-                    <a v-else href="javascript:void(0)" @click="notLogin">DOWNLOAD</a>
+                    <a v-else href="javascript:void(0)">DOWNLOAD</a>
                 </div>
             </div>
             <aside class="my-aside" v-loading="loading">
@@ -160,6 +161,10 @@
                 });
             },
             downLoadPdfByUrl() {
+                if(!this.loginMsg){
+                    this.$message.info('Please Login !');
+                    return
+                }
                 let data = {
                     url: this.details.doi,
                     userEmail: JSON.parse(this.loginMsg).loginmail
@@ -169,10 +174,10 @@
                     }
                 });
             },
-            notLogin() {
-                if(this.details.openaccess === 'true')
-                    this.$message.info('Please Login !')
-            },
+            // notLogin() {
+            //     if(this.details.openaccess === 'true')
+            //         this.$message.info('Please Login !')
+            // },
             searchEvent() {
                 $.ajax({
                     type: "get",
