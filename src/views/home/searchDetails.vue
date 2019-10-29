@@ -5,15 +5,15 @@
             <div class="list-cont">
                 <div class="title">
                     <i class="icon icon-note"></i>
-                    <span>{{details.title}}</span>
+                    <span @click="jumpPage">{{details.title}}</span>
                 </div>
                 <p><i v-for="(o, i) in details.creators" :key="i">{{o.creator || o.full_name}}<span
                         v-if="details.creators.length-1 > i">, </span></i></p>
                 <p><em>{{details.publisher}}</em></p>
-                <p><em @click="jumpPage">{{details.publicationName}}</em></p>
+                <p><em>{{details.publicationName}}</em></p>
                 <p>Volume {{details.volume}} | Page {{details.startingPage}}-{{details.endingPage}} |
                     {{details.publicationDate}}</p>
-                <p style="cursor: pointer;" @click="jumpPage">DOI：<span>{{details.doi}}</span></p>
+                <p>DOI：<span style="cursor: pointer;" @click="jumpPage">{{details.doi}}</span></p>
                 <p>ISSN：{{details.issn}}</p>
                 <!--<p>ISBN：{{details.isbn}}</p>-->
                 <div class="list-cont-title">
@@ -45,7 +45,7 @@
                     <span>Data Provided By <b>{{details.publisher}}</b></span>
                     <!--loginMsg &&-->
                     <a v-if="details.openaccess === 'true'"
-                       :class="{login:details.openaccess === 'true'}"
+                       class="login"
                        @click="downLoadPdfByUrl"
                        download="pdf"
                        :href="loginMsg?downLoadUrl:`javascript:void(0)`">
@@ -304,13 +304,9 @@
                 }
                 span {
                     display: inline-block;
-                    /*height: 34px;*/
-                    /*line-height: 34px;*/
-                    /*overflow: hidden;*/
-                    /*text-overflow: ellipsis;*/
-                    /*white-space: nowrap;*/
                     font-size: 22px;
                     color: #29697E;
+                    cursor: pointer;
                 }
             }
             .list-cont-title {
@@ -344,7 +340,7 @@
                     border-radius: 13px;
                     background: #ddf6ec;
                     color: #009A7D;
-                    cursor: pointer;
+                    /*cursor: pointer;*/
                 }
                 span {
                     color: #3356E3;

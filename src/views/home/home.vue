@@ -74,7 +74,7 @@
                              indicator-position="none">
                     <el-carousel-item>
                         <img src="../../assets/images/logo-springernature.svg" alt="">
-                        <img src="../../assets/images/ieee.jpg" alt="">
+                        <!--<img src="../../assets/images/ieee.jpg" alt="">-->
                     </el-carousel-item>
                 </el-carousel>
             </div>
