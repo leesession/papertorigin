@@ -16,6 +16,7 @@
                 </div>
             </div>
         </div>
+        <div class="intro">Chengdu FengRui Cloud Science & Technology Co. Ltd. All rights reserved.</div>
     </div>
 </template>
 
@@ -111,6 +112,12 @@
                     }
                 }
             }
+        }
+
+        .intro{
+            text-align: center;
+            height: 25px;
+            line-height: 25px;
         }
     }
 </style>

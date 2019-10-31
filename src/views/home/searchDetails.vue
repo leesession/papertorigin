@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="btn-box">
-                    <span>Data Provided By <b>{{details.publisher}}</b></span>
+                    <span>Data Provided By <img :src="details.isIEE?ieeLogo:springLogo" :class="{ieee:details.isIEE}" alt=""></span>
                     <!--loginMsg &&-->
                     <a v-if="details.openaccess === 'true'"
                        class="login"
@@ -112,6 +112,8 @@
         },
         data() {
             return {
+                ieeLogo:require('../../assets/images/ieee.jpg'),
+                springLogo:require('../../assets/images/logo-springernature.svg'),
                 citationShow:false,
                 stringObj:{},
                 loading:true,
@@ -392,10 +394,18 @@
                 border-top: 1px solid #D5E0E2;
                 margin: 30px 0 0 0;
                 font-size: 20px;
-                b{
-                    color: #3356E3;
-                    font-size: 22px;
+                span{
+                    display: flex;
+                    align-items: center;
+                    img{
+                        width: 215px;
+                        margin-left: 10px;
+                    }
+                    img.ieee{
+                        width: 110px;
+                    }
                 }
+
                 a {
                     display: inline-block;
                     width: 165px;
