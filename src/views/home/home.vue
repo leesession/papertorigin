@@ -192,10 +192,10 @@
                 ],
                 activeNum: 0,
                 showVal: 'Journal',
-                selectVal: 'journal',
+                selectVal: 'Journal',
                 selectList: [{
                     showName: 'Journal',
-                    value: 'journal'
+                    value: 'Journal'
                 }, {
                     showName: 'Conference',
                     value: 'conference'

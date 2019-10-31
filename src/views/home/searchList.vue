@@ -145,13 +145,14 @@
                 currentPage: 1,
                 springTotal:0,
                 ieeeTotal:0,
+                springType:''
             }
         },
         components: {search, citationAll },
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
-            if (this.type === 'journal') {
+            if (this.type === 'Journal') {
                 this.types = 'Journals';
             } else if (this.type === 'conference') {
                 this.types = 'Conferences';
@@ -223,7 +224,7 @@
             getChildParams(data) {
                 this.type = data.type ? data.type : '';
                 this.key = data.key ? data.key : '';
-                if (this.type == 'journal') {
+                if (this.type == 'Journal') {
                     this.types = 'Journals';
                 } else if (this.type == 'conference') {
                     this.types = 'Conferences';
@@ -326,12 +327,10 @@
                 if (detailquery) {
                     detailquery = escape(detailquery);
                     _url = `${this.url}&p=${2*this.pageSize}&q=(${detailquery}`;
-                    _url = this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`
-                    // _url = `${_url} AND ${this.type}:"${this.key}")`
+                    _url = this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`
                 } else {
                     _url = `${this.url}&p=${2*this.pageSize}`;
-                    // _url = `${_url}&q=(${this.type}:"${this.key}")`
-                    _url = this.key ? `${_url}&q=${this.type}:${this.key}` : _url
+                    _url = this.key ? `${_url}&q=(keyword:"${this.key}" AND type:"${this.type}")` : _url
                 }
                 this.loading = true;
                 $.ajax({
@@ -430,8 +429,8 @@
                     url = `${url}year:"${this.yearFactor}"`;//
                 } else _url = `${this.url}&p=${2*this.pageSize}&s=${(page - 1) * this.pageSize + 1}`;
                 //添上尾部字符串
-                if (_url) searchUrl = this.key ? `${_url}&q=${this.type}:${this.key}` : _url;
-                else searchUrl = this.key ? `${url} AND ${this.type}:"${this.key}")` : `${url})`;
+                if (_url) searchUrl = this.key ? `${_url}&q=keyword:"${this.key}" AND type:"${this.type}"` : _url;
+                else searchUrl = this.key ? `${url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${url})`;
                 // if (_url) searchUrl =  `${_url}&q=${this.type}:${this.key}` ;
                 // else searchUrl = `${url} AND ${this.type}:"${this.key}")`;
                 //请求spring nature
@@ -522,7 +521,7 @@
                 $.ajax({
                     type: "get",
                     // url:  `${_url} AND ${this.type}:"${this.key}")` ,
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
+                    url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
@@ -573,7 +572,7 @@
                 $.ajax({
                     type: "get",
                     // url: `${_url} AND ${this.type}:"${this.key}")` ,
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
+                    url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
@@ -626,7 +625,7 @@
                 $.ajax({
                     type: "get",
                     // url: `${_url} AND ${this.type}:"${this.key}")` ,
-                    url: this.key ? `${_url} AND ${this.type}:"${this.key}")` : `${_url})`,
+                    url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
                         this.list = JSON.parse(res).records;
@@ -707,7 +706,7 @@
                     let startPage = item.startingPage;  //开始页码
                     let endPage = item.endingPage;  //结束页码
                     let stringObj = {};
-                    if(this.type === 'journal'){
+                    if(this.type === 'Journal'){
                         stringObj.string1 = `${authors}${title}[J]. ${publicationName}, ${year}, ${volume} (${item.number}): ${startPage}-${endPage}`;
                         stringObj.string2 = `${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>, ${volume}. ${item.number}, (${year}): ${startPage}-${endPage}`;
                         stringObj.string3 = `${authors}(${year}). ${title}. <i style="font-style: italic;">${publicationName}</i>, ${volume} (${item.number}), ${startPage}-${endPage}`;
@@ -726,9 +725,6 @@
                 this.updateQuote([obj]);
                 this.checkCitation([obj]);
                 this.citationAllShow = true;
-            },
-            getCitationMsg(data) {
-                this.citationShow = data;
             },
         }
     }

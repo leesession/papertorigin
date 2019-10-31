@@ -49,10 +49,10 @@
                 navList: ['Home', 'Our Service', 'Our Resource', 'About Us', 'Contact Us'],
                 key: '',
                 showVal: 'Journal',
-                selectVal: 'journal',
+                selectVal: 'Journal',
                 selectList: [{
                     showName:'Journal',
-                    value:'journal'
+                    value:'Journal'
                 }, {
                     showName:'Conference',
                     value:'conference'
@@ -63,7 +63,7 @@
             }
         },
         mounted(){
-            this.selectVal = this.type ? this.type:'journal';
+            this.selectVal = this.type ? this.type:'Journal';
             this.showVal = this.type ? this.type[0].toUpperCase()+this.type.slice(1): 'Journal';
             this.key = this.keys?this.keys:'';
         },

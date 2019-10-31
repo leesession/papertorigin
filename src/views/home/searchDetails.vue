@@ -134,7 +134,7 @@
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
-            this.url = `${this.url}&p=1&q=${this.type}:${this.key}`;
+            this.url = `${this.url}&p=1&q=(keyword:"${this.key}" AND type:"${this.type}")`;
             this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
             this.downLoadUrl= this.details.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
             this.getListNum();
@@ -238,7 +238,7 @@
                 let volume = this.details.volume ? this.details.volume : '';  //卷数
                 let startPage = this.details.startingPage;  //开始页码
                 let endPage = this.details.endingPage;  //结束页码
-                if(this.type === 'journal'){
+                if(this.type === 'Journal'){
                     this.stringObj= {
                         string1:`${authors}${title}[J]. ${publicationName}, ${year}, (${volume}): ${startPage}-${endPage}`,
                         string2:`${authors}"${title}." <i style="font-style: italic;">${publicationName}</i>, ${volume}, (${year}): ${startPage}-${endPage}`,
