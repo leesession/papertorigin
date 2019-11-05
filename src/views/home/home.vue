@@ -12,29 +12,32 @@
                     </ul>
                 </nav>
             </div>
-            <div class="words-box">
-                <div class="cont">
-                    <p>Search With Your Articles</p>
-                    <p>what do you want to retrieve today?</p>
+            <div class="center">
+                <div class="words-box">
+                    <div class="cont">
+                        <p>Search With Your Articles</p>
+                        <p>what do you want to retrieve today?</p>
+                    </div>
                 </div>
-            </div>
-            <div class="search-box">
-                <div class="search">
-                    <el-dropdown trigger="click" class="search-key">
+                <div class="search-box">
+                    <div class="search">
+                        <el-dropdown trigger="click" class="search-key">
                         <span class="el-dropdown-link">
                           <span>{{showVal}}</span>
                           <i class="el-icon-caret-bottom el-icon--right"></i>
                         </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="(item, index) in selectList" :key="index" :disabled="index === 2">
-                                <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">{{item.showName}}</span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                    <input type="text" class="search-ipt" v-model="key" @blur="keyCodeLeave" @focus="keyCodeEnter">
+                            <el-dropdown-menu slot="dropdown" class="dropdown-list">
+                                <el-dropdown-item v-for="(item, index) in selectList" :key="index" :disabled="index === 2">
+                                    <span @click="selectEvent(item)"  style="display: inline-block;width: 100%">{{item.showName}}</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <input type="text" class="search-ipt" v-model="key" @blur="keyCodeLeave" @focus="keyCodeEnter">
+                    </div>
+                    <button class="search-btn" @click="searchEvent">SEARCH</button>
                 </div>
-                <button class="search-btn" @click="searchEvent">SEARCH</button>
             </div>
+
         </div>
         <!--service-->
         <div class="common-box service-box">
@@ -306,32 +309,38 @@
 </script>
 
 <style scoped lang="scss">
-    .words-box {
-        width: 100%;
-        margin-top: 73px;
-        display: flex;
-        justify-content: center;
-        .cont {
-            width: 408px;
-            text-align: center;
-            p {
-                line-height: 40px;
-                font-size: 20px;
-                color: #fff;
-                opacity: 0.6;
-                &:first-child {
-                    line-height: 65px;
-                    border-bottom: 1px solid #fff;
-                    font-size: 30px;
-                    opacity: 1;
+    .center{
+        position: absolute;
+        top: calc(50% - 60px);
+        left: 50%;
+        transform: translate(-50%,-50%);
+        .words-box {
+            width: 100%;
+            /*margin-top: 73px;*/
+            display: flex;
+            justify-content: center;
+            .cont {
+                width: 508px;
+                text-align: center;
+                p {
+                    line-height: 40px;
+                    font-size: 20px;
+                    color: #fff;
+                    opacity: 0.6;
+                    &:first-child {
+                        line-height: 65px;
+                        border-bottom: 1px solid #fff;
+                        font-size: 30px;
+                        opacity: 1;
+                    }
                 }
             }
         }
+        .search-box {
+            margin: 40px 0 0 0;
+        }
     }
 
-    .search-box {
-        margin: 40px 0 0 0;
-    }
 
     .common-box {
         .title {
@@ -361,7 +370,7 @@
             margin-top: 25px;
             p {
                 line-height: 28px;
-                font-size: 16px;
+                font-size: 22px;
                 color: #485764;
             }
         }

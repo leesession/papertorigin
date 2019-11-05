@@ -154,6 +154,30 @@
         .search-box {
             justify-content: flex-end;
             margin-right: 30px;
+            .search{
+                width: 565px;
+                height: 50px;
+                .search-key{
+                    width: 110px;
+                    height: 50px;
+                    line-height: 50px;
+                    .el-dropdown-link{
+                        font-size: 16px;
+                    }
+                }
+                .search-ipt{
+                    width: 454px;
+                    height: 50px;
+                    line-height: 50px;
+                    font-size: 16px;
+                }
+            }
+            .search-btn{
+                width: 127px;
+                height: 50px;
+                line-height: 50px;
+                font-size: 18px;
+            }
         }
     }
 

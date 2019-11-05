@@ -7,6 +7,9 @@ html, body {
   background-color: #fff;
   font-family: firstFont;
 }
+.dropdown-list{
+  width: 135px;
+}
 .wrap1100{
   width: 1100px;
   margin: auto;
@@ -31,7 +34,7 @@ html, body {
   overflow: hidden;
   background: url(../images/sky-home.png) no-repeat center center;
   background-size: cover;
-  //background-size: 100% 100%;
+  position: relative;
   .head{
     display: flex;
     justify-content: space-between;
@@ -79,37 +82,37 @@ html, body {
   display: flex;
   justify-content: center;
   .search{
-    width: 556px;
-    height: 50px;
+    width: 680px;
+    height: 60px;
     background: #F6F6F6;
     border-radius: 2px;
     display: flex;
     justify-content: flex-start;
     .search-key{
-      width: 110px;
-      height: 50px;
-      line-height: 50px;
+      width: 135px;
+      height: 60px;
+      line-height: 60px;
       text-align: center;
       border-right: 1px solid #4E545B;
       cursor: pointer;
       .el-dropdown-link{
-        font-size: 16px;
+        font-size: 18px;
         color: #222725;
       }
     }
     .search-ipt{
-      width: 446px;
-      height: 50px;
-      line-height: 50px;
+      width: 545px;
+      height: 60px;
+      line-height: 60px;
       padding: 0 10px;
-      font-size: 16px;
+      font-size: 18px;
       color: #222725;
     }
   }
   .search-btn{
-    width: 128px;
-    height: 50px;
-    line-height: 50px;
+    width: 142px;
+    height: 60px;
+    line-height: 60px;
     text-align: center;
     border-radius: 2px;
     background: linear-gradient(to right, #37CDFB , #00AEF4);

@@ -2,6 +2,7 @@
     <div class="footer-box">
         <div class="footer">
             <div class="wrap1300">
+                <img src="../assets/images/foot-logo2.png" class="foot-logo" alt="">
                 <div>
                     <span>Social  Media</span>
                     <i class="icon icon-f"></i>
@@ -40,6 +41,10 @@
             .wrap1300 {
                 display: flex;
                 justify-content: space-between;
+                .foot-logo{
+                    height: 70px;
+                    margin-top: 5px;
+                }
             }
 
             span {
