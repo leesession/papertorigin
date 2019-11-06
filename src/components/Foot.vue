@@ -2,7 +2,6 @@
     <div class="footer-box">
         <div class="footer">
             <div class="wrap1300">
-                <img src="../assets/images/foot-logo2.png" class="foot-logo" alt="">
                 <div>
                     <span>Social  Media</span>
                     <i class="icon icon-f"></i>
@@ -10,6 +9,7 @@
                     <i class="icon icon-fg"></i>
                     <i class="icon icon-wx"></i>
                 </div>
+                <div><img src="../assets/images/foot-logo2.png" class="foot-logo" alt=""></div>
                 <div>
                     <span>Supportable Mobile Terminal</span>
                     <i class="icon icon-ios"></i>
@@ -39,11 +39,23 @@
             background: #D5E7E9;
 
             .wrap1300 {
+                width: 1340px;
                 display: flex;
                 justify-content: space-between;
+                >div{
+                    display: flex;
+                    justify-content: center;
+                    flex: 1;
+                    &:first-child{
+                        justify-content: flex-start;
+                    }
+                    &:last-child{
+                        justify-content: flex-end;
+                    }
+                }
                 .foot-logo{
                     height: 70px;
-                    margin-top: 5px;
+                    margin-top: 7px;
                 }
             }
 
@@ -98,7 +110,7 @@
 
                 &.icon-ios {
                     width: 33px;
-                    height: 39px;
+                    height: 36px;
                     background: url(../assets/images/apple.png) no-repeat center center;
                     background-size: 100% 100%;
 
@@ -108,7 +120,7 @@
                 }
 
                 &.icon-android {
-                    height: 39px;
+                    height: 36px;
                     background: url(../assets/images/android.png) no-repeat center center;
                     background-size: 100% 100%;
 

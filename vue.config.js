@@ -4,7 +4,8 @@ const api2 = 'http://api.springernature.com';
 // const api = 'http://192.168.30.17:9094';
 //引入webpack
 const webpack = require('webpack');
-
+//当前时间为了防止打包缓存不刷新，所以给每个js文件都加一个时间戳
+const Timestamp = new Date().getTime();
 module.exports = {
     // 部署应用时的基本 URL
     publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
@@ -33,6 +34,10 @@ module.exports = {
     },
     // 插件
     configureWebpack: {
+        output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
+            filename: `static/js/[name].${Timestamp}.js`,
+            chunkFilename: `static/js/[name].${Timestamp}.js`
+        },
         plugins: [
             new webpack.ProvidePlugin({
                 jQuery: 'jquery',

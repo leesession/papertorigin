@@ -215,7 +215,7 @@ html, body {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: 1950;
   background: #000;
   opacity: 0.5;
 }
@@ -225,7 +225,7 @@ html, body {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1951;
   overflow: auto;
   margin: 0;
   .dialog{
@@ -303,12 +303,12 @@ html, body {
           margin: 20px 0;
           display: flex;
           justify-content: flex-start;
-          cursor: pointer;
           .checkbox{
             display: inline-block;
             width: 16px;
             height: 16px;
             margin: 0 10px 0 0;
+            cursor: pointer;
             &.checked{
               background: url(../images/checked.png) no-repeat center center;
               background-size: 100% 100%;
@@ -318,10 +318,14 @@ html, body {
               background-size: 100% 100%;
             }
           }
-          span{
+          >span{
             line-height: 16px;
             font-size: 14px;
             color: #32982A;
+            span{
+              color: #3C66D2;
+              cursor: pointer;
+            }
           }
         }
         label{
@@ -417,7 +421,7 @@ html, body {
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 1000;
+  z-index: 1951;
   transform: translate(-50%, -50%);
   .dialog-title{
     height: 58px;

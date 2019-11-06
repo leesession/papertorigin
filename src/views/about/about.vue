@@ -45,12 +45,12 @@
                         name: 'Hang Ru',
                         role: 'Market',
                         img: '',
-                        intro:'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever competed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics.'
+                        intro:'Mr. Ru is the Master of Optical Engineering at Nanchang Hangkong University, and he ever completed market and data analysis of 5 national and provincial entrepreneurship projects. He is responding to market analysis and data statistics.'
                     }, {
                         name: 'Hao Sheng',
                         role: 'Technology',
                         img: '',
-                        intro:'Mr. Sheng has 5 years software developing experience and now he the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design.'
+                        intro:'Mr. Sheng has 5 years software developing experience and now he is the Master of Engineering Management in Xihua University, and he is very good at platform-developing of big data, HIS and Internet of things. He is responding to technological development and design.'
                     }, {
                         name: 'Qipeng Lv',
                         role: 'Advisor',

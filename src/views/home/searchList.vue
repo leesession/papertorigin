@@ -71,7 +71,8 @@
                            :class="{active: item.isActive == true}"
                            @click="yearClickEvent(item.value)">~{{item.value}}</p>
                     </div>
-                    <span @click="yearMore" v-show="!yearFlag">See More</span>
+                    <span @click="yearFlag = true" v-show="!yearFlag">See More</span>
+                    <span @click="yearFlag = false" v-show="yearFlag">Hide More</span>
                 </div>
                 <div class="col">
                     <h3>Subjects:</h3>
@@ -82,7 +83,8 @@
                            :class="{active: item.isActive == true}"
                            @click="subjectClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="subjectsMore" v-show="!subjectsFlag">See More</span>
+                    <span @click="subjectsFlag = true" v-show="!subjectsFlag">See More</span>
+                    <span @click="subjectsFlag = false" v-show="subjectsFlag">Hide More</span>
                 </div>
                 <div class="col">
                     <h3>Publisher:</h3>
@@ -92,7 +94,8 @@
                            :class="{active: item.isActive == true}"
                            @click="publishClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="publisherMore" v-show="!publisherFlag">See More</span>
+                    <span @click="publisherFlag = true" v-show="!publisherFlag">See More</span>
+                    <span @click="publisherFlag = false" v-show="publisherFlag">Hide More</span>
                 </div>
             </aside>
         </div>
@@ -486,15 +489,6 @@
                 });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
             },
-            yearMore() {
-                this.yearFlag = true;
-            },
-            subjectsMore() {
-                this.subjectsFlag = true;
-            },
-            publisherMore() {
-                this.publisherFlag = true;
-            },
             getTrueUrl(_url, clicked, clickName, confirmOne, nameOne, confirmTwo, nameTwo) {
                 if (confirmOne) {
                     if (confirmTwo) _url = `${_url}${clickName}:"${clicked}" AND ${nameOne}:"${confirmOne}" AND ${nameTwo}:"${confirmTwo}"`;
@@ -788,15 +782,11 @@
                 }
 
                 .cont-title {
-                    height: 38px;
                     display: flex;
                     justify-content: flex-start;
 
                     h4 {
                         max-width: 1200px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
                         color: #29697E;
                         font-size: 22px;
                         cursor: pointer;
