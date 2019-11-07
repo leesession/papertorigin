@@ -63,7 +63,8 @@
                            :class="{active: item.isActive == true}"
                            @click="yearClickEvent(item.value)">~{{item.value}}</p>
                     </div>
-                    <span @click="yearMore" v-show="!yearFlag">See More</span>
+                    <span @click="yearFlag = true" v-show="!yearFlag">See More</span>
+                    <span @click="yearFlag = false" v-show="yearFlag">Hide More</span>
                 </div>
                 <div class="col">
                     <h3>Subjects:</h3>
@@ -74,7 +75,8 @@
                            :class="{active: item.isActive == true}"
                            @click="subjectClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="subjectsMore" v-show="!subjectsFlag">See More</span>
+                    <span @click="subjectsFlag = true" v-show="!subjectsFlag">See More</span>
+                    <span @click="subjectsFlag = false" v-show="subjectsFlag">Hide More</span>
                 </div>
                 <div class="col">
                     <h3>Publisher:</h3>
@@ -84,7 +86,8 @@
                            :class="{active: item.isActive == true}"
                            @click="publishClickEvent(item.value)">{{item.value}}</p>
                     </div>
-                    <span @click="publisherMore" v-show="!publisherFlag">See More</span>
+                    <span @click="publisherFlag = true" v-show="!publisherFlag">See More</span>
+                    <span @click="publisherFlag = false" v-show="publisherFlag">Hide More</span>
                 </div>
             </aside>
         </div>
@@ -261,22 +264,13 @@
                let detailquery = `year:"${value}"`;
                 this.$router.push({path: '/searchList', query: {type: this.type, key: this.key, detailquery:detailquery}});
             },
-            yearMore(){
-                this.yearFlag = true;
-            },
             subjectClickEvent(value){
                 let detailquery = `subject:"${value}"`
                 this.$router.push({path: '/searchList', query: {type: this.type, key: this.key,detailquery:detailquery}});
             },
-            subjectsMore(){
-                this.subjectsFlag = true;
-            },
             publishClickEvent(value){
                 let detailquery = `pub:"${value}"`
                 this.$router.push({path: '/searchList', query: {type: this.type, key: this.key,detailquery:detailquery}});
-            },
-            publisherMore(){
-                this.publisherFlag = true;
             },
         }
     }
