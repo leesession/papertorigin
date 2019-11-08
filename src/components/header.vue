@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <div class="header-left"><img src="../assets/images/font.png" alt=""></div>
+    <div class="header-left"><img src="../assets/images/font.png" alt="" height="30px"></div>
     <div class="header-right" v-if="isLogin">
       Welcome, <b>{{JSON.parse(isLogin).name}}</b>
       <span @click="resetPwd">ResetPWD</span>
