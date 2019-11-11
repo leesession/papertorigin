@@ -81,7 +81,7 @@ export default {
       color: #296A7F;
       border: 1px solid #296A7F;
       border-radius: 2px;
-      margin: 11px 0 11px 12px;
+      margin: 10px 0 10px 12px;
       cursor: pointer;
       &:hover, &.active{
         color: #fff;

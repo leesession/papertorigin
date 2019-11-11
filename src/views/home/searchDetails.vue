@@ -28,15 +28,15 @@
                 </div>
                 <p class="tips" v-if="details.keyword">{{details.keyword}}</p>
                 <div class="tools">
-                    <div class="col">
+                    <div class="col" title="view">
                         <i class="icon icon-eyes"></i>
                         <span>{{numObj.lookCount}}</span>
                     </div>
-                    <div class="col" @click="quoteShow">
+                    <div class="col" title="cite" @click="quoteShow">
                         <i class="icon icon-quote"></i>
                         <span>{{numObj.quoteCount}}</span>
                     </div>
-                    <div class="col" @click="addListNum(3)">
+                    <div class="col" title="share" @click="addListNum(3)">
                         <i class="icon icon-share"></i>
                         <span>{{numObj.forwardCount}}</span>
                     </div>

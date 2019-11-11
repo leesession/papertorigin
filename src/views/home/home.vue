@@ -107,7 +107,7 @@
             <div class="contact wrap1150">
                 <div class="col">
                     <i class="icon icon-phone"></i>
-                    <span>+86 028-8888-8888</span>
+                    <span>+86 028-xxxx-xxxx</span>
                 </div>
                 <div class="col">
                     <i class="icon icon-email"></i>
@@ -121,22 +121,22 @@
             <el-carousel :interval="5000" arrow="always" height="200px" indicator-position="none">
                 <el-carousel-item>
                     <div class="card">
-                        <h6>Administrative Management</h6>
-                        <p>Telephone: +86 028-8888-8888</p>
+                        <h6>Administrative and Management</h6>
+                        <p>Telephone: +86 028-xxxx-xxxx</p>
                         <p>Mobilephone: +86 18270890446</p>
                         <p>E-mail: yanfeng@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
                     <div class="card">
                         <h6>Market and Cooperation</h6>
-                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Telephone: +86 028-xxxx-xxxx</p>
                         <p>Mobilephone: +86 15889666049</p>
                         <p>E-mail: yangjunjie@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
                     </div>
                     <div class="card">
                         <h6>Product and Service</h6>
-                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Telephone: +86 028-xxxx-xxxx</p>
                         <p>Mobilephone: +86 13361642689</p>
                         <p>E-mail: ruhang@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>
@@ -145,7 +145,7 @@
                 <el-carousel-item>
                     <div class="card">
                         <h6>Technology and Design</h6>
-                        <p>Telephone: +86 028-8888-8888</p>
+                        <p>Telephone: +86 028-xxxx-xxxx</p>
                         <p>Mobilephone: +86 17308055063</p>
                         <p>E-mail: shenghao@tasselpaper.com</p>
                         <p>Address: NO.366, North Hupan Road, Chengdu 610000, China</p>

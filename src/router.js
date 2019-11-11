@@ -5,7 +5,7 @@ import home from './views/home/home.vue'
 Vue.use(Router)
 
 export default new Router({
-    mode: 'hash',
+    mode: process.env.NODE_ENV === "production" ? "history" : "hash",
     scrollBehavior: () => ({y: 0}),
     base: process.env.BASE_URL,
     routes: [

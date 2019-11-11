@@ -11,7 +11,7 @@
         <div class="info-right">
           <div class="col">
             <i class="icon icon-phone"></i>
-            <span>+86 028-8888-8888</span>
+            <span>+86 028-xxxx-xxxx</span>
           </div>
           <div class="col">
             <i class="icon icon-email"></i>
@@ -49,26 +49,26 @@ export default {
       address: 'NO.366, North Hupan Road, Chengdu 610000, China',
       icon: require("../../assets/images/icon.png"),
         concatArr:[{
-                name:'Administrative Management',
-                Landline:'Telephone: +86 028-8888-8888',
+                name:'Administrative and Management',
+                Landline:'Telephone: +86 028-xxxx-xxxx',
                 mobile:'Mobilephone: +86 18270890446',
                 email:'E-mail: yanfeng@tasselpaper.com',
                 address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
             },{
             name:'Market and Cooperation',
-            Landline:'Telephone: +86 028-8888-8888',
+            Landline:'Telephone: +86 028-xxxx-xxxx',
             mobile:'Mobilephone: +86 15889666049',
             email:'E-mail: yangjunjie@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
         },{
             name:'Product and Service',
-            Landline:'Telephone: +86 028-8888-8888',
+            Landline:'Telephone: +86 028-xxxx-xxxx',
             mobile:'Mobilephone: +86 13361642689',
             email:'E-mail: ruhang@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
         },{
             name:'Technology and Design',
-            Landline:'Telephone: +86 028-8888-8888',
+            Landline:'Telephone: +86 028-xxxx-xxxx',
             mobile:'Mobilephone: +86 17308055063',
             email:'E-mail: shenghao@tasselpaper.com',
             address:'Address: NO.366, North Hupan Road, Chengdu 610000, China'
