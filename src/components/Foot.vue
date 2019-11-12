@@ -4,13 +4,13 @@
             <div class="wrap1300">
                 <div>
                     <span>Social  Media</span>
-                    <a :href="`https://www.facebook.com/sharer.php?u=${facebookUrl}`" target="_blank" title="facebook">
+                    <a :href="`https://www.facebook.com/sharer.php?u=${websiteUrl}`" target="_blank" title="facebook">
                         <i class="icon icon-f"></i>
                     </a>
                     <a href="javascript:void(0)" title="weibo" @click="weiboShare" target="_blank">
                         <i class="icon icon-xl"></i>
                     </a>
-                    <a :href="`http://twitter.com/home?status=${facebookUrl} Tassel Scholar`" title="twitter" target="_blank">
+                    <a :href="`http://twitter.com/home?status=${websiteUrl}`" title="twitter" target="_blank">
                         <i class="icon icon-fg"></i>
                     </a>
                     <i class="icon icon-wx"  @click="shareWeChat" title="wechat"></i>
@@ -24,56 +24,34 @@
             </div>
         </div>
         <div class="intro">Chengdu FengRui Cloud Science & Technology Co. Ltd. All rights reserved.</div>
-        <div class="wechat" v-show="haveCode">
-            <div class="title">
-                分享到微信
-                <i class="el-icon-close" @click="closeCode"></i>
-            </div>
-            <div id="wechat"></div>
-            <div class="tip">
-                打开微信，扫描二维码分享
-            </div>
-        </div>
+        <we-chat ref="wechat" :idName="'wechat'"></we-chat>
     </div>
 </template>
 
 <script>
     import QRCode from 'qrcode2'
+    import weChat from '../components/wechat'
+
     export default {
         name: "Foot",
-        watch:{
-            '$route':function (newVal) {
-                // this.facebookUrl = `http://static.vienna.net.cn${newVal.path}`;
-            }
-        },
+        components:{weChat},
         data(){
             return{
-                haveCode:false,
-                facebookUrl:'http://static.vienna.net.cn/',
-                imgUrl:'http://static.vienna.net.cn/',
-
+                websiteUrl:'',
             }
+        },
+        mounted(){
+            this.websiteUrl = window.location.host;
         },
         methods:{
             weiboShare(){
-                let windowUrl = window.location.host;
-            // &pic=${windowUrl}static/img/blue-logo.a1e05d81.png
-                let url =`http://service.weibo.com/share/share.php?url=${windowUrl}&title=Tassel Scholar`;
+                let url =`http://service.weibo.com/share/share.php?url=${this.websiteUrl}&title=Tassel Scholar`;
                 window.open(url)
             },
             shareWeChat(){
-                this.haveCode = true;
-                let url = window.location.href
-                let qrcode = new QRCode('wechat', {
-                    width: 200,  // 二维码宽度
-                    height: 200, // 二维码高度
-                    text: url
-                })
+                let url = window.location.host;
+                this.$refs.wechat.shareWeChat(url,true)
             },
-            closeCode(){
-                this.haveCode=false;
-                $('#wechat').html('');
-            }
         }
     }
 </script>
@@ -83,7 +61,6 @@
         width: 100%;
         height: 95px;
         background: #f6f6f6;
-
         .footer {
             height: 70px;
             line-height: 70px;
@@ -181,45 +158,10 @@
                 }
             }
         }
-
         .intro{
             text-align: center;
             height: 25px;
             line-height: 25px;
-        }
-        .wechat{
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 240px;
-            transform: translate(-50%,-50%);
-            background-color: #fff;
-            z-index: 10;
-            border: 1px solid #333;
-            text-align: center;
-            .title{
-                height: 25px;
-                line-height: 25px;
-                background-color: #efefef;
-                position: relative;
-                i{
-                    position: absolute;
-                    right: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: 20px;
-                    cursor: pointer;
-                }
-            }
-            #wechat{
-                width: 200px;
-                margin: 0 auto;
-            }
-            .tip{
-                height: 25px;
-                line-height: 25px;
-                background-color: #efefef;
-            }
         }
     }
 </style>

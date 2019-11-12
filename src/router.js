@@ -20,7 +20,7 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/home/searchList.vue')
         },
         {
-            path: '/searchDetails',
+            path: '/searchDetails/:type/:key/:publish/:doi',
             name: 'searchDetails',
             component: () => import(/* webpackChunkName: "about" */ './views/home/searchDetails.vue')
         },

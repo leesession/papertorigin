@@ -2,7 +2,7 @@
     <div class="searchList">
         <search title="Search Results" index="0" :type="type" :keys="key"></search>
         <div class="list">
-            <div class="list-cont">
+            <div class="list-cont" v-loading="contentLoading">
                 <div class="title">
                     <i class="icon icon-note"></i>
                     <span @click="jumpPage">{{details.title}}</span>
@@ -36,13 +36,35 @@
                         <i class="icon icon-quote"></i>
                         <span>{{numObj.quoteCount}}</span>
                     </div>
-                    <div class="col" title="share" @click="addListNum(3)">
-                        <i class="icon icon-share"></i>
-                        <span>{{numObj.forwardCount}}</span>
-                    </div>
+                    <el-popover
+                            placement="top"
+                            width="200"
+                            trigger="click">
+                        <div class="tool">
+                            <a :href="`https://www.facebook.com/sharer.php?u=`" target="_blank" title="facebook">
+                                <i class="icon icon-f"></i>
+                            </a>
+                            <!--@click="weiboShare"-->
+                            <a href="javascript:void(0)" title="weibo"  target="_blank">
+                                <i class="icon icon-xl"></i>
+                            </a>
+                            <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
+                                <i class="icon icon-fg"></i>
+                            </a>
+                            <i class="icon icon-wx"  @click="shareWeChat"  title="wechat"></i>
+                        </div>
+                        <div class="col" title="share" slot="reference">
+                            <i class="icon icon-share"></i>
+                            <span>{{numObj.forwardCount}}</span>
+                        </div>
+                    </el-popover>
+                    <!--<div class="col" title="share" @click="addListNum(3)">-->
+                        <!--<i class="icon icon-share"></i>-->
+                        <!--<span>{{numObj.forwardCount}}</span>-->
+                    <!--</div>-->
                 </div>
                 <div class="btn-box">
-                    <span>Data Provided By <img :src="details.isIEE?ieeLogo:springLogo" :class="{ieee:details.isIEE}" alt=""></span>
+                    <span>Data Provided By <img :src="isIEE?ieeLogo:springLogo" :class="{ieee:isIEE}" alt=""></span>
                     <!--loginMsg &&-->
                     <a v-if="details.openaccess === 'true'"
                        class="login"
@@ -97,17 +119,19 @@
                 :params="stringObj"
                 @listenFun="getCitationMsg">
         </citation>
+        <we-chat ref="wechat1" :idName="'wechat1'"></we-chat>
     </div>
 </template>
 
 <script>
     import {http} from '../../api/http.js'
     import search from '../../components/search.vue'
+    import weChat from '../../components/wechat'
     import {mapState} from 'vuex'
     import citation from '../../components/citation.vue'
 
     export default {
-        name: 'searchList',
+        name: 'searchDetails',
         computed: {
             ...mapState({
                 loginMsg: 'loginMsg'
@@ -120,6 +144,7 @@
                 citationShow:false,
                 stringObj:{},
                 loading:true,
+                contentLoading:true,
                 checkAll: false,
                 details: {},
                 numObj: {},
@@ -130,23 +155,98 @@
                 subjectsFlag: false,
                 publisherFlag: false,
                 url:'http://api.springernature.com/metadata/json?api_key=eded390c0074daf47de31d49ab06d924',
+                springUrl:'',
+                ieeeUrl:'',
                 downLoadUrl:'',
                 type:'',
                 key:'',
             }
         },
-        components: {search , citation},
+        components: {search , citation ,weChat},
         created() {
-            this.type = this.$route.query.type ? this.$route.query.type : '';
-            this.key = this.$route.query.key ? this.$route.query.key : '';
+            this.type = this.$route.params.type ;
+            this.key = this.$route.params.key ;
+            this.doi = this.$route.params.doi ;
+            this.isIEE = this.$route.params.publish==='ieee';
+            //
             this.url = `${this.url}&p=1&q=(keyword:"${this.key}" AND type:"${this.type}")`;
-            this.details = sessionStorage.getItem('INFO') ? JSON.parse(sessionStorage.getItem('INFO')) : '';
-            this.downLoadUrl= this.details.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
-            this.getListNum();
-            this.searchEvent();
-            this.getObjMsg();
+            this.searchEvent();//获取侧边栏
+            this.getAPIKEY();//获取心的key
         },
         methods: {
+            shareWeChat(){
+                let url = window.location.href;
+                console.log(url)
+                this.$refs.wechat1.shareWeChat(url,false)
+            },
+            getAPIKEY() {//获取新的APIKEY
+                let data = '';
+                http.getAPIKEY(data, res => {
+                    if (res.code === 'SUCCESS') {
+                        res.data.forEach(item => {
+                            if (item.publisher === 'springernature') {
+                                this.springUrl = `http://api.springernature.com/meta/v2/json?q=doi:${this.doi}&api_key=${item.apiKey}`
+                            } else if (item.publisher === 'ieee') {
+                                this.ieeeUrl = `http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey=${item.apiKey}&format=json&max_records=25&start_record=1&sort_order=asc&sort_field=article_number&doi=${this.doi}`
+                            }
+                        });
+                        this.getSingle();
+                    }
+                });
+            },
+            getSingle(){
+                if(this.isIEE){
+                    $.ajax({
+                        type: "get",
+                        url: `${this.ieeeUrl}`,
+                        data: "",
+                        success: ress => {
+                            let item =ress.articles[0]
+                            this.details.title = item.title;
+                            this.details.creators = item.authors.authors;
+                            this.details.publisher = item.publisher;
+                            this.details.publicationName = item.publication_title;
+                            this.details.volume = item.volume;
+                            this.details.startingPage = item.start_page;
+                            this.details.endingPage = item.end_page;
+                            this.details.publicationDate = item.publication_date;
+                            this.details.publicationYear = item.publication_year;
+                            this.details.doi = item.doi;
+                            this.details.issn = item.issn;
+                            this.details.abstract = item.abstract;
+                            this.details.urls = item.abstract_url;
+                            this.details.number = item.rank;
+                            this.details.conferenceLocation = item.conference_location;
+                            this.details.IEEEpdfLink = item.pdf_url;
+                            this.details.openaccess = item.access_type === 'LOCKED' ? 'false' : 'true';
+                            this.showPage()
+                        },
+                        error: (xhr) => {
+                            this.getAPIKEY();
+                        }
+                    });
+                }else {
+                    $.ajax({
+                        type: "get",
+                        url: `${this.springUrl}`,
+                        data: "",
+                        success: res => {
+                            this.details = JSON.parse(res).records[0];
+                            this.details .creators.forEach((item1, index) => {//姓名去逗号
+                                this.details .creators[index].creator = item1.creator.indexOf(',') ? item1.creator.replace(/,/, '') : item1.creator
+                            });
+                            this.showPage()
+                        }
+                    });
+                }
+
+            },
+            showPage(){
+                this.contentLoading = false;
+                this.getListNum();
+                this.getObjMsg();
+                this.downLoadUrl= this.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
+            },
             jumpPage() {
                 if (this.details.url && this.details.url[0].value) {
                     window.open(this.details.url[0].value);
@@ -179,10 +279,6 @@
                     }
                 });
             },
-            // notLogin() {
-            //     if(this.details.openaccess === 'true')
-            //         this.$message.info('Please Login !')
-            // },
             searchEvent() {
                 $.ajax({
                     type: "get",
@@ -277,6 +373,51 @@
 </script>
 
 <style scoped lang="scss">
+    .tool{
+        .icon {
+            float: left;
+            width: 36px;
+            height: 36px;
+            margin: 0 0 0 7px;
+            cursor: pointer;
+
+            &.icon-f {
+                background: url(../../assets/images/facebook.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/facebook-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-xl {
+                background: url(../../assets/images/microblog.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/microblog-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-fg {
+                background: url(../../assets/images/twitter.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/twitter-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-wx {
+                background: url(../../assets/images/wechat.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/wechat-active.png) no-repeat center center;
+                }
+            }
+        }
+    }
     .list {
         display: flex;
         justify-content: flex-start;

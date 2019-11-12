@@ -18,7 +18,6 @@
                         </el-checkbox>
                         <el-button size="small" @click="allChangeEvent">Cite Selected</el-button>
                     </div>
-
                     <ul>
                         <li v-for="(item, index) in list" :key="index">
                             <div class="cont-title">
@@ -44,10 +43,33 @@
                                     <i class="icon icon-quote"></i>
                                     <span>{{recordData[index] && recordData[index].quoteCount}}</span>
                                 </div>
-                                <div class="col" title="share">
-                                    <i class="icon icon-share"></i>
-                                    <span>{{recordData[index] && recordData[index].forwardCount}}</span>
-                                </div>
+                                <el-popover
+                                        placement="top"
+                                        width="200"
+                                        trigger="click">
+                                    <div class="tool">
+                                        <a :href="`https://www.facebook.com/sharer.php?u=`" target="_blank" title="facebook">
+                                            <i class="icon icon-f"></i>
+                                        </a>
+                                        <!--@click="weiboShare"-->
+                                        <a href="javascript:void(0)" title="weibo"  target="_blank">
+                                            <i class="icon icon-xl"></i>
+                                        </a>
+                                        <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
+                                            <i class="icon icon-fg"></i>
+                                        </a>
+
+                                        <i class="icon icon-wx"  @click="shareWeChat(item)"  title="wechat"></i>
+                                    </div>
+                                    <div class="col" title="share" slot="reference">
+                                        <i class="icon icon-share"></i>
+                                        <span>{{recordData[index] && recordData[index].forwardCount}}</span>
+                                    </div>
+                                </el-popover>
+                                <!--<div class="col" title="share">-->
+                                <!--<i class="icon icon-share"></i>-->
+                                <!--<span>{{recordData[index] && recordData[index].forwardCount}}</span>-->
+                                <!--</div>-->
                             </div>
                         </li>
                     </ul>
@@ -105,13 +127,14 @@
                 :params="stringAllObj"
                 @listenFun="getCitationAllMsg"
         ></citation-all>
+        <we-chat ref="wechat1" :idName="'wechat1'"></we-chat>
     </div>
 </template>
 
 <script>
     import search from '../../components/search.vue'
     import citationAll from '../../components/citationAll.vue'
-    import {constants} from 'crypto';
+    import weChat from '../../components/wechat'
     import {http} from '../../api/http.js'
 
     export default {
@@ -151,7 +174,7 @@
                 springType: ''
             }
         },
-        components: {search, citationAll},
+        components: {search, citationAll,weChat},
         created() {
             this.type = this.$route.query.type ? this.$route.query.type : '';
             this.key = this.$route.query.key ? this.$route.query.key : '';
@@ -170,6 +193,12 @@
             this.endNum = 2 * this.pageSize;
         },
         methods: {
+            shareWeChat(obj){
+                let publish = obj.isIEE ? 'ieee' : 'spring';
+                let url = `${window.location.host}/searchDetails/${this.type}/${this.key}/${publish}/${obj.doi}`;
+                console.log(url)
+                this.$refs.wechat1.shareWeChat(url,false)
+            },
             backTop() {
                 let doc = document.documentElement;
                 $(doc).animate({
@@ -392,7 +421,7 @@
                                 this.ieeeTotal = ress.total_records
                             },
                             error: (xhr) => {
-                                // this.getAPIKEY();
+                                this.getAPIKEY();
                             }
                         });
                     }
@@ -492,7 +521,11 @@
                 this.loading = true;
                 http.addListNum(data, res => {
                     if (res.code == 'SUCCESS') {
-                        this.$router.push({path: '/searchDetails', query: {type: this.type, key: this.key}});
+                        let publish = obj.isIEE ? 'ieee' : 'spring';
+                        this.$router.push({
+                            name: 'searchDetails',
+                            params: {type: this.type, key: this.key, publish: publish, doi: obj.doi}
+                        });
                     }
                 });
                 sessionStorage.setItem('INFO', JSON.stringify(obj));
@@ -739,6 +772,52 @@
 </script>
 
 <style scoped lang="scss">
+    .tool{
+        .icon {
+            float: left;
+            width: 36px;
+            height: 36px;
+            margin: 0 0 0 7px;
+            cursor: pointer;
+
+            &.icon-f {
+                background: url(../../assets/images/facebook.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/facebook-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-xl {
+                background: url(../../assets/images/microblog.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/microblog-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-fg {
+                background: url(../../assets/images/twitter.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/twitter-active.png) no-repeat center center;
+                }
+            }
+
+            &.icon-wx {
+                background: url(../../assets/images/wechat.png) no-repeat center center;
+                background-size: 100% 100%;
+
+                &:hover {
+                    background: url(../../assets/images/wechat-active.png) no-repeat center center;
+                }
+            }
+        }
+    }
+
     .searchList {
         margin-bottom: 25px;
     }

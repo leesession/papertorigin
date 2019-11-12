@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const Timestamp = new Date().getTime();
 module.exports = {
     // 部署应用时的基本 URL
-    publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+    publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
     // 打包后生成的文件目录名称
     outputDir: "dist",
     // 打包后静态文件的目录名称
