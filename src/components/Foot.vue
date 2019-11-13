@@ -7,7 +7,7 @@
                     <a :href="`https://www.facebook.com/sharer.php?u=${websiteUrl}`" target="_blank" title="facebook">
                         <i class="icon icon-f"></i>
                     </a>
-                    <a href="javascript:void(0)" title="weibo" @click="weiboShare" target="_blank">
+                    <a :href="`http://service.weibo.com/share/share.php?url=${websiteUrl}&title=Tassel Scholar`" title="weibo" target="_blank">
                         <i class="icon icon-xl"></i>
                     </a>
                     <a :href="`http://twitter.com/home?status=${websiteUrl}`" title="twitter" target="_blank">
@@ -41,16 +41,11 @@
             }
         },
         mounted(){
-            this.websiteUrl = window.location.host;
+            this.websiteUrl = `http://${window.location.host}`;
         },
         methods:{
-            weiboShare(){
-                let url =`http://service.weibo.com/share/share.php?url=${this.websiteUrl}&title=Tassel Scholar`;
-                window.open(url)
-            },
             shareWeChat(){
-                let url = window.location.host;
-                this.$refs.wechat.shareWeChat(url,true)
+                this.$refs.wechat.shareWeChat(this.websiteUrl,true)
             },
         }
     }

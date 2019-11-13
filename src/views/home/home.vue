@@ -37,7 +37,6 @@
                     <button class="search-btn" @click="searchEvent">SEARCH</button>
                 </div>
             </div>
-
         </div>
         <!--service-->
         <div class="common-box service-box">
@@ -288,7 +287,7 @@
             searchEvent() {
                 if(this.key.replace(/\s/g,'')){
                     let data = {
-                        browser: getBrowse().browser,
+                        browser: getBrowse()?getBrowse().browser:'mobile',
                         browserData: getBrowseData(),
                         city: getCity(),
                         contry: "",

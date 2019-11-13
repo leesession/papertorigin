@@ -41,11 +41,11 @@
                             width="200"
                             trigger="click">
                         <div class="tool">
-                            <a :href="`https://www.facebook.com/sharer.php?u=`" target="_blank" title="facebook">
+                            <a href="javascript:void(0)" @click="facebookShare" title="facebook">
                                 <i class="icon icon-f"></i>
                             </a>
-                            <!--@click="weiboShare"-->
-                            <a href="javascript:void(0)" title="weibo"  target="_blank">
+
+                            <a href="javascript:void(0)" title="weibo" @click="weiboShare" >
                                 <i class="icon icon-xl"></i>
                             </a>
                             <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
@@ -167,6 +167,9 @@
             this.type = this.$route.params.type ;
             this.key = this.$route.params.key ;
             this.doi = this.$route.params.doi ;
+            if(this.doi.indexOf('_')>-1){//如果doi有_，则是从分享进入
+                this.doi = this.doi.replace(/_/,'/')
+            }
             this.isIEE = this.$route.params.publish==='ieee';
             //
             this.url = `${this.url}&p=1&q=(keyword:"${this.key}" AND type:"${this.type}")`;
@@ -174,9 +177,27 @@
             this.getAPIKEY();//获取心的key
         },
         methods: {
-            shareWeChat(){
-                let url = window.location.href;
-                console.log(url)
+            facebookShare(){//facebook
+                let doi = this.doi.replace(/\//,'_');
+                let pageUrl =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
+                let url = `https://www.facebook.com/sharer.php?u=${pageUrl}`;
+                //加分享+1
+                this.addListNum(3);
+                window.open(url)
+            },
+            weiboShare(){//微博
+                let doi = this.doi.replace(/\//,'_');
+                let pageUrl =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
+                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=Tassel Scholar`;
+                //加分享+1
+                this.addListNum(3);
+                window.open(url)
+            },
+            shareWeChat(){//微信
+                let doi = this.doi.replace(/\//,'_');
+                let url =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
+                //加分享+1
+                this.addListNum(3);
                 this.$refs.wechat1.shareWeChat(url,false)
             },
             getAPIKEY() {//获取新的APIKEY

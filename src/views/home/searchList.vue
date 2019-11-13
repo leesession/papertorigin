@@ -48,17 +48,15 @@
                                         width="200"
                                         trigger="click">
                                     <div class="tool">
-                                        <a :href="`https://www.facebook.com/sharer.php?u=`" target="_blank" title="facebook">
+                                        <a href="javascript:void(0)"  @click="facebookShare(item)" title="facebook">
                                             <i class="icon icon-f"></i>
                                         </a>
-                                        <!--@click="weiboShare"-->
-                                        <a href="javascript:void(0)" title="weibo"  target="_blank">
+                                        <a href="javascript:void(0)" title="weibo" @click="weiboShare(item)" >
                                             <i class="icon icon-xl"></i>
                                         </a>
                                         <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
                                             <i class="icon icon-fg"></i>
                                         </a>
-
                                         <i class="icon icon-wx"  @click="shareWeChat(item)"  title="wechat"></i>
                                     </div>
                                     <div class="col" title="share" slot="reference">
@@ -193,11 +191,38 @@
             this.endNum = 2 * this.pageSize;
         },
         methods: {
-            shareWeChat(obj){
-                let publish = obj.isIEE ? 'ieee' : 'spring';
-                let url = `${window.location.host}/searchDetails/${this.type}/${this.key}/${publish}/${obj.doi}`;
-                console.log(url)
+            facebookShare(obj){
+                let pageUrl = this.getDetailUrl(obj);
+                let url = `https://www.facebook.com/sharer.php?u=${pageUrl}`;
+                window.open(url)
+            },
+            weiboShare(obj){//微博
+                let pageUrl = this.getDetailUrl(obj);
+                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=Tassel Scholar`;
+                window.open(url)
+            },
+            shareWeChat(obj){//微信
+                let url = this.getDetailUrl(obj);
                 this.$refs.wechat1.shareWeChat(url,false)
+            },
+            getDetailUrl(obj){
+                let publish = obj.isIEE ? 'ieee' : 'spring';
+                let doi = obj.doi.replace(/\//,'_');
+                this.addListNum(obj);
+                return `http://${window.location.host}/searchDetails/${this.type}/${this.key}/${publish}/${doi}`;
+            },
+            addListNum(obj) {//分享+1
+                let data = {
+                    forwardCount: 1,
+                    lookCount: 0,
+                    peperDoi: obj.doi,
+                    quoteCount: 0
+                };
+                http.addListNum(data, res => {
+                    if (res.code === 'SUCCESS') {
+                        this.getRecord();
+                    }
+                });
             },
             backTop() {
                 let doc = document.documentElement;
@@ -345,7 +370,7 @@
                 }
                 this.getRecord()
             },
-            getRecord() {
+            getRecord() {//更新记录
                 let doiList = [];
                 this.list.forEach(item => {
                     doiList.push(item.doi)
