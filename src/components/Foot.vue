@@ -10,7 +10,7 @@
                     <a :href="`http://service.weibo.com/share/share.php?url=${websiteUrl}&title=Tassel Scholar`" title="weibo" target="_blank">
                         <i class="icon icon-xl"></i>
                     </a>
-                    <a :href="`http://twitter.com/home?status=${websiteUrl}`" title="twitter" target="_blank">
+                    <a :href="`http://twitter.com/share?text=Tassel Scholar&url=${websiteUrl}`" title="twitter" target="_blank">
                         <i class="icon icon-fg"></i>
                     </a>
                     <i class="icon icon-wx"  @click="shareWeChat" title="wechat"></i>

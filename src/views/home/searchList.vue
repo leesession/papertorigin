@@ -54,7 +54,7 @@
                                         <a href="javascript:void(0)" title="weibo" @click="weiboShare(item)" >
                                             <i class="icon icon-xl"></i>
                                         </a>
-                                        <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
+                                        <a href="javascript:void(0)" title="twitter" @click="twitterShare(item)">
                                             <i class="icon icon-fg"></i>
                                         </a>
                                         <i class="icon icon-wx"  @click="shareWeChat(item)"  title="wechat"></i>
@@ -191,6 +191,11 @@
             this.endNum = 2 * this.pageSize;
         },
         methods: {
+            twitterShare(obj){
+                let pageUrl = this.getDetailUrl(obj);
+                let url = `http://twitter.com/share?text=${obj.title}&url=${pageUrl}`;
+                window.open(url)
+            },
             facebookShare(obj){
                 let pageUrl = this.getDetailUrl(obj);
                 let url = `https://www.facebook.com/sharer.php?u=${pageUrl}`;
@@ -198,11 +203,12 @@
             },
             weiboShare(obj){//微博
                 let pageUrl = this.getDetailUrl(obj);
-                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=Tassel Scholar`;
+                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=${obj.title}`;
                 window.open(url)
             },
             shareWeChat(obj){//微信
                 let url = this.getDetailUrl(obj);
+                document.title = obj.title;//分享的title
                 this.$refs.wechat1.shareWeChat(url,false)
             },
             getDetailUrl(obj){

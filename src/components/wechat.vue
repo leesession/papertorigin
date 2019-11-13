@@ -3,12 +3,12 @@
         <div class="shadow" v-show="haveCode"></div>
         <div class="wechat" v-show="haveCode">
             <div class="title">
-                分享到微信
+                share to wechat
                 <i class="el-icon-close" @click="closeCode"></i>
             </div>
             <div :id="idName"></div>
             <div class="tip">
-                打开微信，扫描二维码分享
+                open wechat and scan QR code for sharing
             </div>
         </div>
     </div>
@@ -50,6 +50,7 @@
                 this.haveCode=false;
                 $('#wechat').html('');
                 $('#wechat1').html('');
+                document.title = 'Tassel Scholar'
             }
         }
     }

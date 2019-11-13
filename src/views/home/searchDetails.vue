@@ -48,7 +48,7 @@
                             <a href="javascript:void(0)" title="weibo" @click="weiboShare" >
                                 <i class="icon icon-xl"></i>
                             </a>
-                            <a :href="`http://twitter.com/home?status= Tassel Scholar`" title="twitter" target="_blank">
+                            <a href="javascript:void(0)" title="twitter" @click="twitterShare">
                                 <i class="icon icon-fg"></i>
                             </a>
                             <i class="icon icon-wx"  @click="shareWeChat"  title="wechat"></i>
@@ -177,6 +177,14 @@
             this.getAPIKEY();//获取心的key
         },
         methods: {
+            twitterShare(){
+                let doi = this.doi.replace(/\//,'_');
+                let pageUrl =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
+                let url = `http://twitter.com/share?text=${this.details.title}&url=${pageUrl}`;
+                //加分享+1
+                this.addListNum(3);
+                window.open(url)
+            },
             facebookShare(){//facebook
                 let doi = this.doi.replace(/\//,'_');
                 let pageUrl =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
@@ -188,7 +196,7 @@
             weiboShare(){//微博
                 let doi = this.doi.replace(/\//,'_');
                 let pageUrl =`http://${window.location.host}/searchDetails/${this.type}/${this.key}/${this.$route.params.publish}/${doi}`;
-                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=Tassel Scholar`;
+                let url =`http://service.weibo.com/share/share.php?url=${pageUrl}&title=${this.details.title}`;
                 //加分享+1
                 this.addListNum(3);
                 window.open(url)
@@ -267,6 +275,7 @@
                 this.getListNum();
                 this.getObjMsg();
                 this.downLoadUrl= this.isIEE ?  this.details.IEEEpdfLink :  `https://link.springer.com/content/pdf/${this.details.doi}.pdf`;
+                document.title = this.details.title
             },
             jumpPage() {
                 if (this.details.url && this.details.url[0].value) {
@@ -389,6 +398,9 @@
                 let detailquery = `pub:"${value}"`
                 this.$router.push({path: '/searchList', query: {type: this.type, key: this.key,detailquery:detailquery}});
             },
+        },
+        beforeDestroy() {
+            document.title = 'Tassel Scholar'
         }
     }
 </script>
