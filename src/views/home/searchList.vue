@@ -20,13 +20,21 @@
                     </div>
                     <ul>
                         <li v-for="(item, index) in list" :key="index">
+                            <!--标题-->
                             <div class="cont-title">
-                                <el-checkbox v-model="item.isChecked" class="check-col fl"
-                                             @change="colChangeEvent(item)"></el-checkbox>
-                                <h4 class="fl" @click="goDetails(item)">{{item.title}}</h4>
+                                <el-checkbox v-model="item.isChecked"
+                                             class="check-col fl"
+                                             @change="colChangeEvent(item)">
+                                </el-checkbox>
+                                <h4 class="fl" @click="goDetails(item)">
+                                    {{item.title}}
+                                    <span v-if="item.openaccess === 'true'">(open access)</span>
+                                </h4>
                             </div>
+                            <!--姓名-->
                             <p><i v-for="(o, i) in item.creators" :key="i">{{o.creator || o.full_name}}<span
                                     v-if="item.creators.length-1 > i">, </span></i></p>
+                            <!--出版商-->
                             <p><em>{{item.publisher}}</em></p>
                             <p><em @click="jumpPage(item)">{{item.publicationName}}</em></p>
                             <p>Volume {{item.volume}} | Page {{item.startingPage}}-{{item.endingPage}} |
@@ -64,10 +72,6 @@
                                         <span>{{recordData[index] && recordData[index].forwardCount}}</span>
                                     </div>
                                 </el-popover>
-                                <!--<div class="col" title="share">-->
-                                <!--<i class="icon icon-share"></i>-->
-                                <!--<span>{{recordData[index] && recordData[index].forwardCount}}</span>-->
-                                <!--</div>-->
                             </div>
                         </li>
                     </ul>
@@ -917,6 +921,11 @@
                         color: #29697E;
                         font-size: 22px;
                         cursor: pointer;
+                        span{
+                            margin-left: 15px;
+                            font-weight: normal;
+                            color: #3356E3;
+                        }
                     }
                 }
 

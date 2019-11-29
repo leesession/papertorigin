@@ -80,6 +80,10 @@ export default {
       this.$emit('listenForgetFun', this.forgetMsg);
     },
     loginEvent() {
+      if (!/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(this.userName)) {
+        this.$message.error('email error')
+        return
+      }
       this.disabled = true;
       let data = {
         loginmail: this.userName,

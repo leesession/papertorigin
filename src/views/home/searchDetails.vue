@@ -20,7 +20,7 @@
                     <i class="icon icon-zero"></i>
                     <span>Abstract</span>
                 </div>
-                <p class="tips">{{details.abstract?details.abstract.indexOf('Abstract') === -1?details.abstract :
+                <p class="tips center">{{details.abstract?details.abstract.indexOf('Abstract') === -1?details.abstract :
                     details.abstract.replace(/Abstract/,''):''}}</p>
                 <div class="list-cont-title" v-if="details.keyword">
                     <i class="icon icon-zero"></i>
@@ -517,6 +517,9 @@
                 }
                 &.tips {
                     line-height: 48px;
+                }
+                &.center{
+                    text-align: center;
                 }
             }
             .tools {
