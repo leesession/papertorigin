@@ -28,7 +28,7 @@
                                 </el-checkbox>
                                 <h4 class="fl" @click="goDetails(item)">
                                     {{item.title}}
-                                    <span v-if="item.openaccess === 'true'">(open access)</span>
+                                    <span v-if="item.openaccess === 'true'">Open Access</span>
                                 </h4>
                             </div>
                             <!--姓名-->
@@ -922,9 +922,12 @@
                         font-size: 22px;
                         cursor: pointer;
                         span{
-                            margin-left: 15px;
-                            font-weight: normal;
-                            color: #3356E3;
+                            margin-left: 5px;
+                            color: #fff;
+                            background-color: orange;
+                            padding: 2px 6px;
+                            border-radius: 13px;
+                            font-size: 18px;
                         }
                     }
                 }

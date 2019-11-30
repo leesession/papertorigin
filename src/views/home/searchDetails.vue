@@ -519,7 +519,7 @@
                     line-height: 48px;
                 }
                 &.center{
-                    text-align: center;
+                    text-align: justify;
                 }
             }
             .tools {
