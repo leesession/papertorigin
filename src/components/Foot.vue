@@ -24,6 +24,7 @@
             </div>
         </div>
         <div class="intro">Chengdu FengRui Cloud Science & Technology Co. Ltd. All rights reserved.</div>
+        <div class="record" @click="toRecord">蜀ICP备20006269号</div>
         <we-chat ref="wechat" :idName="'wechat'"></we-chat>
     </div>
 </template>
@@ -46,6 +47,9 @@
         methods:{
             shareWeChat(){
                 this.$refs.wechat.shareWeChat(this.websiteUrl,true)
+            },
+            toRecord(){
+                window.open('http://www.beian.miit.gov.cn/')
             },
         }
     }
@@ -157,6 +161,12 @@
             text-align: center;
             height: 25px;
             line-height: 25px;
+        }
+        .record{
+            line-height: 25px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
         }
     }
 </style>
