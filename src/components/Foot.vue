@@ -58,8 +58,8 @@
 <style scoped lang="scss">
     .footer-box {
         width: 100%;
-        height: 95px;
         background: #f6f6f6;
+        padding-bottom: 10px;
         .footer {
             height: 70px;
             line-height: 70px;
