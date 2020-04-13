@@ -411,21 +411,21 @@
                     url: _url,
                     data: "",
                     success: res => {
-                        this.start = Number(JSON.parse(res).result[0].start);
-                        this.list = JSON.parse(res).records;
-                        this.year = JSON.parse(res).facets[3].values;
+                        this.start = Number(res.result[0].start);
+                        this.list = res.records;
+                        this.year = res.facets[3].values;
                         //
-                        this.springTotal = Number(JSON.parse(res).result[0].total);
+                        this.springTotal = Number(res.result[0].total);
                         //判断detail页面返回值没有，并且赋值给对应的
                         detailquery = this.$route.query.detailquery;
                         this.year.map((item, index) => {
                             detailquery && detailquery.indexOf('year:"') > -1 && index === 0 ? (item.isActive = true) : item.isActive = false;
                         });
-                        this.subjects = JSON.parse(res).facets[0].values;
+                        this.subjects = res.facets[0].values;
                         this.subjects.map((item, index) => {
                             detailquery && detailquery.indexOf('subject:"') > -1 && index === 0 ? (item.isActive = true) : item.isActive = false;
                         });
-                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.publisher = res.facets[2].values;
                         this.publisher.map((item, index) => {
                             detailquery && detailquery.indexOf('pub:"') > -1 && index === 0 ? item.isActive = true : item.isActive = false;
                         });
@@ -450,7 +450,7 @@
                             url: _urls,
                             data: "",
                             success: ress => {
-                                this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+                                this.total = Number(res.result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
                                 this.ieeeTotal = ress.total_records
@@ -516,7 +516,7 @@
                     url: searchUrl,
                     data: "",
                     success: res => {
-                        this.list = JSON.parse(res).records;
+                        this.list = res.records;
                         //_urls,用于ieee
                         let _urls = `${this.urls}&max_records=${this.pageSize * 2}&start_record=${ieeeStart}&content_type=${this.types}&article_title=${this.key}`
                         if (this.publishFactor) {
@@ -535,7 +535,7 @@
                             url: _urls,
                             data: "",
                             success: ress => {
-                                this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+                                this.total = Number(res.result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
                             },
@@ -596,12 +596,12 @@
                     url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
-                        this.list = JSON.parse(res).records;
-                        this.springTotal = Number(JSON.parse(res).result[0].total);
+                        this.list = res.records;
+                        this.springTotal = Number(res.result[0].total);
                         //更新右侧栏
-                        this.year = JSON.parse(res).facets[3].values;
-                        this.subjects = JSON.parse(res).facets[0].values;
-                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.year = res.facets[3].values;
+                        this.subjects = res.facets[0].values;
+                        this.publisher = res.facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
                         let _urls = `${this.urls}&max_records=${2 * this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publication_year=${year}`;
@@ -613,7 +613,7 @@
                             url: _urls,
                             data: "",
                             success: ress => {
-                                this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+                                this.total = Number(res.result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.loading = false;
                                 this.ieeeTotal = ress.total_records
@@ -649,12 +649,12 @@
                     url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
-                        this.list = JSON.parse(res).records;
-                        this.springTotal = Number(JSON.parse(res).result[0].total);
+                        this.list = res.records;
+                        this.springTotal = Number(res.result[0].total);
                         //更新右侧栏
-                        this.year = JSON.parse(res).facets[3].values;
-                        this.subjects = JSON.parse(res).facets[0].values;
-                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.year = res.facets[3].values;
+                        this.subjects = res.facets[0].values;
+                        this.publisher = res.facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
                         let _urls = '';
@@ -670,7 +670,7 @@
                             data: "",
                             success: ress => {
                                 this.loading = false;
-                                this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+                                this.total = Number(res.result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 this.currentPage = 1;
                                 this.ieeeTotal = ress.total_records
@@ -704,12 +704,12 @@
                     url: this.key ? `${_url} AND keyword:"${this.key}" AND type:"${this.type}")` : `${_url})`,
                     data: "",
                     success: res => {
-                        this.list = JSON.parse(res).records;
-                        this.springTotal = Number(JSON.parse(res).result[0].total);
+                        this.list = res.records;
+                        this.springTotal = Number(res.result[0].total);
                         //更新右侧栏
-                        this.year = JSON.parse(res).facets[3].values;
-                        this.subjects = JSON.parse(res).facets[0].values;
-                        this.publisher = JSON.parse(res).facets[2].values;
+                        this.year = res.facets[3].values;
+                        this.subjects = res.facets[0].values;
+                        this.publisher = res.facets[2].values;
                         this.updateSlide(this.year, this.subjects, this.publisher);
                         //二次请求
                         let _urls = `${this.urls}&max_records=${2 * this.pageSize}&start_record=1&content_type=${this.types}&article_title=${this.key}&publisher=${publishFactor}`;
@@ -722,7 +722,7 @@
                             data: "",
                             success: ress => {
                                 this.loading = false;
-                                this.total = Number(JSON.parse(res).result[0].total) + ress.total_records;
+                                this.total = Number(res.result[0].total) + ress.total_records;
                                 this.operateData(ress.articles);
                                 //重置当前页
                                 this.currentPage = 1;

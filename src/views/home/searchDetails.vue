@@ -260,7 +260,7 @@
                         url: `${this.springUrl}`,
                         data: "",
                         success: res => {
-                            this.details = JSON.parse(res).records[0];
+                            this.details = res.records[0];
                             this.details .creators.forEach((item1, index) => {//姓名去逗号
                                 this.details .creators[index].creator = item1.creator.indexOf(',') ? item1.creator.replace(/,/, '') : item1.creator
                             });
@@ -316,7 +316,7 @@
                     data: "",
                     success: res => {
                         this.loading = false;
-                        let facets = JSON.parse(res).facets;
+                        let facets = res.facets;
                         this.year = facets[3].values;
                         this.year.map(item => {
                             item.isActive = false;
