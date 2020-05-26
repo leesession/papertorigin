@@ -9,9 +9,11 @@ import router from '../router';
 import {dialog} from './dialog.js';
 import {showLoading, hideLoading} from './loading.js';
 
+
+
 // axios基本配置
-axios.defaults.baseURL = process.env.BASE_API;
-axios.defaults.timeout = 10000;
+// axios.defaults.baseURL = `${process.env.BASE_API}`;
+// axios.defaults.timeout = 10000;
 
 // 响应拦截器
 axios.interceptors.request.use(
@@ -72,9 +74,11 @@ function dataFormatType(type) {
  */
 export default function xhr(params) {
     return new Promise((resolve, reject) => {
+        let url = process.env.NODE_ENV === 'development' ?
+            `api/${params.url}` : `papersearch/customer-service/${params.url}`;
         axios({
             method: params.method,
-            url: params.url,
+            url: url,
             params: params.datas,
             data: params.data,
             headers: {

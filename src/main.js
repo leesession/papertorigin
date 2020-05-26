@@ -13,11 +13,13 @@ if (process.env.NODE_ENV === 'production') {
   /*第二层if，根据.env文件中的VUE_APP_FLAG判断是生产环境还是测试环境*/
   if (process.env.VUE_APP_FLAG === 'pro') {
     //production 生产环境
-    axios.defaults.baseURL = 'http://47.112.29.135:9094';//路径
+    // axios.defaults.baseURL = `http://47.108.117.89:9085`;//路径
+    axios.defaults.baseURL = `${process.env.BASE_URL}`;
   }
 } else { //dev 开发环境 axios.defaults.baseURL = 'http://192.168.0.152:8102';//路径
-  axios.defaults.baseURL = process.env.BASE_API;
+  axios.defaults.baseURL = `${process.env.BASE_URL}`;
 }
+
 // axios基本配置
 // axios.defaults.baseURL = process.env.BASE_API;
 axios.defaults.timeout = 10000;

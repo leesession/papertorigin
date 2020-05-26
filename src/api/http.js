@@ -5,7 +5,7 @@ export const http = {
     login(data, successFun) {
         xhr({
             method: 'post',
-            url: '/login/loginAccount',
+            url: 'login/loginAccount',
             data: data,
             type: 'json'
         }).then(res => {
@@ -16,7 +16,7 @@ export const http = {
     register(data, successFun) {
         xhr({
             method: 'post',
-            url: '/login/registAccount',
+            url: 'login/registAccount',
             data: data,
             type: 'json'
         }).then(res => {
@@ -27,7 +27,7 @@ export const http = {
     getListNum(data, successFun) {
         xhr({
             method: 'post',
-            url: '/management/getRecord',
+            url: 'management/getRecord',
             data: data,
             type: 'json'
         }).then(res => {
@@ -38,7 +38,7 @@ export const http = {
     addListNum(data, successFun) {
         xhr({
             method: 'post',
-            url: '/management/updateRecord',
+            url: 'management/updateRecord',
             data: data,
             type: 'json'
         }).then(res => {
@@ -49,7 +49,7 @@ export const http = {
     changePWDByOldPwd(data, successFun) {
         xhr({
             method: 'post',
-            url: '/login/changePWDByOldPwd',
+            url: 'login/changePWDByOldPwd',
             data: data,
             type: 'json'
         }).then(res => {
@@ -60,7 +60,7 @@ export const http = {
     sendCodeToMail(data, successFun) {
         xhr({
             method: 'post',
-            url: '/login/sendCodeToMail',
+            url: 'login/sendCodeToMail',
             data: data,
             type: 'json'
         }).then(res => {
@@ -71,7 +71,7 @@ export const http = {
     findPasswordByCode(data, successFun) {
         xhr({
             method: 'post',
-            url: '/login/findPasswordByCode',
+            url: 'login/findPasswordByCode',
             data: data,
             type: 'json'
         }).then(res => {
@@ -129,7 +129,7 @@ export const http = {
     search(data, successFun) {
         xhr({
             method: 'GET',
-            url: '/metadata/json',
+            url: 'metadata/json',
             data: data,
         }).then(res => {
             successFun(res);
